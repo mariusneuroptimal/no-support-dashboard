@@ -1,0 +1,17 @@
+{
+  "session_id": "A1B2C3D4",
+  "generated_at": "2026-01-06T20:02:00Z",
+  "country": "DE",
+  "tier": "P0",
+  "summary": {
+    "status": "PASS",
+    "failures": 0,
+    "warnings": 0
+  },
+  "checks": [
+    { "name": "dns", "status": "PASS" },
+    { "name": "network", "status": "PASS" },
+    { "name": "geo", "status": "PASS" },
+    { "name": "latency", "status": "PASS" }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "session_id": "E5F6G7H8",
+  "generated_at": "2026-01-06T19:58:00Z",
+  "country": "JP",
+  "tier": "P1",
+  "summary": {
+    "status": "FAIL",
+    "failures": 1,
+    "warnings": 0
+  },
+  "checks": [
+    { "name": "dns", "status": "FAIL" },
+    { "name": "network", "status": "PASS" },
+    { "name": "geo", "status": "PASS" },
+    { "name": "latency", "status": "PASS" }
+  ]
+}

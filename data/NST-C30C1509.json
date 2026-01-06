@@ -1,0 +1,17 @@
+{
+  "session_id": "C30C1509",
+  "generated_at": "2026-01-06T20:08:00Z",
+  "country": "US",
+  "tier": "P0",
+  "summary": {
+    "status": "PASS",
+    "failures": 0,
+    "warnings": 0
+  },
+  "checks": [
+    { "name": "dns", "status": "PASS" },
+    { "name": "network", "status": "PASS" },
+    { "name": "geo", "status": "PASS" },
+    { "name": "latency", "status": "PASS" }
+  ]
+}

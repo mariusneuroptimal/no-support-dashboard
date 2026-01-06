@@ -1,0 +1,17 @@
+{
+  "session_id": "6CB2B731",
+  "generated_at": "2026-01-06T20:05:00Z",
+  "country": "FR",
+  "tier": "P1",
+  "summary": {
+    "status": "WARN",
+    "failures": 0,
+    "warnings": 1
+  },
+  "checks": [
+    { "name": "dns", "status": "PASS" },
+    { "name": "network", "status": "WARN" },
+    { "name": "geo", "status": "PASS" },
+    { "name": "latency", "status": "PASS" }
+  ]
+}

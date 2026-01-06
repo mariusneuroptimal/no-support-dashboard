@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.2.90:8081/diagnostics";
+const BASE_URL = "./data";
 
 // Fetch index and all session files
 async function loadAllSessions() {

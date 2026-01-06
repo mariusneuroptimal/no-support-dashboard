@@ -1,0 +1,17 @@
+{
+  "session_id": "Q7R8S9T0",
+  "generated_at": "2026-01-06T19:45:00Z",
+  "country": "BR",
+  "tier": "P0",
+  "summary": {
+    "status": "PASS",
+    "failures": 0,
+    "warnings": 0
+  },
+  "checks": [
+    { "name": "dns", "status": "PASS" },
+    { "name": "network", "status": "PASS" },
+    { "name": "geo", "status": "PASS" },
+    { "name": "latency", "status": "PASS" }
+  ]
+}
