@@ -1,17 +1,36 @@
 :root {
-  --bg-primary: #0f1115;
-  --bg-card: #1a1d23;
-  --bg-card-hover: #22262e;
-  --text-primary: #e6e6e6;
-  --text-secondary: #8b8f98;
-  --text-muted: #5a5e66;
-  --border: #2a2e36;
-  --pass: #4caf50;
-  --pass-bg: rgba(76, 175, 80, 0.1);
-  --warn: #ff9800;
-  --warn-bg: rgba(255, 152, 0, 0.1);
-  --fail: #f44336;
-  --fail-bg: rgba(244, 67, 54, 0.15);
+  /* Primary - Slate Blue / Steel Blue (trust, calm, clinical) */
+  --slate-blue: #6F8FA6;
+  --steel-blue: #7A9BB2;
+
+  /* Accent - Deep Navy (authority, focus) */
+  --deep-navy: #0E3A5A;
+
+  /* Base - White / Off-White */
+  --white: #FFFFFF;
+  --off-white: #F5F7F8;
+
+  /* Status Colors */
+  --pass: #7FA6A1;       /* Soft Teal - calm success */
+  --pass-bg: rgba(127, 166, 161, 0.12);
+  --warn: #F2A38B;       /* Soft Coral - warm attention */
+  --warn-bg: rgba(242, 163, 139, 0.15);
+  --fail: #7A4A63;       /* Muted Plum - serious but not alarming */
+  --fail-bg: rgba(122, 74, 99, 0.1);
+
+  /* Supporting */
+  --sand: #D6C6A5;
+  --wood: #6B4A2D;
+
+  /* Semantic mapping */
+  --bg-primary: var(--off-white);
+  --bg-card: var(--white);
+  --text-primary: var(--deep-navy);
+  --text-secondary: var(--slate-blue);
+  --text-muted: var(--steel-blue);
+  --border: #E2E8F0;
+  --border-accent: var(--slate-blue);
+
   --font-mono: 'JetBrains Mono', monospace;
   --font-sans: 'Inter', system-ui, sans-serif;
 }
@@ -27,10 +46,6 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 20px 20px;
 }
 
 .dashboard {
@@ -44,21 +59,24 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border);
+  padding: 1.5rem;
+  background: linear-gradient(135deg, var(--slate-blue) 0%, var(--steel-blue) 100%);
+  border-radius: 12px;
   margin-bottom: 2rem;
+  color: var(--white);
 }
 
 .header h1 {
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: -0.02em;
+  color: var(--white);
 }
 
 .last-ingest {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.8);
   margin-top: 0.25rem;
   display: block;
 }
@@ -70,17 +88,20 @@ body {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--pass);
+  color: var(--white);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
 }
 
 .live-dot {
   width: 8px;
   height: 8px;
-  background: var(--pass);
+  background: #90EE90;
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--pass);
+  box-shadow: 0 0 8px rgba(144, 238, 144, 0.6);
 }
 
 /* Summary Cards */
@@ -94,8 +115,9 @@ body {
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1.25rem;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(14, 58, 90, 0.06);
 }
 
 .card-label {
@@ -112,6 +134,7 @@ body {
   font-size: 2.5rem;
   font-weight: 600;
   line-height: 1;
+  color: var(--deep-navy);
 }
 
 .card-sub {
@@ -121,10 +144,17 @@ body {
   margin-top: 0.5rem;
 }
 
-.card.pass { border-color: var(--pass); }
+.card.pass {
+  border-color: var(--pass);
+  border-left: 4px solid var(--pass);
+}
 .card.pass .card-value { color: var(--pass); }
 
-.card.fail { border-color: var(--fail); background: var(--fail-bg); }
+.card.fail {
+  border-color: var(--fail);
+  border-left: 4px solid var(--fail);
+  background: var(--fail-bg);
+}
 .card.fail .card-value { color: var(--fail); }
 .card.fail .card-sub { color: var(--warn); }
 
@@ -132,9 +162,10 @@ body {
 .failure-breakdown {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1.25rem;
+  border-radius: 12px;
+  padding: 1.5rem;
   margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(14, 58, 90, 0.06);
 }
 
 .failure-breakdown h2,
@@ -169,16 +200,16 @@ body {
 
 .bar-track {
   flex: 1;
-  height: 20px;
-  background: rgba(244, 67, 54, 0.1);
-  border-radius: 4px;
+  height: 24px;
+  background: var(--fail-bg);
+  border-radius: 6px;
   overflow: hidden;
 }
 
 .bar-fill {
   height: 100%;
-  background: var(--fail);
-  border-radius: 4px;
+  background: linear-gradient(90deg, var(--fail) 0%, #9A6A83 100%);
+  border-radius: 6px;
 }
 
 .bar-count {
@@ -194,14 +225,16 @@ body {
   font-family: var(--font-mono);
   font-size: 0.85rem;
   color: var(--pass);
+  padding: 0.5rem 0;
 }
 
 /* Sessions Table */
 .recent-sessions {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1.25rem;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(14, 58, 90, 0.06);
 }
 
 .table-wrapper {
@@ -222,37 +255,51 @@ th {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-muted);
-  padding: 0.5rem 1rem;
-  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--border);
+  background: var(--off-white);
 }
 
 td {
-  padding: 0.75rem 1rem;
+  padding: 0.875rem 1rem;
   border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
 }
 
 tr:last-child td {
   border-bottom: none;
 }
 
+tr:hover {
+  background: var(--off-white);
+}
+
 tr.fail {
   background: var(--fail-bg);
+}
+
+tr.fail:hover {
+  background: rgba(122, 74, 99, 0.15);
 }
 
 tr.warn {
   background: var(--warn-bg);
 }
 
-.status-pass { color: var(--pass); }
-.status-warn { color: var(--warn); }
-.status-fail { color: var(--fail); }
+tr.warn:hover {
+  background: rgba(242, 163, 139, 0.2);
+}
+
+.status-pass { color: var(--pass); font-weight: 600; }
+.status-warn { color: #D4896E; font-weight: 600; }
+.status-fail { color: var(--fail); font-weight: 600; }
 
 /* Error Banner */
 .error-banner {
   background: var(--fail-bg);
   border: 1px solid var(--fail);
-  border-radius: 8px;
-  padding: 1rem;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
   margin-top: 2rem;
   font-family: var(--font-mono);
   font-size: 0.85rem;
