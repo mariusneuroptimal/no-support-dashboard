@@ -1,17 +1,61 @@
 {
-  "session_id": "C30C1509",
-  "generated_at": "2026-01-06T20:08:00Z",
-  "country": "US",
-  "tier": "P0",
-  "summary": {
-    "status": "PASS",
-    "failures": 0,
-    "warnings": 0
-  },
-  "checks": [
-    { "name": "dns", "status": "PASS" },
-    { "name": "network", "status": "PASS" },
-    { "name": "geo", "status": "PASS" },
-    { "name": "latency", "status": "PASS" }
+  "SchemaVersion": "1.0",
+  "ExportedAt": "2026-01-06T20:08:00Z",
+  "SessionId": "NST-C30C1509",
+  "AppVersion": "1.0.0",
+  "AppChannel": "stable",
+  "SessionStartTime": "2026-01-06T20:08:00Z",
+  "Actions": [
+    {
+      "Timestamp": "2026-01-06T20:08:01Z",
+      "Action": "Connectivity Test",
+      "Category": "DNS Resolution",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "US",
+        "CountryName": "United States",
+        "DnsFailures": 0
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T20:08:02Z",
+      "Action": "Network Test",
+      "Category": "Reachability",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "US",
+        "CountryName": "United States",
+        "LatencyMs": 18,
+        "LinkSpeedMbps": 500,
+        "ConnectionType": "Ethernet"
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T20:08:03Z",
+      "Action": "Network Test",
+      "Category": "Geo Inference",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "US",
+        "CountryName": "United States",
+        "GeoMismatchDetected": false
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T20:08:04Z",
+      "Action": "Network Test",
+      "Category": "Latency Probe",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "US",
+        "CountryName": "United States",
+        "LatencyMs": 18,
+        "JitterMs": 2
+      }
+    }
   ]
 }

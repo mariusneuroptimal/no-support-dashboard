@@ -1,17 +1,61 @@
 {
-  "session_id": "A1B2C3D4",
-  "generated_at": "2026-01-06T20:02:00Z",
-  "country": "DE",
-  "tier": "P0",
-  "summary": {
-    "status": "PASS",
-    "failures": 0,
-    "warnings": 0
-  },
-  "checks": [
-    { "name": "dns", "status": "PASS" },
-    { "name": "network", "status": "PASS" },
-    { "name": "geo", "status": "PASS" },
-    { "name": "latency", "status": "PASS" }
+  "SchemaVersion": "1.0",
+  "ExportedAt": "2026-01-06T20:02:00Z",
+  "SessionId": "NST-A1B2C3D4",
+  "AppVersion": "1.0.0",
+  "AppChannel": "stable",
+  "SessionStartTime": "2026-01-06T20:02:00Z",
+  "Actions": [
+    {
+      "Timestamp": "2026-01-06T20:02:01Z",
+      "Action": "Connectivity Test",
+      "Category": "DNS Resolution",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "DE",
+        "CountryName": "Germany",
+        "DnsFailures": 0
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T20:02:02Z",
+      "Action": "Network Test",
+      "Category": "Reachability",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "DE",
+        "CountryName": "Germany",
+        "LatencyMs": 32,
+        "LinkSpeedMbps": 1000,
+        "ConnectionType": "Ethernet"
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T20:02:03Z",
+      "Action": "Network Test",
+      "Category": "Geo Inference",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "DE",
+        "CountryName": "Germany",
+        "GeoMismatchDetected": false
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T20:02:04Z",
+      "Action": "Network Test",
+      "Category": "Latency Probe",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "DE",
+        "CountryName": "Germany",
+        "LatencyMs": 32,
+        "JitterMs": 3
+      }
+    }
   ]
 }

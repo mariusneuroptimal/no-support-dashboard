@@ -1,17 +1,61 @@
 {
-  "session_id": "Q7R8S9T0",
-  "generated_at": "2026-01-06T19:45:00Z",
-  "country": "BR",
-  "tier": "P0",
-  "summary": {
-    "status": "PASS",
-    "failures": 0,
-    "warnings": 0
-  },
-  "checks": [
-    { "name": "dns", "status": "PASS" },
-    { "name": "network", "status": "PASS" },
-    { "name": "geo", "status": "PASS" },
-    { "name": "latency", "status": "PASS" }
+  "SchemaVersion": "1.0",
+  "ExportedAt": "2026-01-06T19:45:00Z",
+  "SessionId": "NST-Q7R8S9T0",
+  "AppVersion": "1.0.0",
+  "AppChannel": "stable",
+  "SessionStartTime": "2026-01-06T19:45:00Z",
+  "Actions": [
+    {
+      "Timestamp": "2026-01-06T19:45:01Z",
+      "Action": "Connectivity Test",
+      "Category": "DNS Resolution",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "BR",
+        "CountryName": "Brazil",
+        "DnsFailures": 0
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T19:45:02Z",
+      "Action": "Network Test",
+      "Category": "Reachability",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "BR",
+        "CountryName": "Brazil",
+        "LatencyMs": 145,
+        "LinkSpeedMbps": 75,
+        "ConnectionType": "Wi-Fi"
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T19:45:03Z",
+      "Action": "Network Test",
+      "Category": "Geo Inference",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "BR",
+        "CountryName": "Brazil",
+        "GeoMismatchDetected": false
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T19:45:04Z",
+      "Action": "Network Test",
+      "Category": "Latency Probe",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "BR",
+        "CountryName": "Brazil",
+        "LatencyMs": 145,
+        "JitterMs": 15
+      }
+    }
   ]
 }

@@ -1,17 +1,64 @@
 {
-  "session_id": "E5F6G7H8",
-  "generated_at": "2026-01-06T19:58:00Z",
-  "country": "JP",
-  "tier": "P1",
-  "summary": {
-    "status": "FAIL",
-    "failures": 1,
-    "warnings": 0
-  },
-  "checks": [
-    { "name": "dns", "status": "FAIL" },
-    { "name": "network", "status": "PASS" },
-    { "name": "geo", "status": "PASS" },
-    { "name": "latency", "status": "PASS" }
+  "SchemaVersion": "1.0",
+  "ExportedAt": "2026-01-06T19:58:00Z",
+  "SessionId": "NST-E5F6G7H8",
+  "AppVersion": "1.0.0",
+  "AppChannel": "stable",
+  "SessionStartTime": "2026-01-06T19:58:00Z",
+  "Actions": [
+    {
+      "Timestamp": "2026-01-06T19:58:01Z",
+      "Action": "Connectivity Test",
+      "Category": "DNS Resolution",
+      "Result": "FAIL",
+      "Tier": 3,
+      "Evidence": {
+        "CountryCode": "JP",
+        "CountryName": "Japan",
+        "DnsFailures": 2,
+        "RiskFlags": [
+          { "Id": "DNS_FAILURE", "Severity": "fail" }
+        ]
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T19:58:02Z",
+      "Action": "Network Test",
+      "Category": "Reachability",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "JP",
+        "CountryName": "Japan",
+        "LatencyMs": 85,
+        "LinkSpeedMbps": 200,
+        "ConnectionType": "Wi-Fi"
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T19:58:03Z",
+      "Action": "Network Test",
+      "Category": "Geo Inference",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "JP",
+        "CountryName": "Japan",
+        "GeoMismatchDetected": false
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T19:58:04Z",
+      "Action": "Network Test",
+      "Category": "Latency Probe",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "JP",
+        "CountryName": "Japan",
+        "LatencyMs": 85,
+        "JitterMs": 8
+      }
+    }
   ]
 }

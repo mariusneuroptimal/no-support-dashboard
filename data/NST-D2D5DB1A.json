@@ -1,17 +1,69 @@
 {
-  "session_id": "D2D5DB1A",
-  "generated_at": "2026-01-06T20:10:00Z",
-  "country": "CA",
-  "tier": "P1",
-  "summary": {
-    "status": "FAIL",
-    "failures": 2,
-    "warnings": 0
-  },
-  "checks": [
-    { "name": "dns", "status": "PASS" },
-    { "name": "network", "status": "FAIL" },
-    { "name": "geo", "status": "FAIL" },
-    { "name": "latency", "status": "PASS" }
+  "SchemaVersion": "1.0",
+  "ExportedAt": "2026-01-06T20:10:00Z",
+  "SessionId": "NST-D2D5DB1A",
+  "AppVersion": "1.0.0",
+  "AppChannel": "stable",
+  "SessionStartTime": "2026-01-06T20:10:00Z",
+  "Actions": [
+    {
+      "Timestamp": "2026-01-06T20:10:01Z",
+      "Action": "Connectivity Test",
+      "Category": "DNS Resolution",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "CA",
+        "CountryName": "Canada",
+        "DnsFailures": 0
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T20:10:02Z",
+      "Action": "Network Test",
+      "Category": "Reachability",
+      "Result": "FAIL",
+      "Tier": 3,
+      "Evidence": {
+        "CountryCode": "CA",
+        "CountryName": "Canada",
+        "LatencyMs": 450,
+        "LinkSpeedMbps": 50,
+        "ConnectionType": "Wi-Fi",
+        "PacketLossDetected": true,
+        "RiskFlags": [
+          { "Id": "PACKET_LOSS", "Severity": "fail" },
+          { "Id": "HIGH_LATENCY", "Severity": "warn" }
+        ]
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T20:10:03Z",
+      "Action": "Network Test",
+      "Category": "Geo Inference",
+      "Result": "FAIL",
+      "Tier": 3,
+      "Evidence": {
+        "CountryCode": "CA",
+        "CountryName": "Canada",
+        "GeoMismatchDetected": true,
+        "RiskFlags": [
+          { "Id": "GEO_MISMATCH", "Severity": "fail" }
+        ]
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T20:10:04Z",
+      "Action": "Network Test",
+      "Category": "Latency Probe",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "CA",
+        "CountryName": "Canada",
+        "LatencyMs": 450,
+        "JitterMs": 45
+      }
+    }
   ]
 }

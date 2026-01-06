@@ -1,17 +1,64 @@
 {
-  "session_id": "I9J0K1L2",
-  "generated_at": "2026-01-06T19:55:00Z",
-  "country": "GB",
-  "tier": "P0",
-  "summary": {
-    "status": "PASS",
-    "failures": 0,
-    "warnings": 1
-  },
-  "checks": [
-    { "name": "dns", "status": "PASS" },
-    { "name": "network", "status": "PASS" },
-    { "name": "geo", "status": "WARN" },
-    { "name": "latency", "status": "PASS" }
+  "SchemaVersion": "1.0",
+  "ExportedAt": "2026-01-06T19:55:00Z",
+  "SessionId": "NST-I9J0K1L2",
+  "AppVersion": "1.0.0",
+  "AppChannel": "stable",
+  "SessionStartTime": "2026-01-06T19:55:00Z",
+  "Actions": [
+    {
+      "Timestamp": "2026-01-06T19:55:01Z",
+      "Action": "Connectivity Test",
+      "Category": "DNS Resolution",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "GB",
+        "CountryName": "United Kingdom",
+        "DnsFailures": 0
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T19:55:02Z",
+      "Action": "Network Test",
+      "Category": "Reachability",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "GB",
+        "CountryName": "United Kingdom",
+        "LatencyMs": 42,
+        "LinkSpeedMbps": 350,
+        "ConnectionType": "Ethernet"
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T19:55:03Z",
+      "Action": "Network Test",
+      "Category": "Geo Inference",
+      "Result": "WARN",
+      "Tier": 2,
+      "Evidence": {
+        "CountryCode": "GB",
+        "CountryName": "United Kingdom",
+        "GeoMismatchDetected": false,
+        "RiskFlags": [
+          { "Id": "DATACENTER_IP", "Severity": "warn" }
+        ]
+      }
+    },
+    {
+      "Timestamp": "2026-01-06T19:55:04Z",
+      "Action": "Network Test",
+      "Category": "Latency Probe",
+      "Result": "PASS",
+      "Tier": 0,
+      "Evidence": {
+        "CountryCode": "GB",
+        "CountryName": "United Kingdom",
+        "LatencyMs": 42,
+        "JitterMs": 5
+      }
+    }
   ]
 }

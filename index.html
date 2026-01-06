@@ -116,28 +116,27 @@
             color: var(--text-primary);
         }
 
-        /* Upload Button */
+        /* Upload Button (ghost/tertiary - not dominant) */
         .upload-btn {
             font-family: var(--font-mono);
-            font-size: 0.8rem;
-            padding: 0.5rem 1rem;
-            background: var(--bg-tertiary);
-            border: 1px dashed var(--border);
-            color: var(--text-secondary);
+            font-size: 0.75rem;
+            padding: 0.4rem 0.75rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
             cursor: pointer;
             border-radius: 4px;
             transition: all 0.15s ease;
         }
 
         .upload-btn:hover {
-            border-color: var(--accent-info);
-            color: var(--accent-info);
+            border-color: var(--text-secondary);
+            color: var(--text-secondary);
         }
 
         .upload-btn.has-data {
-            border-style: solid;
-            border-color: var(--accent-pass);
-            color: var(--accent-pass);
+            border-color: var(--border);
+            color: var(--text-secondary);
         }
 
         /* Main Container */
@@ -168,7 +167,216 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .kpi-grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        @media (max-width: 900px) {
+            .kpi-grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .kpi-percent {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-left: 0.25rem;
+        }
+
+        /* Signals Row (Secondary, Lighter) */
+        .signals-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .signals-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .signal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+        }
+
+        .signal-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .signal-value {
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .signal-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-left: 0.5rem;
+        }
+
+        /* Context Row (Distributions) */
+        .context-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .context-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .context-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .context-distribution {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .context-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .context-item-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            width: 70px;
+            flex-shrink: 0;
+        }
+
+        .context-item-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .context-item-fill {
+            height: 100%;
+            background: var(--accent-info);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .context-item-value {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            width: 45px;
+            text-align: right;
+        }
+
+        /* Operation Signals Table */
+        .operation-signals-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+            margin-bottom: 0;
+        }
+
+        .operation-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .operation-table th {
+            text-align: left;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .operation-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .operation-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .operation-table tr.low-n {
+            opacity: 0.5;
+        }
+
+        .operation-table tr.low-n td {
+            color: var(--text-muted);
+        }
+
+        .op-col-name {
+            width: 50%;
+        }
+
+        .op-col-num {
+            width: 12%;
+            text-align: center !important;
+        }
+
+        .op-col-rate {
+            width: 14%;
+            text-align: right !important;
+        }
+
+        .operation-table td.op-col-num {
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .operation-table td.op-col-rate {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .warn-accent {
+            color: var(--accent-warn) !important;
+        }
+
+        .fail-accent {
+            color: var(--accent-fail) !important;
+        }
+
+        .signal-rate {
+            color: var(--text-muted);
         }
 
         .kpi-card {
@@ -541,48 +749,67 @@
             text-align: right;
         }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
+        /* Awaiting State (slim banner, not dominant) */
+        .awaiting-state {
             background: var(--bg-card);
-            border: 2px dashed var(--border);
-            border-radius: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
             margin: 2rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
         }
 
-        .empty-state-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        .empty-state-title {
+        .awaiting-state-icon {
             font-size: 1.25rem;
+            opacity: 0.6;
+            margin-top: 0.1rem;
+        }
+
+        .awaiting-state-content {
+            flex: 1;
+        }
+
+        .awaiting-state-title {
+            font-size: 0.95rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.35rem;
         }
 
-        .empty-state-text {
+        .awaiting-state-text {
             color: var(--text-secondary);
-            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            line-height: 1.5;
         }
 
-        .empty-state-btn {
+        .awaiting-state-secondary {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .awaiting-upload-link {
             font-family: var(--font-mono);
-            font-size: 0.875rem;
-            padding: 0.75rem 1.5rem;
-            background: var(--accent-info);
-            border: none;
-            color: white;
+            font-size: 0.75rem;
+            padding: 0.35rem 0.75rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 4px;
             transition: all 0.15s ease;
         }
 
-        .empty-state-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
+        .awaiting-upload-link:hover {
+            border-color: var(--text-muted);
+            color: var(--text-primary);
         }
 
         /* Toast Notifications */
@@ -676,91 +903,103 @@
             </nav>
             <label class="upload-btn" id="uploadBtn">
                 <input type="file" id="fileInput" accept=".json" multiple hidden>
-                + Upload JSON
+                Upload JSON
             </label>
         </div>
     </header>
 
     <main class="main-container">
-        <!-- Empty State -->
-        <div id="emptyState" class="empty-state">
-            <div class="empty-state-icon">📊</div>
-            <h2 class="empty-state-title">No Data Loaded</h2>
-            <p class="empty-state-text">Upload JSON diagnostics files to view network insights.</p>
-            <label class="empty-state-btn">
-                <input type="file" accept=".json" multiple hidden id="emptyFileInput">
-                Upload Diagnostics Files
-            </label>
+        <!-- Awaiting State (contextual, not dominant) -->
+        <div id="emptyState" class="awaiting-state">
+            <div class="awaiting-state-icon">◔</div>
+            <div class="awaiting-state-content">
+                <div class="awaiting-state-title">Awaiting Diagnostics Data</div>
+                <div class="awaiting-state-text">
+                    This dashboard updates automatically as diagnostic sessions are ingested.<br>
+                    If no data appears, ingestion may be paused or unavailable.
+                </div>
+                <div class="awaiting-state-secondary">
+                    <span>Manual upload available for offline or historical analysis</span>
+                    <label class="awaiting-upload-link">
+                        <input type="file" accept=".json" multiple hidden id="emptyFileInput">
+                        Upload JSON
+                    </label>
+                </div>
+            </div>
         </div>
 
         <!-- Overview Page -->
         <div id="overviewPage" class="page">
             <div class="page-header">
                 <h2 class="page-title">Global Overview</h2>
-                <p class="page-subtitle">Aggregated network diagnostics across all uploaded sessions</p>
+                <p class="page-subtitle">Aggregated signals across isolated diagnostic sessions</p>
             </div>
 
-            <div class="kpi-grid">
+            <!-- Core Stats (Pattern-Focused) -->
+            <div class="kpi-grid kpi-grid-4">
                 <div class="kpi-card">
-                    <div class="kpi-label">Total Sessions</div>
+                    <div class="kpi-label">Diagnostic Sessions</div>
                     <div class="kpi-value" id="totalSessions">0</div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-label">Countries</div>
+                    <div class="kpi-label">Countries Observed</div>
                     <div class="kpi-value" id="totalCountries">0</div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-label">Avg Latency</div>
-                    <div class="kpi-value"><span id="avgLatency">—</span><span class="kpi-unit">ms</span></div>
+                    <div class="kpi-label">Sessions with Issues</div>
+                    <div class="kpi-value"><span id="sessionsWithIssues">0</span><span class="kpi-unit kpi-percent" id="sessionsWithIssuesPercent"></span></div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-label">Avg Jitter</div>
-                    <div class="kpi-value"><span id="avgJitter">—</span><span class="kpi-unit">ms</span></div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Avg Speed</div>
-                    <div class="kpi-value"><span id="avgSpeed">—</span><span class="kpi-unit">Mbps</span></div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Packet Loss</div>
-                    <div class="kpi-value"><span id="packetLossRate">—</span><span class="kpi-unit">%</span></div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Wi-Fi Sessions</div>
-                    <div class="kpi-value"><span id="wifiRate">—</span><span class="kpi-unit">%</span></div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Geo Mismatch</div>
-                    <div class="kpi-value"><span id="geoMismatchRate">—</span><span class="kpi-unit">%</span></div>
+                    <div class="kpi-label">Countries with Issues</div>
+                    <div class="kpi-value" id="countriesWithIssues">0</div>
                 </div>
             </div>
 
-            <div class="kpi-card">
-                <div class="kpi-label">Session Outcomes</div>
-                <div class="outcome-bar">
-                    <div class="outcome-segment pass" id="passBar" style="width: 0%"></div>
-                    <div class="outcome-segment warn" id="warnBar" style="width: 0%"></div>
-                    <div class="outcome-segment fail" id="failBar" style="width: 0%"></div>
+            <!-- Signals & Extremes (Secondary, Lighter) -->
+            <div class="signals-row">
+                <div class="signal-card">
+                    <div class="signal-label">Highest Observed Latency</div>
+                    <div class="signal-value" id="highestLatency">—</div>
                 </div>
-                <div class="outcome-legend">
-                    <div class="outcome-legend-item">
-                        <div class="outcome-dot pass"></div>
-                        <span>PASS <span id="passPercent">0</span>%</span>
-                    </div>
-                    <div class="outcome-legend-item">
-                        <div class="outcome-dot warn"></div>
-                        <span>WARN <span id="warnPercent">0</span>%</span>
-                    </div>
-                    <div class="outcome-legend-item">
-                        <div class="outcome-dot fail"></div>
-                        <span>FAIL <span id="failPercent">0</span>%</span>
-                    </div>
+                <div class="signal-card">
+                    <div class="signal-label">Highest Observed Throughput</div>
+                    <div class="signal-value" id="highestThroughput">—</div>
+                </div>
+                <div class="signal-card">
+                    <div class="signal-label">Failure Density</div>
+                    <div class="signal-value"><span id="failureDensity">—</span><span class="signal-hint" id="failureDensityHint"></span></div>
                 </div>
             </div>
 
-            <div style="margin-top: 2rem;">
+            <!-- Operation Signals -->
+            <div class="operation-signals-section">
+                <div class="kpi-label">Operation Signals</div>
+                <p class="section-hint">Aggregated diagnostic outcomes by operation. Highlights components most frequently associated with issues.</p>
+                <table class="operation-table" id="operationTable">
+                    <thead>
+                        <tr>
+                            <th class="op-col-name">OPERATION</th>
+                            <th class="op-col-num">PASS</th>
+                            <th class="op-col-num">WARN</th>
+                            <th class="op-col-num">FAIL</th>
+                            <th class="op-col-rate">SIGNAL RATE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="operationTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Connection Context (Compact) -->
+            <div class="context-card" style="margin-bottom: 1.5rem;">
+                <div class="kpi-label">Connection Context</div>
+                <div class="context-distribution" id="connectionContextDist"></div>
+            </div>
+
+            <div style="margin-top: 1rem;">
                 <div class="section-header">
-                    <h3 class="section-title">Top Countries by Sessions</h3>
+                    <h3 class="section-title">Countries by Diagnostic Activity</h3>
                 </div>
                 <div id="topCountriesGrid" class="country-grid"></div>
             </div>
@@ -889,6 +1128,8 @@
         // State
         let sessions = [];
         let countryData = {};
+        let operationStats = {};
+        let rawPayloads = [];  // Store raw payloads for operation-level aggregation
         let currentSort = 'sessions';
 
         // Auto-update polling configuration
@@ -969,6 +1210,7 @@
 
                 // Reset sessions and recompute from scratch (no incremental mutation)
                 sessions = [];
+                rawPayloads = [];
                 let loadedCount = 0;
 
                 for (const payload of payloads) {
@@ -976,6 +1218,8 @@
                         validatePayload(payload);
 
                         if (Array.isArray(payload.Actions)) {
+                            // Store raw payload for operation-level aggregation
+                            rawPayloads.push(payload);
                             const samples = extractNetworkSamples(payload);
                             if (samples.length > 0) {
                                 sessions.push(...samples);
@@ -1384,17 +1628,95 @@
                 c.dominantOutcome = c.outcomes.FAIL > 0 ? 'fail'
                     : c.outcomes.WARN > 0 ? 'warn' : 'pass';
             }
+
+            // Aggregate operation-level statistics
+            aggregateOperationStats();
+        }
+
+        // Aggregate operation statistics from raw payloads
+        // Operation ID = Category (canonical, stable)
+        function aggregateOperationStats() {
+            operationStats = {};
+
+            for (const payload of rawPayloads) {
+                if (!Array.isArray(payload.Actions)) continue;
+
+                for (const action of payload.Actions) {
+                    // Category is the canonical operation identifier
+                    const category = action.Category;
+                    if (!category) continue;
+
+                    if (!operationStats[category]) {
+                        operationStats[category] = {
+                            id: category,
+                            display: category,  // Category IS the display name
+                            pass: 0,
+                            warn: 0,
+                            fail: 0,
+                            total: 0
+                        };
+                    }
+
+                    const op = operationStats[category];
+                    op.total++;
+
+                    switch (action.Result) {
+                        case 'PASS': op.pass++; break;
+                        case 'WARN': op.warn++; break;
+                        case 'FAIL': op.fail++; break;
+                    }
+                }
+            }
+
+            // Calculate signal rate for each operation
+            for (const op of Object.values(operationStats)) {
+                op.signalRate = op.total > 0
+                    ? Math.round((op.warn + op.fail) / op.total * 100)
+                    : 0;
+            }
+        }
+
+        // Render Operation Signals table
+        // Sorted by: FAIL desc, WARN desc, total desc
+        // Low-N (< 3 executions): grayed out, not hidden
+        function renderOperationTable() {
+            const tbody = document.getElementById('operationTableBody');
+            if (!tbody) return;
+
+            const ops = Object.values(operationStats)
+                .sort((a, b) => b.fail - a.fail || b.warn - a.warn || b.total - a.total);
+
+            if (ops.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No operation data</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = ops.map(op => {
+                const isLowN = op.total < 3;
+                const rowClass = isLowN ? 'low-n' : '';
+                const title = isLowN ? 'title="Insufficient data to assess signal reliability"' : '';
+
+                return `
+                    <tr class="${rowClass}" ${title}>
+                        <td>${op.display}</td>
+                        <td class="op-col-num">${op.pass}</td>
+                        <td class="op-col-num ${op.warn > 0 && !isLowN ? 'warn-accent' : ''}">${op.warn}</td>
+                        <td class="op-col-num ${op.fail > 0 && !isLowN ? 'fail-accent' : ''}">${op.fail}</td>
+                        <td class="op-col-rate signal-rate">${op.signalRate}%</td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         // Update UI
         function updateUI() {
             const hasData = sessions.length > 0;
 
-            emptyState.style.display = hasData ? 'none' : 'block';
+            emptyState.style.display = hasData ? 'none' : 'flex';
             uploadBtn.classList.toggle('has-data', hasData);
             uploadBtn.innerHTML = hasData
                 ? `<input type="file" id="fileInput" accept=".json" multiple hidden>${sessions.length} sessions`
-                : `<input type="file" id="fileInput" accept=".json" multiple hidden>+ Upload JSON`;
+                : `<input type="file" id="fileInput" accept=".json" multiple hidden>Upload JSON`;
 
             if (hasData) {
                 updateOverview();
@@ -1405,78 +1727,115 @@
 
         // Update Overview page
         function updateOverview() {
-            // Total sessions
+            // === CORE STATS ===
+
+            // Total diagnostic sessions
             document.getElementById('totalSessions').textContent = sessions.length;
 
-            // Total countries
-            document.getElementById('totalCountries').textContent = Object.keys(countryData).length;
+            // Countries observed
+            const countryCount = Object.keys(countryData).length;
+            document.getElementById('totalCountries').textContent = countryCount;
 
-            // Average latency
-            const allLatencies = Object.values(countryData).flatMap(c => c.latencies);
-            const avgLat = allLatencies.length > 0
-                ? Math.round(allLatencies.reduce((a, b) => a + b, 0) / allLatencies.length)
-                : null;
-            document.getElementById('avgLatency').textContent = avgLat ?? '—';
-
-            // Average jitter
-            const allJitters = Object.values(countryData).flatMap(c => c.jitters);
-            const avgJit = allJitters.length > 0
-                ? Math.round(allJitters.reduce((a, b) => a + b, 0) / allJitters.length * 10) / 10
-                : null;
-            document.getElementById('avgJitter').textContent = avgJit ?? '—';
-
-            // Average speed
-            const allSpeeds = Object.values(countryData).flatMap(c => c.speeds);
-            const avgSpd = allSpeeds.length > 0
-                ? Math.round(allSpeeds.reduce((a, b) => a + b, 0) / allSpeeds.length)
-                : null;
-            document.getElementById('avgSpeed').textContent = avgSpd ?? '—';
-
-            // Packet loss rate
-            let totalPacketLoss = 0;
-            for (const c of Object.values(countryData)) {
-                totalPacketLoss += c.packetLossCount;
-            }
-            const pktLossRate = sessions.length > 0 ? (totalPacketLoss / sessions.length * 100).toFixed(1) : '—';
-            document.getElementById('packetLossRate').textContent = pktLossRate;
-
-            // Wi-Fi rate
-            let totalWifi = 0, totalEthernet = 0;
-            for (const c of Object.values(countryData)) {
-                totalWifi += c.connectionTypes['Wi-Fi'] || 0;
-                totalEthernet += c.connectionTypes['Ethernet'] || 0;
-            }
-            const totalConns = totalWifi + totalEthernet;
-            const wifiRateVal = totalConns > 0 ? Math.round(totalWifi / totalConns * 100) : null;
-            document.getElementById('wifiRate').textContent = wifiRateVal ?? '—';
-
-            // Geo mismatch rate
-            let totalGeoMismatch = 0;
-            for (const c of Object.values(countryData)) {
-                totalGeoMismatch += c.geoMismatchCount;
-            }
-            const geoMismatchRateVal = sessions.length > 0 ? (totalGeoMismatch / sessions.length * 100).toFixed(1) : '—';
-            document.getElementById('geoMismatchRate').textContent = geoMismatchRateVal;
-
-            // Outcome distribution
+            // Sessions with issues (WARN or FAIL)
             let totalPass = 0, totalWarn = 0, totalFail = 0;
             for (const c of Object.values(countryData)) {
                 totalPass += c.outcomes.PASS;
                 totalWarn += c.outcomes.WARN;
                 totalFail += c.outcomes.FAIL;
             }
-            const totalOutcomes = totalPass + totalWarn + totalFail;
+            const sessionsWithIssues = totalWarn + totalFail;
+            const issuePercent = sessions.length > 0 ? Math.round(sessionsWithIssues / sessions.length * 100) : 0;
+            document.getElementById('sessionsWithIssues').textContent = sessionsWithIssues;
+            document.getElementById('sessionsWithIssuesPercent').textContent = sessions.length > 0 ? ` (${issuePercent}%)` : '';
 
-            const passPercent = totalOutcomes > 0 ? Math.round(totalPass / totalOutcomes * 100) : 0;
-            const warnPercent = totalOutcomes > 0 ? Math.round(totalWarn / totalOutcomes * 100) : 0;
-            const failPercent = totalOutcomes > 0 ? Math.round(totalFail / totalOutcomes * 100) : 0;
+            // Countries with issues
+            const countriesWithIssues = Object.values(countryData).filter(c => c.outcomes.WARN > 0 || c.outcomes.FAIL > 0).length;
+            document.getElementById('countriesWithIssues').textContent = countriesWithIssues;
 
-            document.getElementById('passBar').style.width = passPercent + '%';
-            document.getElementById('warnBar').style.width = warnPercent + '%';
-            document.getElementById('failBar').style.width = failPercent + '%';
-            document.getElementById('passPercent').textContent = passPercent;
-            document.getElementById('warnPercent').textContent = warnPercent;
-            document.getElementById('failPercent').textContent = failPercent;
+            // === SIGNALS & EXTREMES ===
+
+            // Highest observed latency (find session with max latency)
+            let maxLatency = { value: 0, country: null, code: null };
+            for (const c of Object.values(countryData)) {
+                if (c.latencies.length > 0) {
+                    const maxInCountry = Math.max(...c.latencies);
+                    if (maxInCountry > maxLatency.value) {
+                        maxLatency = { value: maxInCountry, country: c.name, code: c.code };
+                    }
+                }
+            }
+            document.getElementById('highestLatency').innerHTML = maxLatency.code
+                ? `${getFlag(maxLatency.code)} ${maxLatency.code} · ${maxLatency.value} ms`
+                : '—';
+
+            // Highest observed throughput
+            let maxSpeed = { value: 0, country: null, code: null };
+            for (const c of Object.values(countryData)) {
+                if (c.speeds.length > 0) {
+                    const maxInCountry = Math.max(...c.speeds);
+                    if (maxInCountry > maxSpeed.value) {
+                        maxSpeed = { value: maxInCountry, country: c.name, code: c.code };
+                    }
+                }
+            }
+            document.getElementById('highestThroughput').innerHTML = maxSpeed.code
+                ? `${getFlag(maxSpeed.code)} ${maxSpeed.code} · ${maxSpeed.value} Mbps`
+                : '—';
+
+            // Failure density (avg number of issues per failing session)
+            // Count total "issue events" across failing sessions
+            const failingSessions = sessions.filter(s => s.result === 'WARN' || s.result === 'FAIL');
+            let totalIssueFlags = 0;
+            for (const s of failingSessions) {
+                // Count risk flags as issue indicators
+                if (Array.isArray(s.riskFlags)) {
+                    totalIssueFlags += s.riskFlags.filter(f => {
+                        const id = f.Id || f.id || f;
+                        return !['LATENCY_OK', 'BANDWIDTH_OK', 'ETHERNET_CONNECTED', 'NO_PACKET_LOSS'].includes(id);
+                    }).length;
+                }
+                // Also count connectivity issues
+                if (s.dnsFailures > 0) totalIssueFlags++;
+                if (s.tlsInterceptions > 0) totalIssueFlags++;
+                if (Array.isArray(s.blockedPorts) && s.blockedPorts.length > 0) totalIssueFlags++;
+            }
+            const failureDensity = failingSessions.length > 0 ? (totalIssueFlags / failingSessions.length).toFixed(1) : '—';
+            document.getElementById('failureDensity').textContent = failureDensity;
+            document.getElementById('failureDensityHint').textContent = failingSessions.length > 0 ? ' flags/session' : '';
+
+            // === OPERATION SIGNALS ===
+            renderOperationTable();
+
+            // === CONNECTION CONTEXT ===
+            const connContexts = { 'Wi-Fi': 0, 'Ethernet': 0, 'Other': 0 };
+            for (const c of Object.values(countryData)) {
+                connContexts['Wi-Fi'] += c.connectionTypes['Wi-Fi'] || 0;
+                connContexts['Ethernet'] += c.connectionTypes['Ethernet'] || 0;
+                // Sum other connection types
+                for (const [type, count] of Object.entries(c.connectionTypes)) {
+                    if (type !== 'Wi-Fi' && type !== 'Ethernet') {
+                        connContexts['Other'] += count;
+                    }
+                }
+            }
+            const totalConns = connContexts['Wi-Fi'] + connContexts['Ethernet'] + connContexts['Other'];
+            const connContextHtml = totalConns > 0
+                ? Object.entries(connContexts)
+                    .filter(([, count]) => count > 0)
+                    .map(([type, count]) => {
+                        const pct = Math.round(count / totalConns * 100);
+                        return `
+                            <div class="context-item">
+                                <span class="context-item-label">${type}</span>
+                                <div class="context-item-bar">
+                                    <div class="context-item-fill" style="width: ${pct}%"></div>
+                                </div>
+                                <span class="context-item-value">${count} (${pct}%)</span>
+                            </div>
+                        `;
+                    }).join('')
+                : '<div style="color: var(--text-muted); font-size: 0.8rem;">No connection data</div>';
+            document.getElementById('connectionContextDist').innerHTML = connContextHtml;
 
             // Top countries
             const sorted = Object.values(countryData).sort((a, b) => b.sessionCount - a.sessionCount);
