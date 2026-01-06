@@ -1,5 +1,11 @@
 const BASE_URL = "./data";
 
+// App state
+const state = {
+  sessions: [],
+  selectedCountry: null
+};
+
 // Fetch index and all session files
 async function loadAllSessions() {
   const res = await fetch(`${BASE_URL}/index.json`, { cache: "no-store" });
@@ -25,7 +31,8 @@ function summarize(sessions) {
     pass: 0,
     warn: 0,
     signal: 0, // Renamed from 'fail' - observational language
-    bySignalType: {} // Renamed from 'byFailureType'
+    bySignalType: {}, // Renamed from 'byFailureType'
+    byCountry: {} // Country breakdown
   };
 
   for (const s of sessions) {
@@ -42,6 +49,16 @@ function summarize(sessions) {
         }
       }
     }
+
+    // Aggregate by country
+    const country = s.country || 'UNK';
+    if (!stats.byCountry[country]) {
+      stats.byCountry[country] = { sessions: 0, pass: 0, warn: 0, fail: 0 };
+    }
+    stats.byCountry[country].sessions++;
+    if (status === 'pass') stats.byCountry[country].pass++;
+    else if (status === 'warn') stats.byCountry[country].warn++;
+    else if (status === 'fail') stats.byCountry[country].fail++;
   }
 
   return stats;
@@ -89,9 +106,123 @@ function renderBreakdown(stats) {
   `).join('');
 }
 
+// Convert 2-letter country code to flag emoji
+function countryCodeToFlagEmoji(code) {
+  if (!code || code.length !== 2) return '\u{1F3F3}\u{FE0F}'; // White flag
+  const base = 0x1F1E6;
+  return String.fromCodePoint(
+    ...code.toUpperCase().split('').map(c => base + c.charCodeAt(0) - 65)
+  );
+}
+
+// Render country breakdown table
+function renderCountryBreakdown(stats) {
+  const container = document.getElementById('countryBreakdown');
+  const entries = Object.entries(stats.byCountry);
+
+  if (entries.length === 0) {
+    container.innerHTML = '<div class="no-signals">No country data available</div>';
+    return;
+  }
+
+  // Sort: failCount DESC, warnCount DESC, sessions DESC, country ASC
+  entries.sort((a, b) => {
+    if (b[1].fail !== a[1].fail) return b[1].fail - a[1].fail;
+    if (b[1].warn !== a[1].warn) return b[1].warn - a[1].warn;
+    if (b[1].sessions !== a[1].sessions) return b[1].sessions - a[1].sessions;
+    return a[0].localeCompare(b[0]);
+  });
+
+  container.innerHTML = `
+    <table class="country-table">
+      <thead>
+        <tr>
+          <th>Country</th>
+          <th>Sessions</th>
+          <th>Pass</th>
+          <th>Warn</th>
+          <th>Fail</th>
+          <th>Distribution</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${entries.map(([code, data]) => {
+          const flag = countryCodeToFlagEmoji(code);
+          const failRatio = data.fail / data.sessions;
+          const warnRatio = data.warn / data.sessions;
+          const passRatio = data.pass / data.sessions;
+          const selected = state.selectedCountry === code ? 'selected' : '';
+          return `
+            <tr class="clickable ${selected}" data-country="${code}">
+              <td>
+                <span class="country-cell">
+                  <span class="flag">${flag}</span>
+                  <span class="code">${code}</span>
+                </span>
+              </td>
+              <td>${data.sessions}</td>
+              <td class="status-pass">${data.pass}</td>
+              <td class="status-warn">${data.warn}</td>
+              <td class="status-signal">${data.fail}</td>
+              <td>
+                <div class="stacked-bar">
+                  <div class="stacked-pass" style="width: ${passRatio * 100}%"></div>
+                  <div class="stacked-warn" style="width: ${warnRatio * 100}%"></div>
+                  <div class="stacked-fail" style="width: ${failRatio * 100}%"></div>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+
+  // Attach click handlers
+  container.querySelectorAll('tr[data-country]').forEach(row => {
+    row.addEventListener('click', () => {
+      const country = row.dataset.country;
+      // Toggle: click same country clears filter
+      state.selectedCountry = state.selectedCountry === country ? null : country;
+      renderCountryBreakdown(stats);
+      renderTable(state.sessions);
+      updateFilterIndicator();
+    });
+  });
+}
+
+// Update filter indicator in Recent Sessions header
+function updateFilterIndicator() {
+  const header = document.querySelector('.recent-sessions h2');
+  const existing = document.getElementById('countryFilter');
+  if (existing) existing.remove();
+
+  if (state.selectedCountry) {
+    const flag = countryCodeToFlagEmoji(state.selectedCountry);
+    const indicator = document.createElement('span');
+    indicator.id = 'countryFilter';
+    indicator.className = 'filter-indicator';
+    indicator.innerHTML = `${flag} ${state.selectedCountry} <button class="clear-filter" aria-label="Clear filter">\u00D7</button>`;
+    header.appendChild(indicator);
+
+    indicator.querySelector('.clear-filter').addEventListener('click', (e) => {
+      e.stopPropagation();
+      state.selectedCountry = null;
+      renderCountryBreakdown(summarize(state.sessions));
+      renderTable(state.sessions);
+      updateFilterIndicator();
+    });
+  }
+}
+
 // Render sessions table with observational status indicators
 function renderTable(sessions) {
-  const sorted = [...sessions]
+  // Apply country filter if set
+  const filtered = state.selectedCountry
+    ? sessions.filter(s => (s.country || 'UNK') === state.selectedCountry)
+    : sessions;
+
+  const sorted = [...filtered]
     .sort((a, b) => (b.generated_at || '').localeCompare(a.generated_at || ''))
     .slice(0, 20);
 
@@ -172,9 +303,11 @@ function showError(message) {
 async function main() {
   try {
     const sessions = await loadAllSessions();
+    state.sessions = sessions; // Cache for filtering
     const stats = summarize(sessions);
 
     renderSummaryCards(stats);
+    renderCountryBreakdown(stats);
     renderBreakdown(stats);
     renderTable(sessions);
     renderLastIngest(sessions);

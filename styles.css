@@ -289,6 +289,151 @@ body {
   padding: 0.375rem 0;
 }
 
+/* Country Breakdown */
+.country-breakdown {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.country-breakdown h2 {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.country-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.country-table th {
+  text-align: left;
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-subtle);
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid var(--border-default);
+  background: var(--bg-elevated);
+}
+
+.country-table td {
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid var(--border-default);
+  color: var(--text-primary);
+}
+
+.country-table tr:last-child td {
+  border-bottom: none;
+}
+
+.country-table tr:hover {
+  background: var(--bg-elevated);
+}
+
+.country-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.country-cell .flag {
+  font-size: 1.1rem;
+}
+
+.country-cell .code {
+  color: var(--text-secondary);
+}
+
+.stacked-bar {
+  display: flex;
+  height: 16px;
+  background: var(--bg-elevated);
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 80px;
+}
+
+.stacked-pass {
+  background: var(--status-success);
+  height: 100%;
+}
+
+.stacked-warn {
+  background: var(--status-warning);
+  height: 100%;
+}
+
+.stacked-fail {
+  background: var(--status-signal);
+  height: 100%;
+}
+
+.country-table tr.clickable {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.country-table tr.clickable:hover {
+  background: var(--bg-elevated);
+}
+
+.country-table tr.clickable.selected {
+  background: var(--accent-blue-subtle);
+  border-left: 3px solid var(--accent-blue);
+}
+
+.country-table tr.clickable.selected:hover {
+  background: rgba(87, 157, 255, 0.22);
+}
+
+/* Filter indicator */
+.filter-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--accent-blue-subtle);
+  border: 1px solid var(--accent-blue);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--accent-blue);
+  vertical-align: middle;
+}
+
+.clear-filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  color: var(--accent-blue);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.clear-filter:hover {
+  background: rgba(87, 157, 255, 0.3);
+}
+
 /* Sessions Table */
 .recent-sessions {
   background: var(--bg-card);
