@@ -2,13 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NO Support Diagnostics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>NO Support Diagnostics</h1>
-  <div id="summary"></div>
-  <pre id="raw"></pre>
+  <div class="dashboard">
+    <header class="header">
+      <div class="header-left">
+        <h1>NO Support Diagnostics</h1>
+        <span class="last-ingest" id="lastIngest">Loading...</span>
+      </div>
+      <div class="live-indicator">
+        <span class="live-dot"></span>
+        <span>LIVE</span>
+      </div>
+    </header>
+
+    <section class="summary-cards" id="summaryCards">
+      <!-- Populated by JS -->
+    </section>
+
+    <section class="failure-breakdown">
+      <h2>Failure Breakdown</h2>
+      <div class="breakdown-bars" id="breakdownBars">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <section class="recent-sessions">
+      <h2>Recent Sessions</h2>
+      <div class="table-wrapper">
+        <table id="sessionsTable">
+          <thead>
+            <tr>
+              <th>Session</th>
+              <th>Country</th>
+              <th>Tier</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="sessionsBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="error-banner" id="errorBanner" hidden></div>
+  </div>
 
   <script src="app.js"></script>
 </body>
