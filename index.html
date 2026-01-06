@@ -1320,17 +1320,26 @@
         }
 
         // Extract NetworkSamples from payload per ANALYTICS_CONTRACT
-        // Only consumes Actions where Category="Diagnostics" AND Action IN {"Connectivity Test Complete", "Run Network Test"}
+        // Accepts Actions with diagnostic Categories (operation identifiers)
         function extractNetworkSamples(payload) {
             const samples = [];
             const actions = payload.Actions || [];
 
-            for (const action of actions) {
-                // Filter: Category must be "Diagnostics"
-                if (action.Category !== 'Diagnostics') continue;
+            // Valid diagnostic categories (operation identifiers)
+            const diagnosticCategories = new Set([
+                'Diagnostics',           // Legacy
+                'DNS Resolution',        // dns.resolution
+                'Reachability',          // network.reachability
+                'Geo Inference',         // geo.inference
+                'Latency Probe',         // latency.measurement
+                'Throughput Probe',      // speed.throughput (future)
+                'VPN Detection',         // vpn.detection (future)
+                'HTTPS Handshake'        // https.handshake (future)
+            ]);
 
-                // Filter: Action must be one of the allowed values
-                if (action.Action !== 'Connectivity Test Complete' && action.Action !== 'Run Network Test') continue;
+            for (const action of actions) {
+                // Filter: Category must be a recognized diagnostic operation
+                if (!diagnosticCategories.has(action.Category)) continue;
 
                 // Skip PENDING (should not appear post-coercion)
                 if (action.Result === 'PENDING') continue;
@@ -1359,6 +1368,7 @@
                     appChannel: payload.AppChannel,
                     sessionStartTime: payload.SessionStartTime,
                     action: action.Action,
+                    category: action.Category,  // Operation ID (canonical)
                     result: action.Result,
                     tier: typeof action.Tier === 'number' ? action.Tier : 0,
                     countryCode: countryCode.toUpperCase(),
