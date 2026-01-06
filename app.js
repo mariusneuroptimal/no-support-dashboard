@@ -24,20 +24,21 @@ function summarize(sessions) {
     total: sessions.length,
     pass: 0,
     warn: 0,
-    fail: 0,
-    byFailureType: {}
+    signal: 0, // Renamed from 'fail' - observational language
+    bySignalType: {} // Renamed from 'byFailureType'
   };
 
   for (const s of sessions) {
     const status = s.summary?.status?.toLowerCase() || 'unknown';
     if (status === 'pass') stats.pass++;
     else if (status === 'warn') stats.warn++;
-    else if (status === 'fail') stats.fail++;
+    else if (status === 'fail') stats.signal++;
 
+    // Collect signal types (formerly failure types)
     if (status === 'fail' && s.checks) {
       for (const c of s.checks) {
         if (c.status === 'FAIL') {
-          stats.byFailureType[c.name] = (stats.byFailureType[c.name] || 0) + 1;
+          stats.bySignalType[c.name] = (stats.bySignalType[c.name] || 0) + 1;
         }
       }
     }
@@ -46,32 +47,32 @@ function summarize(sessions) {
   return stats;
 }
 
-// Render summary cards
+// Render summary cards with observational language
 function renderSummaryCards(stats) {
   document.getElementById('summaryCards').innerHTML = `
     <div class="card">
-      <div class="card-label">Total</div>
+      <div class="card-label">Sessions</div>
       <div class="card-value">${stats.total}</div>
     </div>
     <div class="card pass">
       <div class="card-label">Pass</div>
       <div class="card-value">${stats.pass}</div>
     </div>
-    <div class="card fail">
-      <div class="card-label">Fail</div>
-      <div class="card-value">${stats.fail}</div>
-      <div class="card-sub">WARN: ${stats.warn}</div>
+    <div class="card signal">
+      <div class="card-label">Issues Detected</div>
+      <div class="card-value">${stats.signal}</div>
+      <div class="card-sub">Warnings: ${stats.warn}</div>
     </div>
   `;
 }
 
-// Render failure breakdown bars
+// Render signal breakdown bars (formerly failure breakdown)
 function renderBreakdown(stats) {
   const container = document.getElementById('breakdownBars');
-  const entries = Object.entries(stats.byFailureType).sort((a, b) => b[1] - a[1]);
+  const entries = Object.entries(stats.bySignalType).sort((a, b) => b[1] - a[1]);
 
   if (entries.length === 0) {
-    container.innerHTML = '<div class="no-failures">No failures detected</div>';
+    container.innerHTML = '<div class="no-signals">No diagnostic signals detected</div>';
     return;
   }
 
@@ -88,29 +89,61 @@ function renderBreakdown(stats) {
   `).join('');
 }
 
-// Render sessions table
+// Render sessions table with observational status indicators
 function renderTable(sessions) {
   const sorted = [...sessions]
     .sort((a, b) => (b.generated_at || '').localeCompare(a.generated_at || ''))
     .slice(0, 20);
 
+  // Softer status indicators - observational rather than judgmental
   const statusIcon = {
-    pass: '✓',
-    warn: '⚠',
-    fail: '✕'
+    pass: '\u2713', // checkmark
+    warn: '\u25B3', // triangle (softer than warning emoji)
+    fail: '\u25CF'  // filled circle (neutral signal indicator)
+  };
+
+  // Map status labels to observational language
+  const statusLabel = {
+    pass: 'PASS',
+    warn: 'WARN',
+    fail: 'SIGNAL'
+  };
+
+  // CSS class mapping - 'fail' status uses 'signal' styling
+  const statusClass = {
+    pass: 'pass',
+    warn: 'warn',
+    fail: 'signal'
   };
 
   document.getElementById('sessionsBody').innerHTML = sorted.map(s => {
     const status = s.summary?.status?.toLowerCase() || 'unknown';
+    const rowClass = statusClass[status] || '';
+    const icon = statusIcon[status] || '?';
+    const label = statusLabel[status] || 'UNKNOWN';
+
     return `
-      <tr class="${status}">
-        <td>${s.session_id || '—'}</td>
-        <td>${s.country || '—'}</td>
-        <td>${s.tier || '—'}</td>
-        <td class="status-${status}">${statusIcon[status] || '?'} ${s.summary?.status || 'UNKNOWN'}</td>
+      <tr class="${rowClass}">
+        <td>${s.session_id || '\u2014'}</td>
+        <td>${s.country || '\u2014'}</td>
+        <td>${formatTier(s.tier)}</td>
+        <td class="status-${statusClass[status] || 'unknown'}">${icon} ${label}</td>
       </tr>
     `;
   }).join('');
+}
+
+// Format tier with semantic labels
+function formatTier(tier) {
+  if (!tier) return '\u2014';
+
+  // Add semantic context to P0/P1 tiers
+  const tierLabels = {
+    'P0': 'P0',
+    'P1': 'P1'
+  };
+
+  return tierLabels[tier] || tier;
 }
 
 // Update last ingest timestamp
