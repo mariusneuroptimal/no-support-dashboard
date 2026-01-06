@@ -1,4 +1,4 @@
-const DATA_BASE_URL = "http://192.168.2.90/diagnostics";
+const DATA_BASE_URL = "http://192.168.2.90:8081/diagnostics";
 
 async function loadDiagnostics() {
   const res = await fetch(`${DATA_BASE_URL}/index.json`, {
