@@ -1,0 +1,23 @@
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+h1 {
+  border-bottom: 2px solid #333;
+  padding-bottom: 0.5rem;
+}
+
+#summary {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+}
+
+#raw {
+  background: #f4f4f4;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+}
