@@ -7,7 +7,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Twemoji for cross-platform flag emoji support -->
+    <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
     <style>
+        /* Twemoji flag sizing */
+        img.emoji {
+            height: 1em;
+            width: 1em;
+            margin: 0 .05em 0 .1em;
+            vertical-align: -0.1em;
+        }
+
+        .leaderboard-flag img.emoji,
+        .country-flag img.emoji {
+            height: 1.2em;
+            width: 1.2em;
+        }
+
+        .country-flag img.emoji {
+            height: 1.75em;
+            width: 1.75em;
+        }
         :root {
             /* Base palette - observatory/instrumentation */
             --bg-primary: #0a0c0f;
@@ -952,6 +972,14 @@
 
             // Countries grid
             renderCountriesGrid(stats);
+
+            // Parse flag emojis with Twemoji for cross-platform consistency
+            if (typeof twemoji !== 'undefined') {
+                twemoji.parse(document.body, {
+                    folder: 'svg',
+                    ext: '.svg'
+                });
+            }
         }
 
         function renderLeaderboards(stats) {
