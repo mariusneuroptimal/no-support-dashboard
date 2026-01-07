@@ -627,6 +627,831 @@
                 transform: translateY(0);
             }
         }
+
+        /* Tab content visibility */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Bluetooth-specific styles */
+
+        /* Verdict Banner */
+        .verdict-banner {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+
+        .verdict-badge {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            flex-shrink: 0;
+        }
+
+        .verdict-badge.ready {
+            background: var(--signal-pass-bg);
+            color: var(--signal-pass);
+            border: 1px solid var(--signal-pass);
+        }
+
+        .verdict-badge.degraded {
+            background: var(--signal-warn-bg);
+            color: var(--signal-warn);
+            border: 1px solid var(--signal-warn);
+        }
+
+        .verdict-badge.unsuitable {
+            background: var(--signal-fail-bg);
+            color: var(--signal-fail);
+            border: 1px solid var(--signal-fail);
+        }
+
+        .verdict-summary {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .verdict-confidence {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        /* Status section */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.85rem;
+        }
+
+        .status-label {
+            color: var(--text-secondary);
+        }
+
+        .status-value {
+            font-family: var(--font-mono);
+            color: var(--text-primary);
+        }
+
+        .status-value.ok {
+            color: var(--signal-pass);
+        }
+
+        .status-value.warn {
+            color: var(--signal-warn);
+        }
+
+        .status-value.fail {
+            color: var(--signal-fail);
+        }
+
+        /* Service list */
+        .service-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .service-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .service-name {
+            color: var(--text-secondary);
+        }
+
+        .service-status {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .service-status.running {
+            color: var(--signal-pass);
+        }
+
+        .service-status.stopped {
+            color: var(--signal-fail);
+        }
+
+        /* Reset buttons */
+        .reset-section {
+            margin-bottom: var(--space-lg);
+        }
+
+        .reset-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .reset-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md) var(--space-lg);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .reset-btn:hover {
+            background: var(--bg-elevated);
+            border-color: var(--border-strong);
+        }
+
+        .reset-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .reset-tier {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .reset-tier.tier-1 {
+            background: var(--signal-pass-bg);
+            color: var(--signal-pass);
+        }
+
+        .reset-tier.tier-2 {
+            background: var(--signal-warn-bg);
+            color: var(--signal-warn);
+        }
+
+        .reset-tier.tier-3 {
+            background: var(--signal-fail-bg);
+            color: var(--signal-fail);
+        }
+
+        .reset-content {
+            flex: 1;
+        }
+
+        .reset-title {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .reset-desc {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-top: 2px;
+        }
+
+        /* Kodi summary */
+        .kodi-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .kodi-item {
+            font-size: 0.85rem;
+        }
+
+        .kodi-label {
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+        }
+
+        .kodi-value {
+            font-family: var(--font-mono);
+            color: var(--text-primary);
+        }
+
+        .kodi-value .warning-icon {
+            color: var(--signal-warn);
+            margin-left: var(--space-xs);
+        }
+
+        /* Collapsible advanced details */
+        .advanced-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            padding: var(--space-sm) 0;
+        }
+
+        .advanced-toggle:hover {
+            color: var(--text-secondary);
+        }
+
+        .advanced-toggle .chevron {
+            transition: transform 0.2s ease;
+        }
+
+        .advanced-toggle.open .chevron {
+            transform: rotate(90deg);
+        }
+
+        .advanced-content {
+            display: none;
+            margin-top: var(--space-sm);
+            padding: var(--space-md);
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            overflow-x: auto;
+        }
+
+        .advanced-content.open {
+            display: block;
+        }
+
+        /* Active probe section */
+        .probe-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            padding: var(--space-lg);
+        }
+
+        .probe-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--space-md);
+        }
+
+        .probe-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .probe-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: var(--space-xs);
+        }
+
+        .probe-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--accent-dim);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .probe-btn:hover {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        .probe-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .probe-status {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            padding: var(--space-md);
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        .probe-spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--bg-primary);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .probe-btn:disabled {
+            background: var(--accent);
+            color: var(--bg-primary);
+            cursor: wait;
+        }
+
+        /* Probe progress banner */
+        .probe-progress-banner {
+            background: var(--accent-dim);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: var(--space-md) var(--space-lg);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .probe-progress-icon {
+            flex-shrink: 0;
+        }
+
+        .probe-progress-text {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .probe-progress-text strong {
+            color: var(--accent);
+        }
+
+        .probe-progress-hint {
+            margin-left: auto;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-style: italic;
+        }
+
+        /* Gated buttons during probe */
+        .reset-btn.gated {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .reset-btn.gated::after {
+            content: ' (probe running)';
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Copy button */
+        .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--bg-elevated);
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+        }
+
+        .copy-btn.copied {
+            background: var(--signal-pass-bg);
+            border-color: var(--signal-pass);
+            color: var(--signal-pass);
+        }
+
+        /* Findings list */
+        .findings-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .finding-card {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            border-left: 3px solid var(--border-default);
+        }
+
+        .finding-card.severity-fail {
+            border-left-color: var(--signal-fail);
+        }
+
+        .finding-card.severity-warn {
+            border-left-color: var(--signal-warn);
+        }
+
+        .finding-card.severity-info {
+            border-left-color: var(--accent);
+        }
+
+        .finding-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .finding-content {
+            flex: 1;
+        }
+
+        .finding-title {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .finding-evidence {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: var(--space-xs);
+        }
+
+        .finding-action {
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-top: var(--space-xs);
+            font-style: italic;
+        }
+
+        /* Driver/adapter info */
+        .hw-info {
+            display: flex;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        .hw-item {
+            font-size: 0.8rem;
+        }
+
+        .hw-label {
+            color: var(--text-tertiary);
+            font-size: 0.7rem;
+            display: block;
+        }
+
+        .hw-value {
+            font-family: var(--font-mono);
+            color: var(--text-secondary);
+        }
+
+        /* ==================== SUPPORT DECISION DASHBOARD STYLES ==================== */
+
+        /* Network Verdict Banner */
+        .network-verdict-banner {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+
+        .verdict-indicator {
+            font-size: 2rem;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .verdict-content {
+            flex: 1;
+        }
+
+        .verdict-primary {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: block;
+        }
+
+        .verdict-meta {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-top: var(--space-xs);
+            display: block;
+        }
+
+        .verdict-primary.environment-likely { color: var(--signal-warn); }
+        .verdict-primary.network-likely { color: #e8a855; }
+        .verdict-primary.system-likely { color: var(--signal-fail); }
+        .verdict-primary.inconclusive { color: var(--text-secondary); }
+
+        /* Recommended Actions */
+        .actions-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .action-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            padding: var(--space-md) var(--space-lg);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+        }
+
+        .action-step {
+            background: var(--accent);
+            color: var(--bg-primary);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .action-content {
+            flex: 1;
+        }
+
+        .action-text {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .action-outcome {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .action-confirms {
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-style: italic;
+            margin-top: var(--space-xs);
+        }
+
+        /* Failure Attribution Table */
+        .attribution-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .attribution-table th {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-tertiary);
+            text-align: left;
+            padding: var(--space-md) var(--space-lg);
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-subtle);
+            font-weight: 500;
+        }
+
+        .attribution-table td {
+            padding: var(--space-md) var(--space-lg);
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.85rem;
+        }
+
+        .attribution-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .attribution-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .failure-pattern {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .failure-pattern.repeated {
+            background: var(--signal-fail-bg);
+            color: var(--signal-fail);
+        }
+
+        .failure-pattern.intermittent {
+            background: var(--signal-warn-bg);
+            color: var(--signal-warn);
+        }
+
+        .failure-pattern.isolated {
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+
+        .failure-pattern.warn-only {
+            background: var(--signal-warn-bg);
+            color: var(--signal-warn);
+        }
+
+        .owner-cell {
+            font-weight: 500;
+        }
+
+        .owner-cell.client { color: var(--signal-warn); }
+        .owner-cell.network { color: #e8a855; }
+        .owner-cell.system { color: var(--signal-fail); }
+
+        /* Environment Context Cards */
+        .environment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--grid-gap);
+        }
+
+        .environment-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: var(--space-lg);
+            transition: border-color 0.2s ease;
+        }
+
+        .environment-card:hover {
+            border-color: var(--border-default);
+        }
+
+        .env-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .env-classification {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-left: auto;
+        }
+
+        .env-classification.stable {
+            background: var(--signal-pass-bg);
+            color: var(--signal-pass);
+        }
+
+        .env-classification.noisy {
+            background: var(--signal-warn-bg);
+            color: var(--signal-warn);
+        }
+
+        .env-classification.high-risk {
+            background: var(--signal-fail-bg);
+            color: var(--signal-fail);
+        }
+
+        .env-classification.insufficient-data {
+            background: var(--bg-tertiary);
+            color: var(--text-tertiary);
+        }
+
+        .env-known-issues,
+        .env-support-note {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+            line-height: 1.5;
+        }
+
+        .env-known-issues strong,
+        .env-support-note strong {
+            color: var(--text-tertiary);
+            font-weight: 500;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .env-stats {
+            display: flex;
+            gap: var(--space-lg);
+            margin-top: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .env-stat {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .env-stat-value {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Notable Patterns Section */
+        .patterns-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .pattern-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: var(--space-md) var(--space-lg);
+        }
+
+        .pattern-observation {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .pattern-suggestion {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .pattern-suggestion::before {
+            content: '→ ';
+            color: var(--accent);
+        }
+
+        .patterns-empty {
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+            padding: var(--space-lg);
+            text-align: center;
+        }
+
+        /* Section titles without "Question Answered" */
+        .section-title-simple {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            margin-bottom: var(--space-lg);
+        }
     </style>
 </head>
 <body>
@@ -637,11 +1462,12 @@
                 <div class="logo">NO</div>
                 <div class="header-title">
                     <h1>NO Support Tool</h1>
-                    <div class="subtitle">Diagnostic Observatory</div>
+                    <div class="subtitle">Support Decision Dashboard</div>
                 </div>
             </div>
             <nav class="domain-nav">
-                <button class="domain-tab active">Network</button>
+                <button class="domain-tab active" data-tab="network">Network</button>
+                <button class="domain-tab" data-tab="bluetooth">Bluetooth</button>
                 <button class="domain-tab future" title="Coming soon">System</button>
                 <button class="domain-tab future" title="Coming soon">Permissions</button>
                 <button class="domain-tab future" title="Coming soon">Environment</button>
@@ -652,94 +1478,283 @@
         <!-- Error Banner (hidden by default) -->
         <div id="error-banner" class="inline-note error" style="display: none; margin-bottom: var(--space-lg);"></div>
 
-        <!-- Network Overview -->
+        <!-- ==================== NETWORK TAB ==================== -->
+        <div id="network-tab" class="tab-content active">
+
+        <!-- 1. Support Verdict Banner (Required) -->
+        <div class="network-verdict-banner" id="network-verdict-banner">
+            <span class="verdict-indicator" id="verdict-indicator">&#128993;</span>
+            <div class="verdict-content">
+                <span class="verdict-primary" id="verdict-primary">Loading...</span>
+                <span class="verdict-meta" id="verdict-meta">Analyzing diagnostic data...</span>
+            </div>
+        </div>
+
+        <!-- 2. Recommended Support Actions -->
         <section class="section">
-            <div class="section-header">
-                <div class="section-question">Question Answered</div>
-                <h2 class="section-title">How much network diagnostic data do we have, and how noisy is it overall?</h2>
-            </div>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-label">Diagnostics Runs</div>
-                    <div class="metric-value" id="metric-runs"><span class="loading">—</span></div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Countries Observed</div>
-                    <div class="metric-value" id="metric-countries"><span class="loading">—</span></div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Runs with Signals</div>
-                    <div class="metric-value" id="metric-signals"><span class="loading">—</span></div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Signal Density</div>
-                    <div class="metric-value" id="metric-density"><span class="loading">—</span></div>
-                </div>
-            </div>
-            <div class="inline-note">
-                These values summarize network diagnostics across independent runs. They indicate signal prevalence, not system health.
-            </div>
+            <h2 class="section-title-simple">Recommended Support Actions</h2>
+            <ol class="actions-list" id="actions-list">
+                <li class="action-item">
+                    <span class="action-step">-</span>
+                    <div class="action-content">
+                        <div class="action-text loading">Loading recommendations...</div>
+                    </div>
+                </li>
+            </ol>
         </section>
 
-        <!-- Notable Network Observations -->
+        <!-- 3. Failure Attribution Summary -->
         <section class="section">
-            <div class="section-header">
-                <div class="section-question">Question Answered</div>
-                <h2 class="section-title">What are the most notable signal-generating contexts?</h2>
-            </div>
-            <div class="observations-container" id="observations-container">
-                <div class="loading" style="padding: var(--space-lg);">Loading...</div>
-            </div>
-            <div class="inline-note">
-                Observations highlight contexts where signals concentrate. These are starting points for investigation, not conclusions.
-            </div>
-        </section>
-
-        <!-- Network Operation Signals -->
-        <section class="section">
-            <div class="section-header">
-                <div class="section-question">Question Answered</div>
-                <h2 class="section-title">Which network operations most frequently emit signals across runs?</h2>
-            </div>
+            <h2 class="section-title-simple">Failure Attribution Summary</h2>
             <div class="operations-table-container">
-                <table class="operations-table">
+                <table class="attribution-table">
                     <thead>
                         <tr>
-                            <th>Operation</th>
-                            <th>Pass</th>
-                            <th>Warn</th>
-                            <th>Fail</th>
-                            <th>Signal Rate</th>
+                            <th>Diagnostic Area</th>
+                            <th>Failure Pattern</th>
+                            <th>Likely Owner</th>
+                            <th>Support Meaning</th>
                         </tr>
                     </thead>
-                    <tbody id="operations-tbody">
-                        <tr><td colspan="5" class="loading" style="text-align: center;">Loading...</td></tr>
+                    <tbody id="attribution-tbody">
+                        <tr><td colspan="4" class="loading" style="text-align: center;">Loading...</td></tr>
                     </tbody>
                 </table>
             </div>
             <div class="inline-note">
-                Operations are aggregated by category. Action labels and evidence are informational and may vary.
+                Only diagnostic areas with failures or warnings are shown. WARN results are not failures.
             </div>
         </section>
 
-        <!-- Countries by Network Diagnostic Runs -->
+        <!-- 4. Observed Network Environments -->
         <section class="section">
-            <div class="section-header">
-                <div class="section-question">Question Answered</div>
-                <h2 class="section-title">In which country contexts are network diagnostics occurring, and how noisy?</h2>
-            </div>
-            <div class="countries-grid" id="countries-grid">
+            <h2 class="section-title-simple">Observed Network Environments</h2>
+            <div class="environment-grid" id="environment-grid">
                 <div class="loading" style="padding: var(--space-lg);">Loading...</div>
             </div>
             <div class="inline-note">
-                Countries represent environmental context, not outcomes. Signal patterns vary by local network conditions.
+                Classification is derived from diagnostic data. Known issues are institutional knowledge, not conclusions.
             </div>
         </section>
+
+        <!-- 5. Notable Patterns (System Learning Only) -->
+        <section class="section">
+            <h2 class="section-title-simple">Notable Patterns</h2>
+            <div class="inline-note" style="margin-bottom: var(--space-md);">
+                For systemic improvement — not live ticket resolution.
+            </div>
+            <div class="patterns-list" id="patterns-list">
+                <div class="patterns-empty">No notable patterns detected in current data.</div>
+            </div>
+        </section>
+
+        </div><!-- End Network Tab -->
+
+        <!-- ==================== BLUETOOTH TAB ==================== -->
+        <div id="bluetooth-tab" class="tab-content">
+
+            <!-- Probe In Progress Banner (hidden by default) -->
+            <div class="probe-progress-banner" id="bt-probe-progress" style="display: none;">
+                <span class="probe-progress-icon"><span class="probe-spinner"></span></span>
+                <span class="probe-progress-text">Active Probe: <strong>Running</strong> (<span id="bt-probe-countdown">00:30</span> remaining)</span>
+                <span class="probe-progress-hint">Reset actions disabled during probe</span>
+            </div>
+
+            <!-- Verdict Banner (P0 UI requirement) -->
+            <div class="verdict-banner" id="bt-verdict-banner">
+                <span class="verdict-badge degraded" id="bt-verdict-badge">DEGRADED</span>
+                <span class="verdict-summary" id="bt-verdict-summary">Bluetooth audio is currently DEGRADED due to Hands-Free routing.</span>
+                <span class="verdict-confidence" id="bt-verdict-confidence">Confidence: High</span>
+                <button class="copy-btn" id="bt-copy-summary" title="Copy Bluetooth Summary">
+                    <span class="copy-icon">&#128203;</span> Copy Summary
+                </button>
+            </div>
+
+            <!-- Bluetooth Status Section (above Safe Resets) -->
+            <section class="section">
+                <div class="section-header">
+                    <div class="section-question">Current State</div>
+                    <h2 class="section-title">Bluetooth Status</h2>
+                </div>
+                <div class="metric-card" style="margin-bottom: var(--space-md);">
+                    <div class="status-grid" id="bt-status-grid">
+                        <div class="status-item">
+                            <span class="status-label">Adapter:</span>
+                            <span class="status-value ok" id="bt-adapter-status">OK</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Audio routing:</span>
+                            <span class="status-value warn" id="bt-audio-routing">DEGRADED (Hands-Free)</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Kodi audio path:</span>
+                            <span class="status-value warn" id="bt-kodi-path">Mismatch detected</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services List with [OK] indicators -->
+                <div class="section-header" style="margin-top: var(--space-lg);">
+                    <h3 style="font-size: 0.9rem; color: var(--text-secondary);">Services</h3>
+                </div>
+                <div class="service-list" id="bt-service-list">
+                    <div class="service-item">
+                        <span class="service-name">Bluetooth Support Service (bthserv)</span>
+                        <span class="service-status running">[OK]</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Bluetooth Audio Gateway (BTAGService)</span>
+                        <span class="service-status running">[OK]</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Windows Audio (Audiosrv)</span>
+                        <span class="service-status running">[OK]</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Audio Endpoint Builder</span>
+                        <span class="service-status running">[OK]</span>
+                    </div>
+                </div>
+
+                <!-- Driver + Adapter Info (surfaced once) -->
+                <div class="section-header" style="margin-top: var(--space-lg);">
+                    <h3 style="font-size: 0.9rem; color: var(--text-secondary);">Hardware</h3>
+                </div>
+                <div class="hw-info" id="bt-hw-info">
+                    <div class="hw-item">
+                        <span class="hw-label">Adapter</span>
+                        <span class="hw-value" id="bt-adapter-name">Intel Wireless Bluetooth</span>
+                    </div>
+                    <div class="hw-item">
+                        <span class="hw-label">Driver Version</span>
+                        <span class="hw-value" id="bt-driver-version">22.180.0.4</span>
+                    </div>
+                    <div class="hw-item">
+                        <span class="hw-label">Driver Date</span>
+                        <span class="hw-value" id="bt-driver-date">2023-08-15</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Top Findings -->
+            <section class="section">
+                <div class="section-header">
+                    <div class="section-question">Issues Detected</div>
+                    <h2 class="section-title">Top Findings</h2>
+                </div>
+                <div class="findings-list" id="bt-findings-list">
+                    <div class="finding-card severity-warn">
+                        <span class="finding-icon">&#9888;</span>
+                        <div class="finding-content">
+                            <div class="finding-title">Hands-Free Profile Active</div>
+                            <div class="finding-evidence">HFP provides mono 8kHz audio. Stereo A2DP profile preferred.</div>
+                            <div class="finding-action">Switch to Stereo output in Windows Sound settings</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kodi Audio Settings -->
+            <section class="section">
+                <div class="section-header">
+                    <div class="section-question">Application Config</div>
+                    <h2 class="section-title">Kodi Audio Settings</h2>
+                </div>
+                <div class="metric-card">
+                    <!-- Curated Summary (above raw dump) -->
+                    <div class="section-header" style="margin-bottom: var(--space-md);">
+                        <h3 style="font-size: 0.85rem; color: var(--text-secondary);">Kodi Audio Summary</h3>
+                    </div>
+                    <div class="kodi-summary" id="bt-kodi-summary">
+                        <div class="kodi-item">
+                            <div class="kodi-label">Output device</div>
+                            <div class="kodi-value" id="bt-kodi-output">DirectSound: default</div>
+                        </div>
+                        <div class="kodi-item">
+                            <div class="kodi-label">Passthrough</div>
+                            <div class="kodi-value" id="bt-kodi-passthrough">ENABLED <span class="warning-icon">&#9888;</span> (incompatible with Bluetooth)</div>
+                        </div>
+                        <div class="kodi-item">
+                            <div class="kodi-label">Channels</div>
+                            <div class="kodi-value" id="bt-kodi-channels">Mono</div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Details (collapsed by default) -->
+                    <button class="advanced-toggle" id="bt-kodi-advanced-toggle">
+                        <span class="chevron">&#9654;</span> Advanced Details
+                    </button>
+                    <div class="advanced-content" id="bt-kodi-advanced-content">
+                        <pre id="bt-kodi-raw">audiooutput.audiodevice = DirectSound:default
+audiooutput.passthroughdevice = DirectSound:default
+audiooutput.passthrough = true
+audiooutput.channels = 1
+audiooutput.guisoundmode = 0
+audiooutput.streamsilence = 0</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Safe Resets (moved down, still visible) -->
+            <section class="section reset-section">
+                <div class="section-header">
+                    <div class="section-question">Remediation</div>
+                    <h2 class="section-title">Safe Resets</h2>
+                </div>
+                <div class="reset-buttons">
+                    <!-- Tier 1 - Green -->
+                    <button class="reset-btn" id="bt-reset-tier1">
+                        <span class="reset-tier tier-1">Tier 1</span>
+                        <div class="reset-content">
+                            <div class="reset-title">Restart Bluetooth + Audio Services</div>
+                            <div class="reset-desc">Safe restart of bthserv, BTAGService, and audio services. No reboot required.</div>
+                        </div>
+                    </button>
+
+                    <!-- Tier 2 - Yellow -->
+                    <button class="reset-btn" id="bt-reset-tier2">
+                        <span class="reset-tier tier-2">Tier 2</span>
+                        <div class="reset-content">
+                            <div class="reset-title">Remove Stale BT Audio Endpoints</div>
+                            <div class="reset-desc">Cleans disconnected Bluetooth audio devices. May require re-pairing.</div>
+                        </div>
+                    </button>
+
+                    <!-- Tier 3 - Red (label tightened per feedback) -->
+                    <button class="reset-btn" id="bt-reset-tier3">
+                        <span class="reset-tier tier-3">Tier 3</span>
+                        <div class="reset-content">
+                            <div class="reset-title">Reset Bluetooth Adapter (Last resort &#8211; reboot required)</div>
+                            <div class="reset-desc">Disables and re-enables the Bluetooth adapter. Disconnects all paired devices.</div>
+                        </div>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Active Probe (isolated at bottom) -->
+            <section class="section">
+                <div class="probe-section">
+                    <div class="probe-header">
+                        <div>
+                            <div class="probe-title">Active Probe</div>
+                            <div class="probe-subtitle">Confirms Bluetooth stability under real audio playback.</div>
+                        </div>
+                        <button class="probe-btn" id="bt-probe-btn">
+                            <span>&#9654;</span> Run 30s Probe
+                        </button>
+                    </div>
+                    <div class="probe-status" id="bt-probe-status">
+                        Not started. Click "Run 30s Probe" to test Bluetooth audio stability during silent playback.
+                    </div>
+                </div>
+            </section>
+
+        </div><!-- End Bluetooth Tab -->
 
         <!-- Footer -->
         <footer class="dashboard-footer">
             <p class="footer-note">
-                This dashboard currently presents network-related diagnostics only. Additional diagnostic domains may be added in future sections.
+                This dashboard converts diagnostics into support decisions. If a panel doesn't change a support decision, it doesn't belong here.
             </p>
         </footer>
     </div>
@@ -805,6 +1820,151 @@
             return runs.filter(Boolean);
         }
 
+        // ==================== SUPPORT DECISION ENGINE ====================
+
+        /**
+         * Static institutional knowledge (human-curated)
+         * Known issues and support notes per country
+         */
+        const countryKnowledge = {
+            'CA': {
+                knownIssues: ['VPN use common', 'ISP DNS filtering'],
+                supportNote: 'Ask about VPN first'
+            },
+            'US': {
+                knownIssues: ['Corporate proxy common'],
+                supportNote: 'Check proxy settings if in corporate environment'
+            },
+            'GB': {
+                knownIssues: ['ISP-level content filtering'],
+                supportNote: 'Check if ISP uses default DNS filtering'
+            },
+            'DE': {
+                knownIssues: ['Strict privacy proxies'],
+                supportNote: 'Check for privacy-focused browser extensions'
+            },
+            'AU': {
+                knownIssues: ['High baseline latency'],
+                supportNote: 'Latency warnings may be normal for this region'
+            }
+        };
+
+        /**
+         * Category → Owner mapping for failure attribution
+         */
+        const categoryOwnership = {
+            'DNS Resolution': { owner: 'Client ISP', meaning: 'Often locally resolvable' },
+            'Reachability': { owner: 'Client / Network', meaning: 'Blocks session startup' },
+            'Geo Inference': { owner: 'Network', meaning: 'Routing artifact, low risk' },
+            'Latency Probe': { owner: 'Network', meaning: 'May indicate congestion' },
+            'Throughput': { owner: 'Network', meaning: 'Bandwidth constraint' }
+        };
+
+        /**
+         * Verdict → Recommended Actions mapping
+         */
+        const verdictActions = {
+            'environment-likely': [
+                { action: 'Ask client to disable VPN or proxy', outcome: 'Reachability improves', confirms: 'Environment-related' },
+                { action: 'Retry diagnostic test', outcome: 'Signals resolve', confirms: 'Transient issue' },
+                { action: 'If resolved, close as environment-related', outcome: 'Ticket closed', confirms: null }
+            ],
+            'network-likely': [
+                { action: 'Retry test off-peak hours', outcome: 'Latency improves', confirms: 'ISP congestion' },
+                { action: 'Document ISP and region', outcome: 'Pattern recorded', confirms: null },
+                { action: 'Escalate if persistent', outcome: 'Engineering review', confirms: 'Infrastructure issue' }
+            ],
+            'system-likely': [
+                { action: 'Escalate with full evidence', outcome: 'Engineering triage', confirms: null },
+                { action: 'Check status page for outages', outcome: 'Known issue identified', confirms: 'System outage' }
+            ],
+            'inconclusive': [
+                { action: 'Request additional diagnostic run', outcome: 'More data collected', confirms: null },
+                { action: 'Ask client about recent changes', outcome: 'Context gathered', confirms: null }
+            ]
+        };
+
+        /**
+         * Derive environment classification from diagnostic data
+         */
+        function deriveClassification(countryData) {
+            const density = countryData.runCount > 0 ? countryData.signals / countryData.runCount : 0;
+            const runs = countryData.runCount;
+
+            if (runs < 5) return 'insufficient-data';
+            if (density < 1) return 'stable';
+            if (density <= 2) return 'noisy';
+            return 'high-risk';
+        }
+
+        /**
+         * Compute support verdict from aggregated statistics
+         * Returns: { verdict, confidence, escalationRequired, dataSufficiency }
+         */
+        function computeVerdict(stats) {
+            const totalRuns = stats.totalRuns;
+
+            // Data sufficiency
+            let dataSufficiency;
+            if (totalRuns < 5) dataSufficiency = 'insufficient';
+            else if (totalRuns <= 15) dataSufficiency = 'emerging';
+            else dataSufficiency = 'stable';
+
+            // Count failures by category
+            const reachabilityFails = stats.operations['Reachability']?.fail || 0;
+            const dnsFails = stats.operations['DNS Resolution']?.fail || 0;
+            const geoFails = stats.operations['Geo Inference']?.fail || 0;
+            const latencyFails = stats.operations['Latency Probe']?.fail || 0;
+
+            const totalFails = Object.values(stats.operations).reduce((sum, op) => sum + op.fail, 0);
+            const totalWarns = Object.values(stats.operations).reduce((sum, op) => sum + op.warn, 0);
+
+            // Check for risk flags
+            const hasPacketLoss = stats.riskFlags?.includes('PACKET_LOSS');
+
+            // Count countries with failures
+            const countriesWithFailures = Object.values(stats.countryData)
+                .filter(c => c.signals > 0).length;
+
+            let verdict = 'inconclusive';
+            let confidence = 'low';
+            let escalationRequired = false;
+
+            // Decision logic
+            if (totalRuns < 5) {
+                verdict = 'inconclusive';
+                confidence = 'low';
+            } else if ((reachabilityFails + dnsFails) > totalFails * 0.6) {
+                // Majority of failures are reachability/DNS → environment-likely
+                verdict = 'environment-likely';
+                confidence = totalRuns > 10 ? 'high' : 'medium';
+                escalationRequired = false;
+            } else if (hasPacketLoss || (latencyFails > 0 && geoFails > 0)) {
+                // Network transit issues
+                verdict = 'network-likely';
+                confidence = totalRuns > 10 ? 'high' : 'medium';
+                escalationRequired = false;
+            } else if (countriesWithFailures >= 3 && totalFails > totalRuns * 0.5) {
+                // Failures across multiple countries → system issue
+                verdict = 'system-likely';
+                confidence = 'high';
+                escalationRequired = true;
+            } else if (totalFails > 0 || totalWarns > 0) {
+                // Some signals but no clear pattern
+                verdict = 'inconclusive';
+                confidence = 'medium';
+            }
+
+            return {
+                verdict,
+                confidence,
+                escalationRequired,
+                dataSufficiency
+            };
+        }
+
+        // ==================== END SUPPORT DECISION ENGINE ====================
+
         /**
          * Aggregate data according to Operation Signals contract
          * - Category = operation (stable, for aggregation)
@@ -820,7 +1980,8 @@
                 operations: {},      // Category -> { pass, warn, fail }
                 countryData: {},     // CountryCode -> { runs, signals, latencies, throughputs, topOp }
                 latencyByCountry: {},   // CountryCode -> max latency
-                throughputByCountry: {} // CountryCode -> max throughput
+                throughputByCountry: {}, // CountryCode -> max throughput
+                riskFlags: []        // Collected risk flags for verdict computation
             };
 
             for (const run of runs) {
@@ -883,7 +2044,7 @@
                         }
                     }
 
-                    // Track latency/throughput extremes for leaderboards
+                    // Track latency/throughput extremes
                     if (countryCode && evidence.LatencyMs) {
                         const lat = parseFloat(evidence.LatencyMs);
                         if (!stats.latencyByCountry[countryCode] || lat > stats.latencyByCountry[countryCode]) {
@@ -895,6 +2056,22 @@
                         if (!stats.throughputByCountry[countryCode] || speed > stats.throughputByCountry[countryCode]) {
                             stats.throughputByCountry[countryCode] = speed;
                         }
+                    }
+
+                    // Collect risk flags for verdict computation
+                    if (evidence.RiskFlags && Array.isArray(evidence.RiskFlags)) {
+                        evidence.RiskFlags.forEach(flag => {
+                            const flagId = flag.Id || flag;
+                            if (!stats.riskFlags.includes(flagId)) {
+                                stats.riskFlags.push(flagId);
+                            }
+                        });
+                    }
+                    if (evidence.PacketLossDetected && !stats.riskFlags.includes('PACKET_LOSS')) {
+                        stats.riskFlags.push('PACKET_LOSS');
+                    }
+                    if (evidence.GeoMismatchDetected && !stats.riskFlags.includes('GEO_MISMATCH')) {
+                        stats.riskFlags.push('GEO_MISMATCH');
                     }
                 }
 
@@ -916,22 +2093,15 @@
          * Render all dashboard sections with aggregated data
          */
         function renderDashboard(stats) {
-            // Network Overview metrics
-            document.getElementById('metric-runs').textContent = stats.totalRuns.toLocaleString();
-            document.getElementById('metric-countries').textContent = stats.countries.size.toLocaleString();
-            document.getElementById('metric-signals').textContent = stats.runsWithSignals.toLocaleString();
+            // Compute verdict first
+            const verdict = computeVerdict(stats);
 
-            const density = stats.totalRuns > 0 ? (stats.totalSignals / stats.totalRuns).toFixed(1) : '0';
-            document.getElementById('metric-density').innerHTML = `${density}<span class="metric-unit">flags/run</span>`;
-
-            // Notable observations
-            renderObservations(stats);
-
-            // Operations table
-            renderOperationsTable(stats);
-
-            // Countries grid
-            renderCountriesGrid(stats);
+            // Render all sections
+            renderVerdictBanner(verdict, stats);
+            renderActions(verdict);
+            renderFailureAttribution(stats);
+            renderEnvironmentCards(stats);
+            renderNotablePatterns(stats);
 
             // Parse flag emojis with Twemoji for cross-platform consistency
             if (typeof twemoji !== 'undefined') {
@@ -943,161 +2113,125 @@
         }
 
         /**
-         * Format signal density with small-N awareness
-         * Shows "~X" when sample size is small to avoid false precision
+         * Render the Support Verdict Banner
          */
-        function formatDensity(density, runs) {
-            if (runs < 5) {
-                return `~${Math.round(density)}`;
-            }
-            return density.toFixed(1);
+        function renderVerdictBanner(verdict, stats) {
+            const indicator = document.getElementById('verdict-indicator');
+            const primary = document.getElementById('verdict-primary');
+            const meta = document.getElementById('verdict-meta');
+
+            // Verdict indicator emoji and text
+            const verdictConfig = {
+                'environment-likely': { emoji: '&#128993;', text: 'Environment-likely issue detected', class: 'environment-likely' },
+                'network-likely': { emoji: '&#128992;', text: 'Network-likely issue detected', class: 'network-likely' },
+                'system-likely': { emoji: '&#128308;', text: 'System-likely issue detected', class: 'system-likely' },
+                'inconclusive': { emoji: '&#9898;', text: 'Inconclusive — more data needed', class: 'inconclusive' }
+            };
+
+            const config = verdictConfig[verdict.verdict] || verdictConfig['inconclusive'];
+
+            indicator.innerHTML = config.emoji;
+            primary.innerHTML = config.text;
+            primary.className = `verdict-primary ${config.class}`;
+
+            // Build metadata string
+            const confidenceText = `Confidence: ${verdict.confidence.charAt(0).toUpperCase() + verdict.confidence.slice(1)}`;
+            const escalationText = `Escalation: ${verdict.escalationRequired ? 'Yes' : 'No'}`;
+            const sufficiencyText = `Sample: ${verdict.dataSufficiency.charAt(0).toUpperCase() + verdict.dataSufficiency.slice(1)} (${stats.totalRuns} runs)`;
+
+            meta.textContent = `${confidenceText} · ${escalationText} · ${sufficiencyText}`;
         }
 
-        function renderObservations(stats) {
-            const container = document.getElementById('observations-container');
+        /**
+         * Render Recommended Support Actions based on verdict
+         */
+        function renderActions(verdict) {
+            const container = document.getElementById('actions-list');
+            const actions = verdictActions[verdict.verdict] || verdictActions['inconclusive'];
 
-            /*
-             * SEVERITY RULE (locked):
-             * Severity reflects signal concentration, not certainty.
-             * WARN = elevated relative to baseline (density > 1, fail rate > 10%)
-             * FAIL = dominant concentration or repeated clustering (density > 2, fail rate > 30%)
-             */
-
-            // Find contexts with notable signal patterns
-            const observations = [];
-
-            // Provenance tracking
-            const totalRuns = stats.totalRuns;
-            const totalCountries = stats.countries.size;
-
-            // Find countries with highest signal density (where signals concentrate)
-            const countryByDensity = Object.entries(stats.countryData)
-                .map(([code, data]) => ({
-                    code,
-                    name: data.name,
-                    density: data.runCount > 0 ? data.signals / data.runCount : 0,
-                    signals: data.signals,
-                    runs: data.runCount,
-                    topOp: Object.entries(data.operationSignals).sort((a, b) => b[1] - a[1])[0]
-                }))
-                .filter(c => c.signals > 0)
-                .sort((a, b) => b.density - a.density);
-
-            // Find operations with highest fail rates
-            const opsByFailRate = Object.entries(stats.operations)
-                .map(([op, counts]) => ({
-                    op,
-                    total: counts.pass + counts.warn + counts.fail,
-                    fails: counts.fail,
-                    warns: counts.warn,
-                    failRate: (counts.pass + counts.warn + counts.fail) > 0
-                        ? counts.fail / (counts.pass + counts.warn + counts.fail) : 0
-                }))
-                .filter(o => o.fails > 0)
-                .sort((a, b) => b.failRate - a.failRate);
-
-            // Build observations (max 3)
-            if (countryByDensity.length > 0) {
-                const top = countryByDensity[0];
-                observations.push({
-                    flag: getFlag(top.code),
-                    country: getCountryName(top.code, top.name),
-                    headline: `${getCountryName(top.code, top.name)} has the highest signal concentration`,
-                    detail: `${formatDensity(top.density, top.runs)} signals per run across ${top.runs} diagnostic runs. Most frequent signal: ${top.topOp ? top.topOp[0] : 'various'}.`,
-                    severity: top.density > 2 ? 'fail' : 'warn',
-                    meta: [`${top.signals} total signals`, `${top.runs} runs`]
-                });
-            }
-
-            if (opsByFailRate.length > 0 && opsByFailRate[0].failRate > 0.1) {
-                const top = opsByFailRate[0];
-                observations.push({
-                    flag: '⚠️',
-                    headline: `${top.op} shows elevated failure rate`,
-                    detail: `${(top.failRate * 100).toFixed(0)}% of ${top.op} operations resulted in FAIL signals. Consider investigating common environmental factors.`,
-                    severity: top.failRate > 0.3 ? 'fail' : 'warn',
-                    meta: [`${top.fails} failures`, `${top.total} total`]
-                });
-            }
-
-            // Add a second country if notably different
-            if (countryByDensity.length > 1 && countryByDensity[1].density > 1) {
-                const second = countryByDensity[1];
-                observations.push({
-                    flag: getFlag(second.code),
-                    country: getCountryName(second.code, second.name),
-                    headline: `${getCountryName(second.code, second.name)} also shows signal clustering`,
-                    detail: `${formatDensity(second.density, second.runs)} signals per run. Most frequent signal: ${second.topOp ? second.topOp[0] : 'various'}.`,
-                    severity: 'warn',
-                    meta: [`${second.signals} signals`, `${second.runs} runs`]
-                });
-            }
-
-            if (observations.length === 0) {
-                container.innerHTML = '<div class="observation-empty">No notable signal concentrations detected in current data.</div>';
-                return;
-            }
-
-            // Provenance line
-            const provenance = `Derived from ${totalRuns} runs across ${totalCountries} ${totalCountries === 1 ? 'country' : 'countries'}`;
-
-            container.innerHTML = observations.slice(0, 3).map(obs => `
-                <div class="observation-card severity-${obs.severity}">
-                    <span class="observation-flag">${obs.flag}</span>
-                    <div class="observation-content">
-                        <div class="observation-headline">${obs.headline}</div>
-                        <div class="observation-detail">${obs.detail}</div>
-                        <div class="observation-meta">
-                            ${obs.meta.map(m => `<span>${m}</span>`).join('')}
-                        </div>
+            container.innerHTML = actions.map((action, index) => `
+                <li class="action-item">
+                    <span class="action-step">${index + 1}</span>
+                    <div class="action-content">
+                        <div class="action-text">${action.action}</div>
+                        <div class="action-outcome">Expected: ${action.outcome}</div>
+                        ${action.confirms ? `<div class="action-confirms">Confirms: ${action.confirms}</div>` : ''}
                     </div>
-                </div>
-            `).join('') + `<div class="observation-provenance">${provenance}</div>`;
+                </li>
+            `).join('');
         }
 
-        function renderOperationsTable(stats) {
-            const tbody = document.getElementById('operations-tbody');
-            const operations = Object.entries(stats.operations)
-                .sort((a, b) => {
-                    const aSignals = a[1].warn + a[1].fail;
-                    const bSignals = b[1].warn + b[1].fail;
-                    return bSignals - aSignals;
-                });
+        /**
+         * Render Failure Attribution Summary table
+         */
+        function renderFailureAttribution(stats) {
+            const tbody = document.getElementById('attribution-tbody');
 
-            if (operations.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-tertiary);">No operation data available</td></tr>';
+            // Filter to operations with signals (warn or fail)
+            const operationsWithSignals = Object.entries(stats.operations)
+                .filter(([_, counts]) => counts.warn > 0 || counts.fail > 0)
+                .sort((a, b) => (b[1].fail + b[1].warn) - (a[1].fail + a[1].warn));
+
+            if (operationsWithSignals.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-tertiary);">No failures or warnings detected — all diagnostics passed.</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = operations.map(([category, counts]) => {
+            tbody.innerHTML = operationsWithSignals.map(([category, counts]) => {
                 const total = counts.pass + counts.warn + counts.fail;
-                const signalRate = total > 0 ? ((counts.warn + counts.fail) / total * 100) : 0;
+
+                // Determine failure pattern
+                let pattern, patternClass;
+                if (counts.fail > total * 0.5) {
+                    pattern = 'Repeated FAIL';
+                    patternClass = 'repeated';
+                } else if (counts.fail > 0 && counts.fail <= total * 0.2) {
+                    pattern = 'Isolated FAIL';
+                    patternClass = 'isolated';
+                } else if (counts.fail > 0) {
+                    pattern = 'Intermittent FAIL';
+                    patternClass = 'intermittent';
+                } else if (counts.warn > 0) {
+                    pattern = 'WARN only';
+                    patternClass = 'warn-only';
+                } else {
+                    pattern = 'Mixed';
+                    patternClass = 'isolated';
+                }
+
+                // Get ownership info
+                const ownership = categoryOwnership[category] || { owner: 'Unknown', meaning: 'Requires investigation' };
+
+                // Determine owner class for coloring
+                let ownerClass = '';
+                if (ownership.owner.toLowerCase().includes('client')) ownerClass = 'client';
+                else if (ownership.owner.toLowerCase().includes('network')) ownerClass = 'network';
+                else if (ownership.owner.toLowerCase().includes('system')) ownerClass = 'system';
+
                 return `
                     <tr>
                         <td class="operation-name">${category}</td>
-                        <td><span class="signal-count pass">${counts.pass.toLocaleString()}</span></td>
-                        <td><span class="signal-count warn">${counts.warn.toLocaleString()}</span></td>
-                        <td><span class="signal-count fail">${counts.fail.toLocaleString()}</span></td>
-                        <td class="signal-rate">
-                            <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: ${Math.min(signalRate, 100).toFixed(0)}%"></span></span>
-                            ${signalRate.toFixed(1)}%
-                        </td>
+                        <td><span class="failure-pattern ${patternClass}">${pattern}</span></td>
+                        <td class="owner-cell ${ownerClass}">${ownership.owner}</td>
+                        <td>${ownership.meaning}</td>
                     </tr>
                 `;
             }).join('');
         }
 
-        function renderCountriesGrid(stats) {
-            const grid = document.getElementById('countries-grid');
-            const countries = Object.entries(stats.countryData)
-                .sort((a, b) => b[1].runCount - a[1].runCount);
+        /**
+         * Render Environment Context Cards (formerly Countries Grid)
+         */
+        function renderEnvironmentCards(stats) {
+            const grid = document.getElementById('environment-grid');
+            const countries = Object.entries(stats.countryData);
 
             if (countries.length === 0) {
-                grid.innerHTML = '<div style="padding: var(--space-lg); color: var(--text-tertiary);">No country data available</div>';
+                grid.innerHTML = '<div style="padding: var(--space-lg); color: var(--text-tertiary);">No environment data available</div>';
                 return;
             }
 
-            // Sort by signal density (most signals per run first) to surface investigation priorities
+            // Sort by signal density to surface high-risk environments first
             const sortedCountries = countries.sort((a, b) => {
                 const densityA = a[1].runCount > 0 ? a[1].signals / a[1].runCount : 0;
                 const densityB = b[1].runCount > 0 ? b[1].signals / b[1].runCount : 0;
@@ -1105,45 +2239,112 @@
             });
 
             grid.innerHTML = sortedCountries.map(([code, data]) => {
-                const rawDensity = data.runCount > 0 ? data.signals / data.runCount : 0;
-                const density = formatDensity(rawDensity, data.runCount);
-                const topOp = Object.entries(data.operationSignals)
-                    .sort((a, b) => b[1] - a[1])[0];
-                const topOpName = topOp ? topOp[0] : 'None';
-                const hasSignals = data.signals > 0;
+                // Derive classification from data
+                const classification = deriveClassification(data);
+                const classificationLabels = {
+                    'stable': 'Stable',
+                    'noisy': 'Moderately Noisy',
+                    'high-risk': 'High Risk',
+                    'insufficient-data': 'Insufficient Data'
+                };
+
+                // Get institutional knowledge if available
+                const knowledge = countryKnowledge[code];
+                const knownIssues = knowledge?.knownIssues?.join(', ') || 'No documented issues';
+                const supportNote = knowledge?.supportNote || 'Follow standard diagnostic flow';
 
                 return `
-                    <div class="country-card">
-                        <div class="country-header">
-                            <span class="country-flag" title="${getCountryName(code, data.name)}">${getFlag(code)}</span>
+                    <div class="environment-card">
+                        <div class="env-header">
+                            <span class="country-flag">${getFlag(code)}</span>
                             <span class="country-name">${getCountryName(code, data.name)}</span>
+                            <span class="env-classification ${classification}">${classificationLabels[classification]}</span>
                         </div>
-                        <div class="country-metrics">
-                            ${hasSignals ? `
-                            <div class="country-metric full-width" style="margin-top: 0; padding-top: 0; border-top: none;">
-                                <div class="country-metric-label">Most Frequent Signal</div>
-                                <span class="top-operation">
-                                    <span class="top-operation-dot"></span>
-                                    ${topOpName}
-                                </span>
-                            </div>
-                            ` : ''}
-                            <div class="country-metric">
-                                <div class="country-metric-label">Signal Density</div>
-                                <div class="country-metric-value">${density}<span class="metric-unit" style="font-size: 0.65rem;">/run</span></div>
-                            </div>
-                            <div class="country-metric">
-                                <div class="country-metric-label">Total Signals</div>
-                                <div class="country-metric-value">${data.signals.toLocaleString()}</div>
-                            </div>
-                            <div class="country-metric">
-                                <div class="country-metric-label">Diagnostic Runs</div>
-                                <div class="country-metric-value">${data.runCount.toLocaleString()}</div>
-                            </div>
+                        <div class="env-known-issues">
+                            <strong>Known issues:</strong> ${knownIssues}
+                        </div>
+                        <div class="env-support-note">
+                            <strong>Support note:</strong> ${supportNote}
+                        </div>
+                        <div class="env-stats">
+                            <span class="env-stat"><span class="env-stat-value">${data.runCount}</span> runs</span>
+                            <span class="env-stat"><span class="env-stat-value">${data.signals}</span> signals</span>
                         </div>
                     </div>
                 `;
             }).join('');
+        }
+
+        /**
+         * Render Notable Patterns section (for system learning)
+         */
+        function renderNotablePatterns(stats) {
+            const container = document.getElementById('patterns-list');
+            const patterns = [];
+
+            // Detect pattern: VPN/proxy correlation with failures
+            if (stats.riskFlags.includes('VPN_DETECTED') || stats.riskFlags.includes('PROXY_DETECTED')) {
+                const reachabilityFails = stats.operations['Reachability']?.fail || 0;
+                if (reachabilityFails > 0) {
+                    patterns.push({
+                        observation: 'Reachability failures frequently co-occur with VPN/proxy usage',
+                        suggestion: 'Consider adding VPN detection earlier in setup flow'
+                    });
+                }
+            }
+
+            // Detect pattern: Geographic clustering of failures
+            const countriesWithHighDensity = Object.entries(stats.countryData)
+                .filter(([_, data]) => {
+                    const density = data.runCount > 0 ? data.signals / data.runCount : 0;
+                    return density > 2 && data.runCount >= 3;
+                });
+
+            if (countriesWithHighDensity.length >= 2) {
+                patterns.push({
+                    observation: `High signal density detected in ${countriesWithHighDensity.length} regions`,
+                    suggestion: 'Review regional network infrastructure or ISP patterns'
+                });
+            }
+
+            // Detect pattern: Specific operation with high fail rate
+            const highFailOps = Object.entries(stats.operations)
+                .filter(([_, counts]) => {
+                    const total = counts.pass + counts.warn + counts.fail;
+                    return total > 5 && counts.fail / total > 0.4;
+                });
+
+            if (highFailOps.length > 0) {
+                const opName = highFailOps[0][0];
+                patterns.push({
+                    observation: `${opName} diagnostic shows consistently high failure rate (>40%)`,
+                    suggestion: 'Evaluate if diagnostic threshold needs adjustment or if systemic issue exists'
+                });
+            }
+
+            // Detect pattern: Packet loss correlation
+            if (stats.riskFlags.includes('PACKET_LOSS')) {
+                const latencyFails = stats.operations['Latency Probe']?.fail || 0;
+                if (latencyFails > 0) {
+                    patterns.push({
+                        observation: 'Packet loss detected alongside latency failures',
+                        suggestion: 'May indicate network congestion — consider time-of-day analysis'
+                    });
+                }
+            }
+
+            // Render patterns or empty state
+            if (patterns.length === 0) {
+                container.innerHTML = '<div class="patterns-empty">No notable patterns detected in current data.</div>';
+                return;
+            }
+
+            container.innerHTML = patterns.map(p => `
+                <div class="pattern-card">
+                    <div class="pattern-observation">${p.observation}</div>
+                    <div class="pattern-suggestion">${p.suggestion}</div>
+                </div>
+            `).join('');
         }
 
         /**
@@ -1154,14 +2355,15 @@
             banner.textContent = `Live data unavailable: ${message}. Check data/index.json or GitHub Pages deployment.`;
             banner.style.display = 'block';
 
-            // Set empty states
-            document.getElementById('metric-runs').textContent = '—';
-            document.getElementById('metric-countries').textContent = '—';
-            document.getElementById('metric-signals').textContent = '—';
-            document.getElementById('metric-density').textContent = '—';
-            document.getElementById('observations-container').innerHTML = '<div class="observation-empty">Data unavailable</div>';
-            document.getElementById('operations-tbody').innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-tertiary);">Data unavailable</td></tr>';
-            document.getElementById('countries-grid').innerHTML = '<div style="padding: var(--space-lg); color: var(--text-tertiary);">Data unavailable</div>';
+            // Set empty states for Support Decision Dashboard
+            document.getElementById('verdict-indicator').innerHTML = '&#9898;';
+            document.getElementById('verdict-primary').textContent = 'Data unavailable';
+            document.getElementById('verdict-primary').className = 'verdict-primary inconclusive';
+            document.getElementById('verdict-meta').textContent = 'Unable to compute verdict — check data source';
+            document.getElementById('actions-list').innerHTML = '<li class="action-item"><span class="action-step">-</span><div class="action-content"><div class="action-text">Data unavailable</div></div></li>';
+            document.getElementById('attribution-tbody').innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-tertiary);">Data unavailable</td></tr>';
+            document.getElementById('environment-grid').innerHTML = '<div style="padding: var(--space-lg); color: var(--text-tertiary);">Data unavailable</div>';
+            document.getElementById('patterns-list').innerHTML = '<div class="patterns-empty">Data unavailable</div>';
         }
 
         /**
@@ -1180,6 +2382,278 @@
 
         // Load data when DOM is ready
         document.addEventListener('DOMContentLoaded', init);
+
+        /**
+         * ==================== TAB SWITCHING ====================
+         */
+        function initTabs() {
+            const tabs = document.querySelectorAll('.domain-tab[data-tab]');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    if (tab.classList.contains('future')) return;
+
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    // Show corresponding content
+                    const tabId = tab.dataset.tab;
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    const targetContent = document.getElementById(`${tabId}-tab`);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        /**
+         * ==================== BLUETOOTH TAB FUNCTIONALITY ====================
+         */
+
+        // Advanced details toggle
+        function initAdvancedToggle() {
+            const toggle = document.getElementById('bt-kodi-advanced-toggle');
+            const content = document.getElementById('bt-kodi-advanced-content');
+
+            if (toggle && content) {
+                toggle.addEventListener('click', () => {
+                    toggle.classList.toggle('open');
+                    content.classList.toggle('open');
+                });
+            }
+        }
+
+        // Copy Bluetooth Summary
+        function initCopySummary() {
+            const copyBtn = document.getElementById('bt-copy-summary');
+            if (!copyBtn) return;
+
+            copyBtn.addEventListener('click', async () => {
+                const verdict = document.getElementById('bt-verdict-badge')?.textContent || 'UNKNOWN';
+                const confidence = document.getElementById('bt-verdict-confidence')?.textContent || '';
+                const summary = document.getElementById('bt-verdict-summary')?.textContent || '';
+
+                // Collect top findings
+                const findings = [];
+                document.querySelectorAll('#bt-findings-list .finding-card').forEach(card => {
+                    const title = card.querySelector('.finding-title')?.textContent || '';
+                    const evidence = card.querySelector('.finding-evidence')?.textContent || '';
+                    if (title) findings.push(`- ${title}: ${evidence}`);
+                });
+
+                // Kodi summary
+                const kodiOutput = document.getElementById('bt-kodi-output')?.textContent || '';
+                const kodiPassthrough = document.getElementById('bt-kodi-passthrough')?.textContent || '';
+                const kodiChannels = document.getElementById('bt-kodi-channels')?.textContent || '';
+
+                const summaryText = `Bluetooth Diagnostic Summary
+=============================
+Verdict: ${verdict}
+${confidence}
+
+${summary}
+
+Top Findings:
+${findings.length > 0 ? findings.join('\n') : '- No issues detected'}
+
+Kodi Audio:
+- Output: ${kodiOutput}
+- Passthrough: ${kodiPassthrough}
+- Channels: ${kodiChannels}
+
+Actions Taken: None (diagnostic only)
+`;
+
+                try {
+                    await navigator.clipboard.writeText(summaryText);
+                    copyBtn.classList.add('copied');
+                    copyBtn.innerHTML = '<span class="copy-icon">&#10003;</span> Copied!';
+                    setTimeout(() => {
+                        copyBtn.classList.remove('copied');
+                        copyBtn.innerHTML = '<span class="copy-icon">&#128203;</span> Copy Summary';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy:', err);
+                }
+            });
+        }
+
+        // Initialize Bluetooth tab features
+        function initBluetoothTab() {
+            initAdvancedToggle();
+            initCopySummary();
+
+            // Reset button handlers (placeholder - actual PowerShell integration would be needed)
+            ['bt-reset-tier1', 'bt-reset-tier2', 'bt-reset-tier3'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.addEventListener('click', () => {
+                        alert(`This action requires the NO Support Tool PowerShell backend.\n\nButton: ${btn.querySelector('.reset-title')?.textContent}`);
+                    });
+                }
+            });
+
+            // Probe state management (DIAG-EXEC-001 compliant)
+            initAsyncProbe();
+        }
+
+        /**
+         * Async Probe Execution (DIAG-EXEC-001)
+         * - Non-blocking execution
+         * - Soft-locks only conflicting actions
+         * - UI remains responsive (tabs, scrolling, copy, etc.)
+         */
+        function initAsyncProbe() {
+            const probeBtn = document.getElementById('bt-probe-btn');
+            const probeStatus = document.getElementById('bt-probe-status');
+            const progressBanner = document.getElementById('bt-probe-progress');
+            const countdownEl = document.getElementById('bt-probe-countdown');
+
+            // Elements to gate during probe (conflicting actions only)
+            const gatedButtons = [
+                document.getElementById('bt-reset-tier1'),
+                document.getElementById('bt-reset-tier2'),
+                document.getElementById('bt-reset-tier3')
+            ].filter(Boolean);
+
+            if (!probeBtn || !probeStatus || !progressBanner) return;
+
+            // Probe state
+            let probeState = {
+                status: 'idle', // idle | running | completed | failed
+                remaining: 0,
+                intervalId: null,
+                result: null
+            };
+
+            // Format seconds as MM:SS
+            function formatTime(seconds) {
+                const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const s = (seconds % 60).toString().padStart(2, '0');
+                return `${m}:${s}`;
+            }
+
+            // Gate conflicting actions
+            function setGatedState(gated) {
+                gatedButtons.forEach(btn => {
+                    if (gated) {
+                        btn.classList.add('gated');
+                    } else {
+                        btn.classList.remove('gated');
+                    }
+                });
+            }
+
+            // Update UI to reflect probe state
+            function updateProbeUI() {
+                if (probeState.status === 'running') {
+                    // Show progress banner
+                    progressBanner.style.display = 'flex';
+                    countdownEl.textContent = formatTime(probeState.remaining);
+
+                    // Update button
+                    probeBtn.disabled = true;
+                    probeBtn.innerHTML = `<span class="probe-spinner"></span> Probe running...`;
+
+                    // Update status area
+                    probeStatus.textContent = 'Probe in progress. Playing silent audio to test Bluetooth stability...';
+                    probeStatus.style.color = 'var(--accent)';
+
+                    // Gate conflicting actions
+                    setGatedState(true);
+
+                } else {
+                    // Hide progress banner
+                    progressBanner.style.display = 'none';
+
+                    // Restore button
+                    probeBtn.disabled = false;
+                    probeBtn.innerHTML = '<span>&#9654;</span> Run 30s Probe';
+
+                    // Ungate actions
+                    setGatedState(false);
+
+                    // Update status based on result
+                    if (probeState.status === 'completed' && probeState.result) {
+                        const r = probeState.result;
+                        if (r.passed) {
+                            probeStatus.innerHTML = `<span style="color: var(--signal-pass);">PASS</span> - No disconnects or device changes detected during ${r.duration}s probe.`;
+                        } else {
+                            probeStatus.innerHTML = `<span style="color: var(--signal-fail);">FAIL</span> - ${r.events} event(s) detected: ${r.reason}`;
+                        }
+                    } else if (probeState.status === 'failed') {
+                        probeStatus.innerHTML = '<span style="color: var(--signal-fail);">ERROR</span> - Probe failed to execute.';
+                    }
+                }
+            }
+
+            // Start async probe
+            function startProbe() {
+                const duration = 30;
+                probeState.status = 'running';
+                probeState.remaining = duration;
+                probeState.result = null;
+
+                updateProbeUI();
+
+                // Countdown timer (runs every second, UI stays responsive)
+                probeState.intervalId = setInterval(() => {
+                    probeState.remaining--;
+                    countdownEl.textContent = formatTime(probeState.remaining);
+
+                    if (probeState.remaining <= 0) {
+                        clearInterval(probeState.intervalId);
+                    }
+                }, 1000);
+
+                // Simulate async probe execution
+                // In real implementation: PowerShell background job / runspace
+                runProbeAsync(duration).then(result => {
+                    clearInterval(probeState.intervalId);
+                    probeState.status = 'completed';
+                    probeState.result = result;
+                    updateProbeUI();
+                }).catch(err => {
+                    clearInterval(probeState.intervalId);
+                    probeState.status = 'failed';
+                    probeState.result = { error: err.message };
+                    updateProbeUI();
+                });
+            }
+
+            // Simulated async probe (replace with actual PowerShell integration)
+            function runProbeAsync(duration) {
+                return new Promise((resolve) => {
+                    // Simulate background execution
+                    setTimeout(() => {
+                        // Simulate random result for demo
+                        const passed = Math.random() > 0.2;
+                        resolve({
+                            passed,
+                            duration,
+                            events: passed ? 0 : Math.floor(Math.random() * 3) + 1,
+                            reason: passed ? null : 'Device re-enumeration detected'
+                        });
+                    }, duration * 1000);
+                });
+            }
+
+            // Attach click handler
+            probeBtn.addEventListener('click', () => {
+                if (probeState.status !== 'running') {
+                    startProbe();
+                }
+            });
+        }
+
+        // Initialize all tab functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            initTabs();
+            initBluetoothTab();
+        });
     </script>
 </body>
 </html>
