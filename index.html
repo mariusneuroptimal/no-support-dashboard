@@ -530,6 +530,7 @@
         .country-flag {
             font-size: 1.5rem;
             line-height: 1;
+            cursor: default;
         }
 
         .country-name {
@@ -539,7 +540,7 @@
 
         .country-stats {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 0.75rem;
         }
 
@@ -890,7 +891,7 @@
             <div class="awaiting-state-content">
                 <div class="awaiting-state-title">Awaiting Diagnostics Data</div>
                 <div class="awaiting-state-text">
-                    This dashboard updates automatically as diagnostic sessions are ingested.<br>
+                    This dashboard updates automatically as diagnostics runs are ingested.<br>
                     If no data appears, ingestion may be paused or unavailable.
                 </div>
                 <div class="awaiting-state-secondary">
@@ -907,31 +908,31 @@
         <div id="overviewPage" class="page">
             <div class="page-header">
                 <h2 class="page-title">Global Overview</h2>
-                <p class="page-subtitle">Aggregated signals across isolated diagnostic sessions</p>
+                <p class="page-subtitle">Aggregated signals across isolated diagnostics runs</p>
             </div>
 
             <!-- Core Stats (Pattern-Focused) -->
             <div class="kpi-grid kpi-grid-4">
                 <div class="kpi-card">
-                    <div class="kpi-label">Diagnostic Sessions</div>
-                    <div class="kpi-value" id="totalSessions">0</div>
+                    <div class="kpi-label">Diagnostics Runs</div>
+                    <div class="kpi-value" id="totalRuns">0</div>
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-label">Countries Observed</div>
                     <div class="kpi-value" id="totalCountries">0</div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-label">Sessions with Issues</div>
-                    <div class="kpi-value"><span id="sessionsWithIssues">0</span><span class="kpi-unit kpi-percent" id="sessionsWithIssuesPercent"></span></div>
+                    <div class="kpi-label">Runs with Signals</div>
+                    <div class="kpi-value"><span id="runsWithSignals">0</span><span class="kpi-unit kpi-percent" id="runsWithSignalsPercent"></span></div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-label">Countries with Issues</div>
-                    <div class="kpi-value" id="countriesWithIssues">0</div>
+                    <div class="kpi-label">Signal Density</div>
+                    <div class="kpi-value"><span id="signalDensity">—</span><span class="kpi-unit" id="signalDensityUnit"></span></div>
                 </div>
             </div>
 
             <!-- Signals & Extremes (Secondary, Lighter) -->
-            <div class="signals-row">
+            <div class="signals-row" style="grid-template-columns: repeat(2, 1fr);">
                 <div class="signal-card">
                     <div class="signal-label">Highest Observed Latency</div>
                     <div class="signal-value" id="highestLatency">—</div>
@@ -940,16 +941,12 @@
                     <div class="signal-label">Highest Observed Throughput</div>
                     <div class="signal-value" id="highestThroughput">—</div>
                 </div>
-                <div class="signal-card">
-                    <div class="signal-label">Failure Density</div>
-                    <div class="signal-value"><span id="failureDensity">—</span><span class="signal-hint" id="failureDensityHint"></span></div>
-                </div>
             </div>
 
             <!-- Operation Signals -->
             <div class="operation-signals-section">
                 <div class="kpi-label">Operation Signals</div>
-                <p class="section-hint">Aggregated diagnostic outcomes by operation. Highlights components most frequently associated with issues.</p>
+                <p class="section-hint">Aggregated diagnostic outcomes by operation. Highlights components most frequently emitting signals.</p>
                 <table class="operation-table" id="operationTable">
                     <thead>
                         <tr>
@@ -966,15 +963,28 @@
                 </table>
             </div>
 
-            <!-- Connection Context (Compact) -->
+            <!-- Connection Context Signals -->
             <div class="context-card" style="margin-bottom: 1.5rem;">
-                <div class="kpi-label">Connection Context</div>
-                <div class="context-distribution" id="connectionContextDist"></div>
+                <div class="kpi-label">Connection Context Signals</div>
+                <p class="section-hint" style="margin-bottom: 0.75rem;">Signal occurrence by connection context</p>
+                <table class="operation-table" id="connectionContextTable">
+                    <thead>
+                        <tr>
+                            <th class="op-col-name">CONNECTION TYPE</th>
+                            <th class="op-col-num">RUNS</th>
+                            <th class="op-col-num">WITH SIGNALS</th>
+                            <th class="op-col-rate">SIGNAL RATE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="connectionContextBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
             </div>
 
             <div style="margin-top: 1rem;">
                 <div class="section-header">
-                    <h3 class="section-title">Countries by Diagnostic Activity</h3>
+                    <h3 class="section-title">Countries by Diagnostic Runs</h3>
                 </div>
                 <div id="topCountriesGrid" class="country-grid"></div>
             </div>
@@ -984,13 +994,13 @@
         <div id="countriesPage" class="page">
             <div class="page-header">
                 <h2 class="page-title">Country Grid</h2>
-                <p class="page-subtitle">Network diagnostics by country</p>
+                <p class="page-subtitle">Diagnostics runs by country</p>
             </div>
 
             <div class="section-header">
                 <h3 class="section-title">All Countries</h3>
                 <div class="sort-controls">
-                    <button class="sort-btn active" data-sort="sessions">Sessions</button>
+                    <button class="sort-btn active" data-sort="runs">Runs</button>
                     <button class="sort-btn" data-sort="signals">Signals</button>
                 </div>
             </div>
@@ -1017,8 +1027,8 @@
                     </div>
 
                     <div class="detail-section">
-                        <div class="detail-section-title">Connection Context</div>
-                        <div class="distribution" id="connectionTypes"></div>
+                        <div class="detail-section-title">Connection Context Signals</div>
+                        <div id="modalConnectionContext"></div>
                     </div>
 
                     <div class="detail-section">
@@ -1035,11 +1045,11 @@
 
     <script>
         // State
-        let sessions = [];
+        let runs = [];
         let countryData = {};
         let operationStats = {};
         let rawPayloads = [];  // Store raw payloads for operation-level aggregation
-        let currentSort = 'sessions';
+        let currentSort = 'runs';
 
         // Auto-update polling configuration
         const POLL_INTERVAL_MS = 60_000; // 60 seconds
@@ -1099,7 +1109,7 @@
         async function reloadAllData(index) {
             const files = index.files ?? [];
             if (files.length === 0) {
-                sessions = [];
+                runs = [];
                 aggregateData();
                 updateUI();
                 updateLastUpdated();
@@ -1117,8 +1127,8 @@
                     )
                 );
 
-                // Reset sessions and recompute from scratch (no incremental mutation)
-                sessions = [];
+                // Reset runs and recompute from scratch (no incremental mutation)
+                runs = [];
                 rawPayloads = [];
                 let loadedCount = 0;
 
@@ -1131,12 +1141,12 @@
                             rawPayloads.push(payload);
                             const samples = extractNetworkSamples(payload);
                             if (samples.length > 0) {
-                                sessions.push(...samples);
+                                runs.push(...samples);
                                 loadedCount += samples.length;
                             }
                         } else if (payload.connectivity || payload.network) {
                             const sample = extractLegacySample(payload);
-                            sessions.push(sample);
+                            runs.push(sample);
                             loadedCount++;
                         }
                     } catch (e) {
@@ -1177,7 +1187,7 @@
         // Update "Last updated" timestamp
         function updateLastUpdated() {
             const el = document.getElementById('lastUpdated');
-            if (el && sessions.length > 0) {
+            if (el && runs.length > 0) {
                 const now = new Date();
                 const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
                 el.textContent = `Updated ${time}`;
@@ -1361,7 +1371,7 @@
                                 // New WinConfig export format
                                 const samples = extractNetworkSamples(item);
                                 if (samples.length > 0) {
-                                    sessions.push(...samples);
+                                    runs.push(...samples);
                                     added += samples.length;
                                 } else {
                                     // Valid payload but no diagnostic actions
@@ -1370,7 +1380,7 @@
                             } else if (item.connectivity || item.network) {
                                 // Legacy flat format (sample-data.json style)
                                 const sample = extractLegacySample(item);
-                                sessions.push(sample);
+                                runs.push(sample);
                                 added++;
                             } else {
                                 throw new Error('Unrecognized payload structure');
@@ -1406,7 +1416,7 @@
         function aggregateData() {
             countryData = {};
 
-            for (const sample of sessions) {
+            for (const sample of runs) {
                 // NetworkSample uses flat properties
                 const code = sample.countryCode || 'Unknown';
                 const name = sample.countryName || code;
@@ -1415,7 +1425,7 @@
                     countryData[code] = {
                         code,
                         name,
-                        sessions: [],
+                        runs: [],
                         latencies: [],
                         speeds: [],
                         jitters: [],
@@ -1437,7 +1447,7 @@
                 }
 
                 const c = countryData[code];
-                c.sessions.push(sample);
+                c.runs.push(sample);
 
                 // Latency (undefined = missing, not 0)
                 if (typeof sample.latencyMs === 'number' && sample.latencyMs > 0) {
@@ -1515,7 +1525,7 @@
 
             // Calculate aggregates
             for (const c of Object.values(countryData)) {
-                c.sessionCount = c.sessions.length;
+                c.runCount = c.runs.length;
                 c.avgLatency = c.latencies.length > 0
                     ? Math.round(c.latencies.reduce((a, b) => a + b, 0) / c.latencies.length)
                     : null;
@@ -1530,12 +1540,12 @@
                     : null;
 
                 const total = c.outcomes.PASS + c.outcomes.WARN + c.outcomes.FAIL;
-                c.failureRate = total > 0 ? ((c.outcomes.WARN + c.outcomes.FAIL) / total * 100) : 0;
+                c.signalRate = total > 0 ? ((c.outcomes.WARN + c.outcomes.FAIL) / total * 100) : 0;
                 c.passRate = total > 0 ? (c.outcomes.PASS / total * 100) : 0;
 
                 // Percentage calculations for new flags
-                c.packetLossRate = c.sessionCount > 0 ? (c.packetLossCount / c.sessionCount * 100) : 0;
-                c.geoMismatchRate = c.sessionCount > 0 ? (c.geoMismatchCount / c.sessionCount * 100) : 0;
+                c.packetLossRate = c.runCount > 0 ? (c.packetLossCount / c.runCount * 100) : 0;
+                c.geoMismatchRate = c.runCount > 0 ? (c.geoMismatchCount / c.runCount * 100) : 0;
 
                 // Determine Wi-Fi vs Ethernet split
                 const wifiCount = c.connectionTypes['Wi-Fi'] || 0;
@@ -1629,12 +1639,12 @@
 
         // Update UI
         function updateUI() {
-            const hasData = sessions.length > 0;
+            const hasData = runs.length > 0;
 
             emptyState.style.display = hasData ? 'none' : 'flex';
             uploadBtn.classList.toggle('has-data', hasData);
             uploadBtn.innerHTML = hasData
-                ? `<input type="file" id="fileInput" accept=".json" multiple hidden>${sessions.length} sessions`
+                ? `<input type="file" id="fileInput" accept=".json" multiple hidden>${runs.length} runs`
                 : `<input type="file" id="fileInput" accept=".json" multiple hidden>Upload JSON`;
 
             if (hasData) {
@@ -1648,32 +1658,48 @@
         function updateOverview() {
             // === CORE STATS ===
 
-            // Total diagnostic sessions
-            document.getElementById('totalSessions').textContent = sessions.length;
+            // Total diagnostics runs
+            document.getElementById('totalRuns').textContent = runs.length;
 
             // Countries observed
             const countryCount = Object.keys(countryData).length;
             document.getElementById('totalCountries').textContent = countryCount;
 
-            // Sessions with issues (WARN or FAIL)
+            // Runs with signals (WARN or FAIL)
             let totalPass = 0, totalWarn = 0, totalFail = 0;
             for (const c of Object.values(countryData)) {
                 totalPass += c.outcomes.PASS;
                 totalWarn += c.outcomes.WARN;
                 totalFail += c.outcomes.FAIL;
             }
-            const sessionsWithIssues = totalWarn + totalFail;
-            const issuePercent = sessions.length > 0 ? Math.round(sessionsWithIssues / sessions.length * 100) : 0;
-            document.getElementById('sessionsWithIssues').textContent = sessionsWithIssues;
-            document.getElementById('sessionsWithIssuesPercent').textContent = sessions.length > 0 ? ` (${issuePercent}%)` : '';
+            const runsWithSignals = totalWarn + totalFail;
+            const signalPercent = runs.length > 0 ? Math.round(runsWithSignals / runs.length * 100) : 0;
+            document.getElementById('runsWithSignals').textContent = runsWithSignals;
+            document.getElementById('runsWithSignalsPercent').textContent = runs.length > 0 ? ` (${signalPercent}%)` : '';
 
-            // Countries with issues
-            const countriesWithIssues = Object.values(countryData).filter(c => c.outcomes.WARN > 0 || c.outcomes.FAIL > 0).length;
-            document.getElementById('countriesWithIssues').textContent = countriesWithIssues;
+            // Signal density (flags per run with signals)
+            const runsEmittingSignals = runs.filter(s => s.result === 'WARN' || s.result === 'FAIL');
+            let totalSignalFlags = 0;
+            for (const s of runsEmittingSignals) {
+                // Count risk flags as signal indicators
+                if (Array.isArray(s.riskFlags)) {
+                    totalSignalFlags += s.riskFlags.filter(f => {
+                        const id = f.Id || f.id || f;
+                        return !['LATENCY_OK', 'BANDWIDTH_OK', 'ETHERNET_CONNECTED', 'NO_PACKET_LOSS'].includes(id);
+                    }).length;
+                }
+                // Also count connectivity flags
+                if (s.dnsFailures > 0) totalSignalFlags++;
+                if (s.tlsInterceptions > 0) totalSignalFlags++;
+                if (Array.isArray(s.blockedPorts) && s.blockedPorts.length > 0) totalSignalFlags++;
+            }
+            const signalDensity = runsEmittingSignals.length > 0 ? (totalSignalFlags / runsEmittingSignals.length).toFixed(1) : '—';
+            document.getElementById('signalDensity').textContent = signalDensity;
+            document.getElementById('signalDensityUnit').textContent = runsEmittingSignals.length > 0 ? ' flags/run' : '';
 
             // === SIGNALS & EXTREMES ===
 
-            // Highest observed latency (find session with max latency)
+            // Highest observed latency (find run with max latency)
             let maxLatency = { value: 0, country: null, code: null };
             for (const c of Object.values(countryData)) {
                 if (c.latencies.length > 0) {
@@ -1684,7 +1710,7 @@
                 }
             }
             document.getElementById('highestLatency').innerHTML = maxLatency.code
-                ? `${getFlag(maxLatency.code)} ${maxLatency.code} · ${maxLatency.value} ms`
+                ? `<span class="country-flag" title="${maxLatency.country}">${getFlag(maxLatency.code)}</span> ${maxLatency.value} ms`
                 : '—';
 
             // Highest observed throughput
@@ -1698,66 +1724,47 @@
                 }
             }
             document.getElementById('highestThroughput').innerHTML = maxSpeed.code
-                ? `${getFlag(maxSpeed.code)} ${maxSpeed.code} · ${maxSpeed.value} Mbps`
+                ? `<span class="country-flag" title="${maxSpeed.country}">${getFlag(maxSpeed.code)}</span> ${maxSpeed.value} Mbps`
                 : '—';
-
-            // Failure density (avg number of issues per failing session)
-            // Count total "issue events" across failing sessions
-            const failingSessions = sessions.filter(s => s.result === 'WARN' || s.result === 'FAIL');
-            let totalIssueFlags = 0;
-            for (const s of failingSessions) {
-                // Count risk flags as issue indicators
-                if (Array.isArray(s.riskFlags)) {
-                    totalIssueFlags += s.riskFlags.filter(f => {
-                        const id = f.Id || f.id || f;
-                        return !['LATENCY_OK', 'BANDWIDTH_OK', 'ETHERNET_CONNECTED', 'NO_PACKET_LOSS'].includes(id);
-                    }).length;
-                }
-                // Also count connectivity issues
-                if (s.dnsFailures > 0) totalIssueFlags++;
-                if (s.tlsInterceptions > 0) totalIssueFlags++;
-                if (Array.isArray(s.blockedPorts) && s.blockedPorts.length > 0) totalIssueFlags++;
-            }
-            const failureDensity = failingSessions.length > 0 ? (totalIssueFlags / failingSessions.length).toFixed(1) : '—';
-            document.getElementById('failureDensity').textContent = failureDensity;
-            document.getElementById('failureDensityHint').textContent = failingSessions.length > 0 ? ' flags/session' : '';
 
             // === OPERATION SIGNALS ===
             renderOperationTable();
 
-            // === CONNECTION CONTEXT ===
-            const connContexts = { 'Wi-Fi': 0, 'Ethernet': 0, 'Other': 0 };
-            for (const c of Object.values(countryData)) {
-                connContexts['Wi-Fi'] += c.connectionTypes['Wi-Fi'] || 0;
-                connContexts['Ethernet'] += c.connectionTypes['Ethernet'] || 0;
-                // Sum other connection types
-                for (const [type, count] of Object.entries(c.connectionTypes)) {
-                    if (type !== 'Wi-Fi' && type !== 'Ethernet') {
-                        connContexts['Other'] += count;
-                    }
+            // === CONNECTION CONTEXT SIGNALS ===
+            // Aggregate runs and signals by connection type
+            const connStats = {};
+            for (const run of runs) {
+                const connType = run.connectionType || 'Unknown';
+                if (!connStats[connType]) {
+                    connStats[connType] = { runs: 0, withSignals: 0 };
+                }
+                connStats[connType].runs++;
+                if (run.result === 'WARN' || run.result === 'FAIL') {
+                    connStats[connType].withSignals++;
                 }
             }
-            const totalConns = connContexts['Wi-Fi'] + connContexts['Ethernet'] + connContexts['Other'];
-            const connContextHtml = totalConns > 0
-                ? Object.entries(connContexts)
-                    .filter(([, count]) => count > 0)
-                    .map(([type, count]) => {
-                        const pct = Math.round(count / totalConns * 100);
-                        return `
-                            <div class="context-item">
-                                <span class="context-item-label">${type}</span>
-                                <div class="context-item-bar">
-                                    <div class="context-item-fill" style="width: ${pct}%"></div>
-                                </div>
-                                <span class="context-item-value">${count} (${pct}%)</span>
-                            </div>
-                        `;
-                    }).join('')
-                : '<div style="color: var(--text-muted); font-size: 0.8rem;">No connection data</div>';
-            document.getElementById('connectionContextDist').innerHTML = connContextHtml;
+
+            const connTypes = Object.entries(connStats)
+                .filter(([type]) => type !== 'Unknown')
+                .sort((a, b) => b[1].runs - a[1].runs);
+
+            const connContextHtml = connTypes.length > 0
+                ? connTypes.map(([type, stats]) => {
+                    const signalRate = stats.runs > 0 ? Math.round(stats.withSignals / stats.runs * 100) : 0;
+                    return `
+                        <tr>
+                            <td>${type}</td>
+                            <td class="op-col-num">${stats.runs}</td>
+                            <td class="op-col-num ${stats.withSignals > 0 ? 'warn-accent' : ''}">${stats.withSignals}</td>
+                            <td class="op-col-rate signal-rate">${signalRate}%</td>
+                        </tr>
+                    `;
+                }).join('')
+                : '<tr><td colspan="4" style="color: var(--text-muted); text-align: center;">No connection data</td></tr>';
+            document.getElementById('connectionContextBody').innerHTML = connContextHtml;
 
             // Top countries
-            const sorted = Object.values(countryData).sort((a, b) => b.sessionCount - a.sessionCount);
+            const sorted = Object.values(countryData).sort((a, b) => b.runCount - a.runCount);
             const top5 = sorted.slice(0, 5);
             document.getElementById('topCountriesGrid').innerHTML = top5.map(renderCountryCard).join('');
         }
@@ -1766,8 +1773,8 @@
         function renderCountryCard(c) {
             // Count signals (WARN + FAIL)
             const signalCount = c.outcomes.WARN + c.outcomes.FAIL;
-            const signalDensity = c.sessionCount > 0
-                ? (signalCount / c.sessionCount).toFixed(1)
+            const signalDensity = c.runCount > 0
+                ? (signalCount / c.runCount).toFixed(1)
                 : '0';
 
             // Determine highest-signal operation for this country
@@ -1777,26 +1784,25 @@
             return `
                 <div class="country-card" onclick="showCountryDetail('${c.code}')">
                     <div class="country-header">
-                        <span class="country-flag">${getFlag(c.code)}</span>
-                        <span class="country-name">${c.name}</span>
+                        <span class="country-flag" title="${c.name}">${getFlag(c.code)}</span>
                     </div>
                     <div class="country-stats">
                         <div class="country-stat">
-                            <span class="stat-label">Sessions</span>
-                            <span class="stat-value">${c.sessionCount}</span>
+                            <span class="stat-label">Runs</span>
+                            <span class="stat-value">${c.runCount}</span>
                         </div>
                         <div class="country-stat">
-                            <span class="stat-label">Signals</span>
+                            <span class="stat-label">With Signals</span>
                             <span class="stat-value ${signalCount > 0 ? 'has-signals' : ''}">${signalCount}</span>
                         </div>
                         <div class="country-stat">
                             <span class="stat-label">Density</span>
-                            <span class="stat-value">${signalDensity}/session</span>
+                            <span class="stat-value">${signalDensity}/run</span>
                         </div>
                     </div>
                     ${highestSignalOp && highestSignalOp.signals > 0 ? `
                         <div class="country-signal-hint">
-                            Highest: ${highestSignalOp.category} (${highestSignalOp.signals})
+                            Top: ${highestSignalOp.category}
                         </div>
                     ` : ''}
                 </div>
@@ -1842,8 +1848,9 @@
                     // Sort by signal count (WARN + FAIL)
                     sorted.sort((a, b) => (b.outcomes.WARN + b.outcomes.FAIL) - (a.outcomes.WARN + a.outcomes.FAIL));
                     break;
+                case 'runs':
                 default:
-                    sorted.sort((a, b) => b.sessionCount - a.sessionCount);
+                    sorted.sort((a, b) => b.runCount - a.runCount);
             }
 
             document.getElementById('allCountriesGrid').innerHTML = sorted.map(renderCountryCard).join('');
@@ -1913,20 +1920,50 @@
                 `).join('')
                 : '<div style="color: var(--text-muted); font-size: 0.875rem;">No risk flags recorded</div>';
 
-            // Connection types
-            const connTypes = Object.entries(c.connectionTypes).sort((a, b) => b[1] - a[1]);
-            const maxConn = Math.max(...connTypes.map(([, v]) => v), 1);
-            document.getElementById('connectionTypes').innerHTML = connTypes.length > 0
-                ? connTypes.map(([type, count]) => `
-                    <div class="dist-row">
-                        <span class="dist-label">${type}</span>
-                        <div class="dist-bar-container">
-                            <div class="dist-bar" style="width: ${count / maxConn * 100}%;"></div>
-                        </div>
-                        <span class="dist-value">${count}</span>
-                    </div>
-                `).join('')
+            // Connection Context Signals for this country
+            // Aggregate runs and signals by connection type for this country
+            const countryConnStats = {};
+            for (const run of c.runs) {
+                const connType = run.connectionType || 'Unknown';
+                if (!countryConnStats[connType]) {
+                    countryConnStats[connType] = { runs: 0, withSignals: 0 };
+                }
+                countryConnStats[connType].runs++;
+                if (run.result === 'WARN' || run.result === 'FAIL') {
+                    countryConnStats[connType].withSignals++;
+                }
+            }
+
+            const countryConnTypes = Object.entries(countryConnStats)
+                .filter(([type]) => type !== 'Unknown')
+                .sort((a, b) => b[1].runs - a[1].runs);
+
+            const modalConnHtml = countryConnTypes.length > 0
+                ? `<table class="operation-table" style="margin-top: 0.5rem;">
+                    <thead>
+                        <tr>
+                            <th>TYPE</th>
+                            <th class="op-col-num">RUNS</th>
+                            <th class="op-col-num">SIGNALS</th>
+                            <th class="op-col-rate">RATE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${countryConnTypes.map(([type, stats]) => {
+                            const rate = stats.runs > 0 ? Math.round(stats.withSignals / stats.runs * 100) : 0;
+                            return `
+                                <tr>
+                                    <td>${type}</td>
+                                    <td class="op-col-num">${stats.runs}</td>
+                                    <td class="op-col-num ${stats.withSignals > 0 ? 'warn-accent' : ''}">${stats.withSignals}</td>
+                                    <td class="op-col-rate signal-rate">${rate}%</td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>`
                 : '<div style="color: var(--text-muted); font-size: 0.875rem;">No connection data</div>';
+            document.getElementById('modalConnectionContext').innerHTML = modalConnHtml;
 
             countryModal.classList.add('active');
         }
