@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Twemoji for cross-platform flag emoji support -->
+    <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
     <style>
         :root {
             --bg-primary: #0a0a0c;
@@ -531,6 +533,14 @@
             font-size: 1.5rem;
             line-height: 1;
             cursor: default;
+        }
+
+        /* Twemoji flag images */
+        .country-flag img.emoji,
+        .signal-value img.emoji {
+            height: 1.2em;
+            width: 1.2em;
+            vertical-align: -0.1em;
         }
 
         .country-name {
@@ -1083,6 +1093,16 @@
 
         function getFlag(code) {
             return countryFlags[code] || code;
+        }
+
+        // Parse emoji flags to images (for Windows compatibility)
+        function parseEmojis() {
+            if (typeof twemoji !== 'undefined') {
+                twemoji.parse(document.body, {
+                    folder: 'svg',
+                    ext: '.svg'
+                });
+            }
         }
 
         // ==================== AUTO-UPDATE POLLING ====================
@@ -1651,6 +1671,7 @@
                 updateOverview();
                 updateCountriesGrid();
                 showPage('overview');
+                parseEmojis();
             }
         }
 
@@ -1966,6 +1987,7 @@
             document.getElementById('modalConnectionContext').innerHTML = modalConnHtml;
 
             countryModal.classList.add('active');
+            parseEmojis();
         }
 
         // Show page
