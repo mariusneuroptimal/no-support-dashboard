@@ -560,42 +560,17 @@
             font-weight: 500;
         }
 
-        .country-outcome {
-            grid-column: 1 / -1;
-            margin-top: 0.5rem;
-            padding-top: 0.75rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .outcome-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .outcome-value {
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-        }
-
-        .outcome-value.pass {
-            background: var(--accent-pass-bg);
-            color: var(--accent-pass);
-        }
-
-        .outcome-value.warn {
-            background: var(--accent-warn-bg);
+        .stat-value.has-signals {
             color: var(--accent-warn);
         }
 
-        .outcome-value.fail {
-            background: var(--accent-fail-bg);
-            color: var(--accent-fail);
+        .country-signal-hint {
+            grid-column: 1 / -1;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.7rem;
+            color: var(--text-muted);
         }
 
         /* Detail Modal */
@@ -1016,8 +991,7 @@
                 <h3 class="section-title">All Countries</h3>
                 <div class="sort-controls">
                     <button class="sort-btn active" data-sort="sessions">Sessions</button>
-                    <button class="sort-btn" data-sort="latency">Latency</button>
-                    <button class="sort-btn" data-sort="failures">Failures</button>
+                    <button class="sort-btn" data-sort="signals">Signals</button>
                 </div>
             </div>
 
@@ -1037,84 +1011,19 @@
             </div>
             <div class="modal-body">
                 <div class="detail-grid">
-                    <div class="detail-section">
-                        <div class="detail-section-title">Latency Distribution</div>
-                        <div class="metric-row">
-                            <span class="metric-label">Minimum</span>
-                            <span class="metric-value" id="latencyMin">—</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">P50 (Median)</span>
-                            <span class="metric-value" id="latencyP50">—</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">P90</span>
-                            <span class="metric-value" id="latencyP90">—</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Maximum</span>
-                            <span class="metric-value" id="latencyMax">—</span>
-                        </div>
-                    </div>
-
-                    <div class="detail-section">
-                        <div class="detail-section-title">Speed Distribution</div>
-                        <div class="metric-row">
-                            <span class="metric-label">Minimum</span>
-                            <span class="metric-value" id="speedMin">—</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">P50 (Median)</span>
-                            <span class="metric-value" id="speedP50">—</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">P90</span>
-                            <span class="metric-value" id="speedP90">—</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Maximum</span>
-                            <span class="metric-value" id="speedMax">—</span>
-                        </div>
-                    </div>
-
-                    <div class="detail-section">
-                        <div class="detail-section-title">Connectivity Quality</div>
-                        <div id="connectivityQuality"></div>
-                    </div>
-
-                    <div class="detail-section">
-                        <div class="detail-section-title">Wi-Fi Signal Strength</div>
-                        <div id="signalStrength"></div>
-                    </div>
-
                     <div class="detail-section full-width">
-                        <div class="detail-section-title">Session Outcomes</div>
-                        <div id="modalOutcomeBar"></div>
-                    </div>
-
-                    <div class="detail-section full-width">
-                        <div class="detail-section-title">Risk Flags</div>
-                        <div class="distribution" id="riskFlags"></div>
+                        <div class="detail-section-title">Operation Signals</div>
+                        <div id="modalOperationSignals"></div>
                     </div>
 
                     <div class="detail-section">
-                        <div class="detail-section-title">IP Types</div>
-                        <div class="distribution" id="ipTypes"></div>
-                    </div>
-
-                    <div class="detail-section">
-                        <div class="detail-section-title">Link Standards</div>
-                        <div class="distribution" id="linkStandards"></div>
-                    </div>
-
-                    <div class="detail-section full-width">
-                        <div class="detail-section-title">Failure Breakdown</div>
-                        <div class="distribution" id="failureBreakdown"></div>
-                    </div>
-
-                    <div class="detail-section full-width">
-                        <div class="detail-section-title">Connection Types</div>
+                        <div class="detail-section-title">Connection Context</div>
                         <div class="distribution" id="connectionTypes"></div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-section-title">Risk Flags Observed</div>
+                        <div class="distribution" id="riskFlags"></div>
                     </div>
                 </div>
             </div>
@@ -1853,20 +1762,17 @@
             document.getElementById('topCountriesGrid').innerHTML = top5.map(renderCountryCard).join('');
         }
 
-        // Render country card
+        // Render country card (context only, no averages, no outcome badge)
         function renderCountryCard(c) {
-            const outcomeText = c.dominantOutcome === 'pass' ? 'PASS'
-                : c.dominantOutcome === 'warn' ? 'WARN' : 'FAIL';
+            // Count signals (WARN + FAIL)
+            const signalCount = c.outcomes.WARN + c.outcomes.FAIL;
+            const signalDensity = c.sessionCount > 0
+                ? (signalCount / c.sessionCount).toFixed(1)
+                : '0';
 
-            // Format jitter with quality indicator
-            const jitterDisplay = c.avgJitter !== null
-                ? `${c.avgJitter} ms`
-                : '—';
-
-            // Packet loss rate
-            const pktLossDisplay = c.packetLossRate > 0
-                ? `${c.packetLossRate.toFixed(1)}%`
-                : '0%';
+            // Determine highest-signal operation for this country
+            const countryOps = getCountryOperationStats(c.code);
+            const highestSignalOp = countryOps.length > 0 ? countryOps[0] : null;
 
             return `
                 <div class="country-card" onclick="showCountryDetail('${c.code}')">
@@ -1880,32 +1786,51 @@
                             <span class="stat-value">${c.sessionCount}</span>
                         </div>
                         <div class="country-stat">
-                            <span class="stat-label">Avg Latency</span>
-                            <span class="stat-value">${c.avgLatency ?? '—'} ms</span>
+                            <span class="stat-label">Signals</span>
+                            <span class="stat-value ${signalCount > 0 ? 'has-signals' : ''}">${signalCount}</span>
                         </div>
                         <div class="country-stat">
-                            <span class="stat-label">Avg Jitter</span>
-                            <span class="stat-value">${jitterDisplay}</span>
-                        </div>
-                        <div class="country-stat">
-                            <span class="stat-label">Packet Loss</span>
-                            <span class="stat-value">${pktLossDisplay}</span>
-                        </div>
-                        <div class="country-stat">
-                            <span class="stat-label">Avg Speed</span>
-                            <span class="stat-value">${c.avgSpeed ?? '—'} Mbps</span>
-                        </div>
-                        <div class="country-stat">
-                            <span class="stat-label">Wi-Fi</span>
-                            <span class="stat-value">${c.wifiRate !== null ? c.wifiRate.toFixed(0) + '%' : '—'}</span>
-                        </div>
-                        <div class="country-outcome">
-                            <span class="outcome-label">Outcome</span>
-                            <span class="outcome-value ${c.dominantOutcome}">${outcomeText}</span>
+                            <span class="stat-label">Density</span>
+                            <span class="stat-value">${signalDensity}/session</span>
                         </div>
                     </div>
+                    ${highestSignalOp && highestSignalOp.signals > 0 ? `
+                        <div class="country-signal-hint">
+                            Highest: ${highestSignalOp.category} (${highestSignalOp.signals})
+                        </div>
+                    ` : ''}
                 </div>
             `;
+        }
+
+        // Get operation-level stats for a specific country
+        function getCountryOperationStats(countryCode) {
+            const ops = {};
+
+            for (const payload of rawPayloads) {
+                if (!Array.isArray(payload.Actions)) continue;
+
+                for (const action of payload.Actions) {
+                    const ev = action.Evidence || {};
+                    const code = ev.CountryCode || ev.Country?.CountryCode || 'Unknown';
+
+                    if (code.toUpperCase() !== countryCode.toUpperCase()) continue;
+
+                    const cat = action.Category;
+                    if (!cat) continue;
+
+                    if (!ops[cat]) {
+                        ops[cat] = { category: cat, pass: 0, warn: 0, fail: 0, signals: 0 };
+                    }
+
+                    if (action.Result === 'PASS') ops[cat].pass++;
+                    else if (action.Result === 'WARN') { ops[cat].warn++; ops[cat].signals++; }
+                    else if (action.Result === 'FAIL') { ops[cat].fail++; ops[cat].signals++; }
+                }
+            }
+
+            // Sort by signals desc
+            return Object.values(ops).sort((a, b) => b.signals - a.signals);
         }
 
         // Update countries grid
@@ -1913,11 +1838,9 @@
             let sorted = Object.values(countryData);
 
             switch (currentSort) {
-                case 'latency':
-                    sorted.sort((a, b) => (b.avgLatency ?? 0) - (a.avgLatency ?? 0));
-                    break;
-                case 'failures':
-                    sorted.sort((a, b) => b.failureRate - a.failureRate);
+                case 'signals':
+                    // Sort by signal count (WARN + FAIL)
+                    sorted.sort((a, b) => (b.outcomes.WARN + b.outcomes.FAIL) - (a.outcomes.WARN + a.outcomes.FAIL));
                     break;
                 default:
                     sorted.sort((a, b) => b.sessionCount - a.sessionCount);
@@ -1934,95 +1857,31 @@
             document.getElementById('modalFlag').textContent = getFlag(code);
             document.getElementById('modalCountryName').textContent = c.name;
 
-            // Latency distribution
-            document.getElementById('latencyMin').textContent = c.latencies.length > 0
-                ? Math.min(...c.latencies) + ' ms' : '—';
-            document.getElementById('latencyP50').textContent = c.latencies.length > 0
-                ? percentile(c.latencies, 0.5) + ' ms' : '—';
-            document.getElementById('latencyP90').textContent = c.latencies.length > 0
-                ? percentile(c.latencies, 0.9) + ' ms' : '—';
-            document.getElementById('latencyMax').textContent = c.latencies.length > 0
-                ? Math.max(...c.latencies) + ' ms' : '—';
-
-            // Speed distribution
-            document.getElementById('speedMin').textContent = c.speeds.length > 0
-                ? Math.min(...c.speeds) + ' Mbps' : '—';
-            document.getElementById('speedP50').textContent = c.speeds.length > 0
-                ? percentile(c.speeds, 0.5) + ' Mbps' : '—';
-            document.getElementById('speedP90').textContent = c.speeds.length > 0
-                ? percentile(c.speeds, 0.9) + ' Mbps' : '—';
-            document.getElementById('speedMax').textContent = c.speeds.length > 0
-                ? Math.max(...c.speeds) + ' Mbps' : '—';
-
-            // Outcome bar
-            const total = c.outcomes.PASS + c.outcomes.WARN + c.outcomes.FAIL;
-            const passP = total > 0 ? Math.round(c.outcomes.PASS / total * 100) : 0;
-            const warnP = total > 0 ? Math.round(c.outcomes.WARN / total * 100) : 0;
-            const failP = total > 0 ? Math.round(c.outcomes.FAIL / total * 100) : 0;
-
-            document.getElementById('modalOutcomeBar').innerHTML = `
-                <div class="outcome-bar" style="height: 12px;">
-                    <div class="outcome-segment pass" style="width: ${passP}%"></div>
-                    <div class="outcome-segment warn" style="width: ${warnP}%"></div>
-                    <div class="outcome-segment fail" style="width: ${failP}%"></div>
-                </div>
-                <div class="outcome-legend" style="margin-top: 1rem;">
-                    <div class="outcome-legend-item">
-                        <div class="outcome-dot pass"></div>
-                        <span>PASS ${passP}% (${c.outcomes.PASS})</span>
-                    </div>
-                    <div class="outcome-legend-item">
-                        <div class="outcome-dot warn"></div>
-                        <span>WARN ${warnP}% (${c.outcomes.WARN})</span>
-                    </div>
-                    <div class="outcome-legend-item">
-                        <div class="outcome-dot fail"></div>
-                        <span>FAIL ${failP}% (${c.outcomes.FAIL})</span>
-                    </div>
-                </div>
-            `;
-
-            // Connectivity Quality section (jitter, packet loss)
-            const connQualityHtml = `
-                <div class="metric-row">
-                    <span class="metric-label">Avg Jitter</span>
-                    <span class="metric-value">${c.avgJitter !== null ? c.avgJitter + ' ms' : '—'}</span>
-                </div>
-                <div class="metric-row">
-                    <span class="metric-label">Jitter P90</span>
-                    <span class="metric-value">${c.jitters.length > 0 ? percentile(c.jitters, 0.9) + ' ms' : '—'}</span>
-                </div>
-                <div class="metric-row">
-                    <span class="metric-label">Packet Loss Rate</span>
-                    <span class="metric-value">${c.packetLossRate.toFixed(1)}%</span>
-                </div>
-                <div class="metric-row">
-                    <span class="metric-label">Geo Mismatch Rate</span>
-                    <span class="metric-value">${c.geoMismatchRate.toFixed(1)}%</span>
-                </div>
-            `;
-            document.getElementById('connectivityQuality').innerHTML = connQualityHtml;
-
-            // Signal Strength distribution (Wi-Fi only)
-            const signalHtml = c.signalStrengths.length > 0 ? `
-                <div class="metric-row">
-                    <span class="metric-label">Avg Signal</span>
-                    <span class="metric-value">${c.avgSignal}%</span>
-                </div>
-                <div class="metric-row">
-                    <span class="metric-label">Minimum</span>
-                    <span class="metric-value">${Math.min(...c.signalStrengths)}%</span>
-                </div>
-                <div class="metric-row">
-                    <span class="metric-label">P50</span>
-                    <span class="metric-value">${percentile(c.signalStrengths, 0.5)}%</span>
-                </div>
-                <div class="metric-row">
-                    <span class="metric-label">Weak (<40%)</span>
-                    <span class="metric-value">${c.signalStrengths.filter(s => s < 40).length} sessions</span>
-                </div>
-            ` : '<div style="color: var(--text-muted); font-size: 0.875rem;">No Wi-Fi signal data</div>';
-            document.getElementById('signalStrength').innerHTML = signalHtml;
+            // Operation Signals for this country
+            const countryOps = getCountryOperationStats(code);
+            const opsHtml = countryOps.length > 0 ? `
+                <table class="operation-table" style="margin-top: 0.5rem;">
+                    <thead>
+                        <tr>
+                            <th>OPERATION</th>
+                            <th class="op-col-num">PASS</th>
+                            <th class="op-col-num">WARN</th>
+                            <th class="op-col-num">FAIL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${countryOps.map(op => `
+                            <tr>
+                                <td>${op.category}</td>
+                                <td class="op-col-num">${op.pass}</td>
+                                <td class="op-col-num ${op.warn > 0 ? 'warn-accent' : ''}">${op.warn}</td>
+                                <td class="op-col-num ${op.fail > 0 ? 'fail-accent' : ''}">${op.fail}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            ` : '<div style="color: var(--text-muted); font-size: 0.875rem;">No operation data</div>';
+            document.getElementById('modalOperationSignals').innerHTML = opsHtml;
 
             // Risk flags breakdown
             const riskFlagLabels = {
@@ -2054,45 +1913,6 @@
                 `).join('')
                 : '<div style="color: var(--text-muted); font-size: 0.875rem;">No risk flags recorded</div>';
 
-            // IP Types breakdown
-            const ipTypes = Object.entries(c.ipTypes).sort((a, b) => b[1] - a[1]);
-            const maxIp = Math.max(...ipTypes.map(([, v]) => v), 1);
-            const ipTypeLabels = { 'residential': 'Residential', 'business': 'Business', 'datacenter': 'Datacenter/VPN', 'unknown': 'Unknown' };
-            document.getElementById('ipTypes').innerHTML = ipTypes.length > 0
-                ? ipTypes.map(([type, count]) => `
-                    <div class="dist-row">
-                        <span class="dist-label">${ipTypeLabels[type] || type}</span>
-                        <div class="dist-bar-container">
-                            <div class="dist-bar" style="width: ${count / maxIp * 100}%;"></div>
-                        </div>
-                        <span class="dist-value">${count}</span>
-                    </div>
-                `).join('')
-                : '<div style="color: var(--text-muted); font-size: 0.875rem;">No IP type data</div>';
-
-            // Failure breakdown
-            const failures = [
-                { label: 'DNS Failures', count: c.dnsFailures },
-                { label: 'TLS Interceptions', count: c.tlsInterceptions },
-                ...Object.entries(c.blockedPorts).map(([port, count]) => ({
-                    label: `Port ${port} Blocked`,
-                    count
-                }))
-            ].filter(f => f.count > 0);
-
-            const maxFailure = Math.max(...failures.map(f => f.count), 1);
-            document.getElementById('failureBreakdown').innerHTML = failures.length > 0
-                ? failures.map(f => `
-                    <div class="dist-row">
-                        <span class="dist-label">${f.label}</span>
-                        <div class="dist-bar-container">
-                            <div class="dist-bar" style="width: ${f.count / maxFailure * 100}%; background: var(--accent-fail);"></div>
-                        </div>
-                        <span class="dist-value">${f.count}</span>
-                    </div>
-                `).join('')
-                : '<div style="color: var(--text-muted); font-size: 0.875rem;">No failures recorded</div>';
-
             // Connection types
             const connTypes = Object.entries(c.connectionTypes).sort((a, b) => b[1] - a[1]);
             const maxConn = Math.max(...connTypes.map(([, v]) => v), 1);
@@ -2107,21 +1927,6 @@
                     </div>
                 `).join('')
                 : '<div style="color: var(--text-muted); font-size: 0.875rem;">No connection data</div>';
-
-            // Link Standards
-            const linkStds = Object.entries(c.linkStandards).sort((a, b) => b[1] - a[1]);
-            const maxLink = Math.max(...linkStds.map(([, v]) => v), 1);
-            document.getElementById('linkStandards').innerHTML = linkStds.length > 0
-                ? linkStds.map(([std, count]) => `
-                    <div class="dist-row">
-                        <span class="dist-label">${std}</span>
-                        <div class="dist-bar-container">
-                            <div class="dist-bar" style="width: ${count / maxLink * 100}%;"></div>
-                        </div>
-                        <span class="dist-value">${count}</span>
-                    </div>
-                `).join('')
-                : '<div style="color: var(--text-muted); font-size: 0.875rem;">No link standard data</div>';
 
             countryModal.classList.add('active');
         }
