@@ -3,2071 +3,1036 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NO Support Tool - Network Diagnostics</title>
+    <title>NO Support Tool — Network Diagnostics</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Twemoji for cross-platform flag emoji support -->
-    <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0a0c;
-            --bg-secondary: #12131a;
-            --bg-tertiary: #1a1b24;
-            --bg-card: #16171f;
-            --border: #2a2b36;
-            --border-hover: #3a3b46;
-            --text-primary: #e8e9ed;
-            --text-secondary: #8a8b96;
-            --text-muted: #5a5b66;
-            --accent-pass: #22c55e;
-            --accent-pass-bg: rgba(34, 197, 94, 0.1);
-            --accent-warn: #f59e0b;
-            --accent-warn-bg: rgba(245, 158, 11, 0.1);
-            --accent-fail: #ef4444;
-            --accent-fail-bg: rgba(239, 68, 68, 0.1);
-            --accent-info: #3b82f6;
-            --font-mono: 'JetBrains Mono', monospace;
-            --font-sans: 'Space Grotesk', sans-serif;
+            /* Base palette - observatory/instrumentation */
+            --bg-primary: #0a0c0f;
+            --bg-secondary: #12151a;
+            --bg-tertiary: #1a1e25;
+            --bg-elevated: #222830;
+
+            /* Text hierarchy */
+            --text-primary: #e8eaed;
+            --text-secondary: #9aa0a6;
+            --text-tertiary: #5f6368;
+            --text-muted: #3c4043;
+
+            /* Signal colors - intentionally muted/observational */
+            --signal-pass: #4a9f7e;
+            --signal-pass-bg: rgba(74, 159, 126, 0.12);
+            --signal-warn: #c9a227;
+            --signal-warn-bg: rgba(201, 162, 39, 0.12);
+            --signal-fail: #b86a5c;
+            --signal-fail-bg: rgba(184, 106, 92, 0.12);
+
+            /* Accent - cool teal for interactive/highlight */
+            --accent: #5c9aa8;
+            --accent-dim: rgba(92, 154, 168, 0.15);
+
+            /* Borders */
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-default: rgba(255, 255, 255, 0.1);
+            --border-strong: rgba(255, 255, 255, 0.15);
+
+            /* Typography */
+            --font-display: 'Outfit', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+
+            /* Spacing scale */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+
+            /* Grid */
+            --grid-gap: 20px;
         }
 
-        * {
+        *, *::before, *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         body {
-            font-family: var(--font-sans);
+            font-family: var(--font-display);
             background: var(--bg-primary);
             color: var(--text-primary);
-            min-height: 100vh;
             line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Subtle scan line effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.03) 2px,
+                rgba(0, 0, 0, 0.03) 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Layout */
+        .dashboard {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: var(--space-xl);
         }
 
         /* Header */
         .header {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
             display: flex;
+            align-items: flex-start;
             justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            margin-bottom: var(--space-2xl);
+            padding-bottom: var(--space-lg);
+            border-bottom: 1px solid var(--border-subtle);
         }
 
-        .header-title {
+        .header-main {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: var(--space-md);
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 11px;
+            color: var(--accent);
+            letter-spacing: -0.5px;
         }
 
         .header-title h1 {
-            font-size: 1.25rem;
-            font-weight: 600;
+            font-size: 1.5rem;
+            font-weight: 500;
             letter-spacing: -0.02em;
+            color: var(--text-primary);
         }
 
-        .header-title .badge {
+        .header-title .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        /* Domain nav */
+        .domain-nav {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .domain-tab {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: var(--space-sm) var(--space-md);
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .domain-tab:hover {
+            border-color: var(--border-default);
+            color: var(--text-secondary);
+        }
+
+        .domain-tab.active {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .domain-tab.future {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Section structure */
+        .section {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .section-header {
+            margin-bottom: var(--space-lg);
+        }
+
+        .section-question {
             font-family: var(--font-mono);
             font-size: 0.7rem;
-            padding: 0.25rem 0.5rem;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            margin-bottom: var(--space-xs);
+            opacity: 0.8;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        /* Navigation Tabs */
-        .nav-tabs {
-            display: flex;
-            gap: 0.25rem;
-            background: var(--bg-tertiary);
-            padding: 0.25rem;
-            border-radius: 6px;
-        }
-
-        .nav-tab {
-            font-family: var(--font-sans);
-            font-size: 0.875rem;
+        .section-title {
+            font-size: 1.1rem;
             font-weight: 500;
-            padding: 0.5rem 1rem;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.15s ease;
-        }
-
-        .nav-tab:hover {
             color: var(--text-primary);
-            background: var(--bg-card);
+            letter-spacing: -0.01em;
         }
 
-        .nav-tab.active {
-            background: var(--bg-card);
-            color: var(--text-primary);
-        }
-
-        /* Upload Button (ghost/tertiary - not dominant) */
-        .upload-btn {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            padding: 0.4rem 0.75rem;
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.15s ease;
-        }
-
-        .upload-btn:hover {
-            border-color: var(--text-secondary);
-            color: var(--text-secondary);
-        }
-
-        .upload-btn.has-data {
-            border-color: var(--border);
-            color: var(--text-secondary);
-        }
-
-        /* Main Container */
-        .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* Scope Footer */
-        .scope-footer {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border);
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-align: center;
-        }
-
-        /* Page Title */
-        .page-header {
-            margin-bottom: 2rem;
-        }
-
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .page-subtitle {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* KPI Cards Grid */
-        .kpi-grid {
+        /* Metric cards grid */
+        .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .kpi-grid-4 {
             grid-template-columns: repeat(4, 1fr);
+            gap: var(--grid-gap);
         }
 
-        @media (max-width: 900px) {
-            .kpi-grid-4 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .kpi-percent {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-left: 0.25rem;
-        }
-
-        /* Signals Row (Secondary, Lighter) */
-        .signals-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .signals-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .signal-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+        .metric-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
             border-radius: 8px;
-            padding: 1rem 1.25rem;
+            padding: var(--space-lg);
+            position: relative;
+            overflow: hidden;
         }
 
-        .signal-label {
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
+            opacity: 0.5;
+        }
+
+        .metric-label {
+            font-family: var(--font-mono);
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
+            color: var(--text-tertiary);
+            margin-bottom: var(--space-sm);
         }
 
-        .signal-value {
+        .metric-value {
             font-family: var(--font-mono);
-            font-size: 0.95rem;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+
+        .metric-unit {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--text-tertiary);
+            margin-left: var(--space-xs);
+        }
+
+        /* Inline notes */
+        .inline-note {
+            margin-top: var(--space-md);
+            padding: var(--space-md);
+            background: var(--bg-tertiary);
+            border-left: 2px solid var(--border-default);
+            font-size: 0.8rem;
             color: var(--text-secondary);
+            line-height: 1.6;
         }
 
-        .signal-hint {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-left: 0.5rem;
-        }
-
-        /* Context Row (Distributions) */
-        .context-row {
+        /* Leaderboard section */
+        .leaderboards {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--grid-gap);
         }
 
-        @media (max-width: 768px) {
-            .context-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .context-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+        .leaderboard {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
             border-radius: 8px;
-            padding: 1.25rem;
+            padding: var(--space-lg);
         }
 
-        .context-distribution {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .context-item {
+        .leaderboard-header {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            justify-content: space-between;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--border-subtle);
         }
 
-        .context-item-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            width: 70px;
-            flex-shrink: 0;
+        .leaderboard-title {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-tertiary);
         }
 
-        .context-item-bar {
-            flex: 1;
+        .leaderboard-icon {
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .leaderboard-item {
+            display: grid;
+            grid-template-columns: 24px 1fr auto;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-xs) 0;
+        }
+
+        .leaderboard-flag {
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .leaderboard-bar-container {
             height: 6px;
             background: var(--bg-tertiary);
             border-radius: 3px;
             overflow: hidden;
         }
 
-        .context-item-fill {
+        .leaderboard-bar {
             height: 100%;
-            background: var(--accent-info);
             border-radius: 3px;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
         }
 
-        .context-item-value {
+        .leaderboard.slow .leaderboard-bar {
+            background: linear-gradient(90deg, var(--signal-warn) 0%, var(--signal-fail) 100%);
+        }
+
+        .leaderboard.fast .leaderboard-bar {
+            background: linear-gradient(90deg, var(--accent) 0%, var(--signal-pass) 100%);
+        }
+
+        .leaderboard-value {
             font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            width: 45px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            min-width: 65px;
             text-align: right;
         }
 
-        /* Operation Signals Table */
-        .operation-signals-section {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+        .leaderboard-item:first-child .leaderboard-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Operations table */
+        .operations-table-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
             border-radius: 8px;
-            padding: 1.25rem;
-            margin-bottom: 1.5rem;
+            overflow: hidden;
         }
 
-        .section-hint {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 0.35rem;
-            margin-bottom: 0;
-        }
-
-        .operation-table {
+        .operations-table {
             width: 100%;
             border-collapse: collapse;
+        }
+
+        .operations-table th {
             font-family: var(--font-mono);
-            font-size: 0.8rem;
-            margin-top: 1rem;
-        }
-
-        .operation-table th {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-tertiary);
             text-align: left;
-            color: var(--text-muted);
+            padding: var(--space-md) var(--space-lg);
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-subtle);
             font-weight: 500;
-            font-size: 0.7rem;
-            letter-spacing: 0.05em;
-            padding: 0.5rem 0.75rem;
-            border-bottom: 1px solid var(--border);
         }
 
-        .operation-table td {
-            padding: 0.75rem;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-secondary);
+        .operations-table th:not(:first-child) {
+            text-align: center;
         }
 
-        .operation-table tr:last-child td {
+        .operations-table td {
+            padding: var(--space-md) var(--space-lg);
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.85rem;
+        }
+
+        .operations-table td:not(:first-child) {
+            text-align: center;
+            font-family: var(--font-mono);
+        }
+
+        .operations-table tr:last-child td {
             border-bottom: none;
         }
 
-        .operation-table tr.low-n {
-            opacity: 0.5;
+        .operations-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
         }
 
-        .operation-table tr.low-n td {
-            color: var(--text-muted);
-        }
-
-        .op-col-name {
-            width: 50%;
-        }
-
-        .op-col-num {
-            width: 12%;
-            text-align: center !important;
-        }
-
-        .op-col-rate {
-            width: 14%;
-            text-align: right !important;
-        }
-
-        .operation-table td.op-col-num {
-            text-align: center;
+        .operation-name {
             font-weight: 500;
-        }
-
-        .operation-table td.op-col-rate {
-            text-align: right;
-            font-weight: 600;
-        }
-
-        .warn-accent {
-            color: var(--accent-warn) !important;
-        }
-
-        .fail-accent {
-            color: var(--accent-fail) !important;
-        }
-
-        .signal-rate {
-            color: var(--text-muted);
-        }
-
-        .kpi-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.25rem;
-        }
-
-        .kpi-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .kpi-value {
-            font-family: var(--font-mono);
-            font-size: 2rem;
-            font-weight: 600;
-            line-height: 1.2;
-        }
-
-        .kpi-unit {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-
-        /* Outcome Distribution */
-        .outcome-bar {
-            display: flex;
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 0.75rem;
-            background: var(--bg-tertiary);
-        }
-
-        .outcome-segment {
-            height: 100%;
-            transition: width 0.3s ease;
-        }
-
-        .outcome-segment.pass { background: var(--accent-pass); }
-        .outcome-segment.warn { background: var(--accent-warn); }
-        .outcome-segment.fail { background: var(--accent-fail); }
-
-        .outcome-legend {
-            display: flex;
-            gap: 1rem;
-            margin-top: 0.75rem;
-            font-size: 0.75rem;
-        }
-
-        .outcome-legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            color: var(--text-secondary);
-        }
-
-        .outcome-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .outcome-dot.pass { background: var(--accent-pass); }
-        .outcome-dot.warn { background: var(--accent-warn); }
-        .outcome-dot.fail { background: var(--accent-fail); }
-
-        /* Section Headers */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .section-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Sort Controls */
-        .sort-controls {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .sort-btn {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            padding: 0.35rem 0.75rem;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.15s ease;
-        }
-
-        .sort-btn:hover {
-            border-color: var(--border-hover);
             color: var(--text-primary);
         }
 
-        .sort-btn.active {
-            background: var(--bg-card);
-            border-color: var(--accent-info);
-            color: var(--accent-info);
+        .signal-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
         }
 
-        /* Country Grid */
-        .country-grid {
+        .signal-count.pass {
+            background: var(--signal-pass-bg);
+            color: var(--signal-pass);
+        }
+
+        .signal-count.warn {
+            background: var(--signal-warn-bg);
+            color: var(--signal-warn);
+        }
+
+        .signal-count.fail {
+            background: var(--signal-fail-bg);
+            color: var(--signal-fail);
+        }
+
+        .signal-rate {
+            color: var(--text-secondary);
+        }
+
+        .signal-rate-bar {
+            display: inline-block;
+            width: 60px;
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            margin-right: var(--space-sm);
+            overflow: hidden;
+            vertical-align: middle;
+        }
+
+        .signal-rate-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        /* Countries grid */
+        .countries-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1rem;
+            gap: var(--grid-gap);
         }
 
         .country-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
             border-radius: 8px;
-            padding: 1.25rem;
-            cursor: pointer;
-            transition: all 0.15s ease;
+            padding: var(--space-lg);
+            transition: border-color 0.2s ease;
         }
 
         .country-card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-2px);
+            border-color: var(--border-default);
         }
 
         .country-header {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid var(--border);
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--border-subtle);
         }
 
         .country-flag {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             line-height: 1;
-            cursor: default;
-        }
-
-        /* Twemoji flag images */
-        .country-flag img.emoji,
-        .signal-value img.emoji {
-            height: 1.2em;
-            width: 1.2em;
-            vertical-align: -0.1em;
         }
 
         .country-name {
-            font-weight: 600;
-            font-size: 1rem;
-        }
-
-        .country-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-        }
-
-        .country-stat {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .stat-value {
-            font-family: var(--font-mono);
-            font-size: 0.875rem;
             font-weight: 500;
-        }
-
-        .stat-value.has-signals {
-            color: var(--accent-warn);
-        }
-
-        .country-signal-hint {
-            grid-column: 1 / -1;
-            margin-top: 0.5rem;
-            padding-top: 0.5rem;
-            border-top: 1px solid var(--border);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
-        /* Detail Modal */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 200;
-            padding: 2rem;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            width: 100%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            background: var(--bg-secondary);
-        }
-
-        .modal-title {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.25rem;
-            line-height: 1;
-        }
-
-        .modal-close:hover {
             color: var(--text-primary);
+            font-size: 0.95rem;
         }
 
-        .modal-body {
-            padding: 1.5rem;
-        }
-
-        .detail-grid {
+        .country-metrics {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
+            gap: var(--space-md);
         }
 
-        .detail-section {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.25rem;
+        .country-metric {
+            padding: var(--space-sm) 0;
         }
 
-        .detail-section.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .detail-section-title {
-            font-size: 0.75rem;
+        .country-metric-label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
+            color: var(--text-tertiary);
+            margin-bottom: var(--space-xs);
         }
 
-        .metric-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .metric-row:last-child {
-            border-bottom: none;
-        }
-
-        .metric-label {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-        }
-
-        .metric-value {
+        .country-metric-value {
             font-family: var(--font-mono);
-            font-weight: 500;
-        }
-
-        /* Distribution Bars */
-        .distribution {
-            margin-top: 0.5rem;
-        }
-
-        .dist-row {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .dist-label {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            width: 50px;
-        }
-
-        .dist-bar-container {
-            flex: 1;
-            height: 8px;
-            background: var(--bg-tertiary);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .dist-bar {
-            height: 100%;
-            background: var(--accent-info);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-
-        .dist-value {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            width: 60px;
-            text-align: right;
-        }
-
-        /* Awaiting State (slim banner, not dominant) */
-        .awaiting-state {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.5rem 2rem;
-            margin: 2rem 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-
-        .awaiting-state-icon {
-            font-size: 1.25rem;
-            opacity: 0.6;
-            margin-top: 0.1rem;
-        }
-
-        .awaiting-state-content {
-            flex: 1;
-        }
-
-        .awaiting-state-title {
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 0.35rem;
         }
 
-        .awaiting-state-text {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            line-height: 1.5;
+        .country-metric.full-width {
+            grid-column: span 2;
+            padding-top: var(--space-md);
+            margin-top: var(--space-sm);
+            border-top: 1px solid var(--border-subtle);
         }
 
-        .awaiting-state-secondary {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            margin-top: 0.75rem;
-            padding-top: 0.75rem;
-            border-top: 1px solid var(--border);
-            display: flex;
+        .top-operation {
+            display: inline-flex;
             align-items: center;
-            gap: 0.75rem;
-        }
-
-        .awaiting-upload-link {
+            gap: var(--space-sm);
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--bg-tertiary);
+            border-radius: 4px;
             font-family: var(--font-mono);
             font-size: 0.75rem;
-            padding: 0.35rem 0.75rem;
-            background: transparent;
-            border: 1px solid var(--border);
             color: var(--text-secondary);
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.15s ease;
         }
 
-        .awaiting-upload-link:hover {
-            border-color: var(--text-muted);
-            color: var(--text-primary);
+        .top-operation-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--signal-warn);
         }
 
-        /* Toast Notifications */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            padding: 1rem 1.5rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-family: var(--font-mono);
-            font-size: 0.875rem;
-            display: none;
-            z-index: 300;
-            animation: slideIn 0.3s ease;
+        /* Footer */
+        .dashboard-footer {
+            margin-top: var(--space-2xl);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
         }
 
-        .toast.active {
-            display: block;
+        .footer-note {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .toast.error {
-            border-color: var(--accent-fail);
-            color: var(--accent-fail);
-        }
-
-        .toast.success {
-            border-color: var(--accent-pass);
-            color: var(--accent-pass);
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(1rem);
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: var(--space-md);
+            }
+
+            .header {
+                flex-direction: column;
+                gap: var(--space-lg);
+            }
+
+            .metrics-grid,
+            .leaderboards {
+                grid-template-columns: 1fr;
+            }
+
+            .domain-nav {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Loading animation for initial render */
+        .section {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeIn {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-
-        /* Hidden Pages */
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
-            }
-
-            .header-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .main-container {
-                padding: 1rem;
-            }
-
-            .detail-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .kpi-value {
-                font-size: 1.5rem;
-            }
-        }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-title">
-            <h1>NO Support Tool</h1>
-            <span class="badge">Network Diagnostics v1.0</span>
-            <span class="badge" id="lastUpdated" style="display: none; margin-left: 0.5rem;"></span>
-        </div>
-        <div class="header-actions">
-            <nav class="nav-tabs">
-                <button class="nav-tab active" data-page="overview">Overview</button>
-                <button class="nav-tab" data-page="countries">Countries</button>
+    <div class="dashboard">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-main">
+                <div class="logo">NO</div>
+                <div class="header-title">
+                    <h1>NO Support Tool</h1>
+                    <div class="subtitle">Diagnostic Observatory</div>
+                </div>
+            </div>
+            <nav class="domain-nav">
+                <button class="domain-tab active">Network</button>
+                <button class="domain-tab future" title="Coming soon">System</button>
+                <button class="domain-tab future" title="Coming soon">Permissions</button>
+                <button class="domain-tab future" title="Coming soon">Environment</button>
+                <button class="domain-tab future" title="Coming soon">Hardware</button>
             </nav>
-            <label class="upload-btn" id="uploadBtn">
-                <input type="file" id="fileInput" accept=".json" multiple hidden>
-                Upload JSON
-            </label>
-        </div>
-    </header>
+        </header>
 
-    <main class="main-container">
-        <!-- Awaiting State (contextual, not dominant) -->
-        <div id="emptyState" class="awaiting-state">
-            <div class="awaiting-state-icon">◔</div>
-            <div class="awaiting-state-content">
-                <div class="awaiting-state-title">Awaiting Diagnostics Data</div>
-                <div class="awaiting-state-text">
-                    This dashboard updates automatically as diagnostics runs are ingested.<br>
-                    If no data appears, ingestion may be paused or unavailable.
-                </div>
-                <div class="awaiting-state-secondary">
-                    <span>Manual upload available for offline or historical analysis</span>
-                    <label class="awaiting-upload-link">
-                        <input type="file" accept=".json" multiple hidden id="emptyFileInput">
-                        Upload JSON
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Overview Page -->
-        <div id="overviewPage" class="page">
-            <div class="page-header">
-                <h2 class="page-title">Global Overview</h2>
-                <p class="page-subtitle">Aggregated signals across isolated diagnostics runs</p>
-            </div>
-
-            <!-- Core Stats (Pattern-Focused) -->
-            <div class="kpi-grid kpi-grid-4">
-                <div class="kpi-card">
-                    <div class="kpi-label">Diagnostics Runs</div>
-                    <div class="kpi-value" id="totalRuns">0</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Countries Observed</div>
-                    <div class="kpi-value" id="totalCountries">0</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Runs with Signals</div>
-                    <div class="kpi-value"><span id="runsWithSignals">0</span><span class="kpi-unit kpi-percent" id="runsWithSignalsPercent"></span></div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Signal Density</div>
-                    <div class="kpi-value"><span id="signalDensity">—</span><span class="kpi-unit" id="signalDensityUnit"></span></div>
-                </div>
-            </div>
-
-            <!-- Signals & Extremes (Secondary, Lighter) -->
-            <div class="signals-row" style="grid-template-columns: repeat(2, 1fr);">
-                <div class="signal-card">
-                    <div class="signal-label">Highest Observed Latency</div>
-                    <div class="signal-value" id="highestLatency">—</div>
-                </div>
-                <div class="signal-card">
-                    <div class="signal-label">Highest Observed Throughput</div>
-                    <div class="signal-value" id="highestThroughput">—</div>
-                </div>
-            </div>
-
-            <!-- Operation Signals -->
-            <div class="operation-signals-section">
-                <div class="kpi-label">Operation Signals</div>
-                <p class="section-hint">Aggregated diagnostic outcomes by operation. Highlights components most frequently emitting signals.</p>
-                <table class="operation-table" id="operationTable">
-                    <thead>
-                        <tr>
-                            <th class="op-col-name">OPERATION</th>
-                            <th class="op-col-num">PASS</th>
-                            <th class="op-col-num">WARN</th>
-                            <th class="op-col-num">FAIL</th>
-                            <th class="op-col-rate">SIGNAL RATE</th>
-                        </tr>
-                    </thead>
-                    <tbody id="operationTableBody">
-                        <!-- Populated by JS -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Connection Context Signals -->
-            <div class="context-card" style="margin-bottom: 1.5rem;">
-                <div class="kpi-label">Connection Context Signals</div>
-                <p class="section-hint" style="margin-bottom: 0.75rem;">Signal occurrence by connection context</p>
-                <table class="operation-table" id="connectionContextTable">
-                    <thead>
-                        <tr>
-                            <th class="op-col-name">CONNECTION TYPE</th>
-                            <th class="op-col-num">RUNS</th>
-                            <th class="op-col-num">WITH SIGNALS</th>
-                            <th class="op-col-rate">SIGNAL RATE</th>
-                        </tr>
-                    </thead>
-                    <tbody id="connectionContextBody">
-                        <!-- Populated by JS -->
-                    </tbody>
-                </table>
-            </div>
-
-            <div style="margin-top: 1rem;">
-                <div class="section-header">
-                    <h3 class="section-title">Countries by Diagnostic Runs</h3>
-                </div>
-                <div id="topCountriesGrid" class="country-grid"></div>
-            </div>
-        </div>
-
-        <!-- Countries Page -->
-        <div id="countriesPage" class="page">
-            <div class="page-header">
-                <h2 class="page-title">Country Grid</h2>
-                <p class="page-subtitle">Diagnostics runs by country</p>
-            </div>
-
+        <!-- Network Overview -->
+        <section class="section">
             <div class="section-header">
-                <h3 class="section-title">All Countries</h3>
-                <div class="sort-controls">
-                    <button class="sort-btn active" data-sort="runs">Runs</button>
-                    <button class="sort-btn" data-sort="signals">Signals</button>
+                <div class="section-question">Question Answered</div>
+                <h2 class="section-title">How much network diagnostic data do we have, and how noisy is it overall?</h2>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Diagnostics Runs</div>
+                    <div class="metric-value">2,847</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Countries Observed</div>
+                    <div class="metric-value">34</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Runs with Signals</div>
+                    <div class="metric-value">1,203</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Signal Density</div>
+                    <div class="metric-value">2.4<span class="metric-unit">flags/run</span></div>
                 </div>
             </div>
-
-            <div id="allCountriesGrid" class="country-grid"></div>
-        </div>
-
-        <!-- Scope Disclaimer -->
-        <footer class="scope-footer">
-            This dashboard presents network-related diagnostics only. Additional diagnostic domains may be added in future versions.
-        </footer>
-    </main>
-
-    <!-- Country Detail Modal -->
-    <div class="modal-overlay" id="countryModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">
-                    <span id="modalFlag"></span>
-                    <span id="modalCountryName"></span>
-                </div>
-                <button class="modal-close" id="modalClose">&times;</button>
+            <div class="inline-note">
+                These values summarize network diagnostics across independent runs. They indicate signal prevalence, not system health.
             </div>
-            <div class="modal-body">
-                <div class="detail-grid">
-                    <div class="detail-section full-width">
-                        <div class="detail-section-title">Operation Signals</div>
-                        <div id="modalOperationSignals"></div>
-                    </div>
+        </section>
 
-                    <div class="detail-section">
-                        <div class="detail-section-title">Connection Context Signals</div>
-                        <div id="modalConnectionContext"></div>
+        <!-- Network Context & Extremes -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-question">Trivia</div>
+                <h2 class="section-title">Country leaderboards by observed network performance</h2>
+            </div>
+            <div class="leaderboards">
+                <div class="leaderboard slow">
+                    <div class="leaderboard-header">
+                        <span class="leaderboard-title">Highest Latency</span>
+                        <span class="leaderboard-icon">🐢</span>
                     </div>
-
-                    <div class="detail-section">
-                        <div class="detail-section-title">Risk Flags Observed</div>
-                        <div class="distribution" id="riskFlags"></div>
+                    <div class="leaderboard-list">
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-flag" title="Brazil">🇧🇷</span>
+                            <div class="leaderboard-bar-container">
+                                <div class="leaderboard-bar" style="width: 100%"></div>
+                            </div>
+                            <span class="leaderboard-value">452 ms</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-flag" title="India">🇮🇳</span>
+                            <div class="leaderboard-bar-container">
+                                <div class="leaderboard-bar" style="width: 78%"></div>
+                            </div>
+                            <span class="leaderboard-value">354 ms</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-flag" title="Australia">🇦🇺</span>
+                            <div class="leaderboard-bar-container">
+                                <div class="leaderboard-bar" style="width: 62%"></div>
+                            </div>
+                            <span class="leaderboard-value">281 ms</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-flag" title="South Africa">🇿🇦</span>
+                            <div class="leaderboard-bar-container">
+                                <div class="leaderboard-bar" style="width: 55%"></div>
+                            </div>
+                            <span class="leaderboard-value">248 ms</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-flag" title="Canada">🇨🇦</span>
+                            <div class="leaderboard-bar-container">
+                                <div class="leaderboard-bar" style="width: 41%"></div>
+                            </div>
+                            <span class="leaderboard-value">187 ms</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="leaderboard fast">
+                    <div class="leaderboard-header">
+                        <span class="leaderboard-title">Highest Throughput</span>
+                        <span class="leaderboard-icon">🚀</span>
+                    </div>
+                    <div class="leaderboard-list">
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-flag" title="South Korea">🇰🇷</span>
+                            <div class="leaderboard-bar-container">
+                                <div class="leaderboard-bar" style="width: 100%"></div>
+                            </div>
+                            <span class="leaderboard-value">94.2 Mbps</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-flag" title="Japan">🇯🇵</span>
+                            <div class="leaderboard-bar-container">
+                                <div class="leaderboard-bar" style="width: 91%"></div>
+                            </div>
+                            <span class="leaderboard-value">85.7 Mbps</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-flag" title="Sweden">🇸🇪</span>
+                            <div class="leaderboard-bar-container">
+                                <div class="leaderboard-bar" style="width: 82%"></div>
+                            </div>
+                            <span class="leaderboard-value">77.1 Mbps</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-flag" title="Germany">🇩🇪</span>
+                            <div class="leaderboard-bar-container">
+                                <div class="leaderboard-bar" style="width: 74%"></div>
+                            </div>
+                            <span class="leaderboard-value">69.8 Mbps</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="leaderboard-flag" title="United States">🇺🇸</span>
+                            <div class="leaderboard-bar-container">
+                                <div class="leaderboard-bar" style="width: 68%"></div>
+                            </div>
+                            <span class="leaderboard-value">64.3 Mbps</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Toast -->
-    <div class="toast" id="toast"></div>
-
-    <script>
-        // State
-        let runs = [];
-        let countryData = {};
-        let operationStats = {};
-        let rawPayloads = [];  // Store raw payloads for operation-level aggregation
-        let currentSort = 'runs';
-
-        // Auto-update polling configuration
-        const POLL_INTERVAL_MS = 60_000; // 60 seconds
-        const DIAGNOSTICS_BASE_URL = './data'; // Relative path - portable
-        let lastIndexHash = null;
-        let pollInterval = null;
-
-        // DOM Elements
-        const fileInput = document.getElementById('fileInput');
-        const emptyFileInput = document.getElementById('emptyFileInput');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const emptyState = document.getElementById('emptyState');
-        const overviewPage = document.getElementById('overviewPage');
-        const countriesPage = document.getElementById('countriesPage');
-        const countryModal = document.getElementById('countryModal');
-        const toast = document.getElementById('toast');
-
-        // Country flag mapping (subset for demo, falls back to country code)
-        const countryFlags = {
-            'US': '🇺🇸', 'CA': '🇨🇦', 'GB': '🇬🇧', 'DE': '🇩🇪', 'FR': '🇫🇷',
-            'AU': '🇦🇺', 'JP': '🇯🇵', 'BR': '🇧🇷', 'MX': '🇲🇽', 'IN': '🇮🇳',
-            'CN': '🇨🇳', 'KR': '🇰🇷', 'ES': '🇪🇸', 'IT': '🇮🇹', 'NL': '🇳🇱',
-            'SE': '🇸🇪', 'NO': '🇳🇴', 'DK': '🇩🇰', 'FI': '🇫🇮', 'CH': '🇨🇭',
-            'AT': '🇦🇹', 'BE': '🇧🇪', 'PL': '🇵🇱', 'PT': '🇵🇹', 'RU': '🇷🇺',
-            'ZA': '🇿🇦', 'NZ': '🇳🇿', 'SG': '🇸🇬', 'HK': '🇭🇰', 'TW': '🇹🇼',
-            'IE': '🇮🇪', 'IL': '🇮🇱', 'AE': '🇦🇪', 'AR': '🇦🇷', 'CL': '🇨🇱',
-            'CO': '🇨🇴', 'PH': '🇵🇭', 'TH': '🇹🇭', 'MY': '🇲🇾', 'ID': '🇮🇩',
-            'VN': '🇻🇳', 'CZ': '🇨🇿', 'RO': '🇷🇴', 'HU': '🇭🇺', 'GR': '🇬🇷',
-            'TR': '🇹🇷', 'SA': '🇸🇦', 'EG': '🇪🇬', 'NG': '🇳🇬', 'KE': '🇰🇪'
-        };
-
-        function getFlag(code) {
-            return countryFlags[code] || code;
-        }
-
-        // Parse emoji flags to images (for Windows compatibility)
-        function parseEmojis() {
-            if (typeof twemoji !== 'undefined') {
-                twemoji.parse(document.body, {
-                    folder: 'svg',
-                    ext: '.svg'
-                });
-            }
-        }
-
-        // ==================== AUTO-UPDATE POLLING ====================
-
-        // Fetch index.json with cache-busting
-        async function fetchIndex() {
-            const url = `${DIAGNOSTICS_BASE_URL}/index.json?ts=${Date.now()}`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error(`Failed to fetch index.json: ${res.status}`);
-            return res.json();
-        }
-
-        // Stable hash of index for change detection
-        function hashIndex(index) {
-            const files = index.files ?? [];
-            return JSON.stringify({
-                updatedAt: index.updatedAt,
-                count: files.length,
-                last: files[files.length - 1] ?? null,
-            });
-        }
-
-        // Reload all data from index (idempotent, stateless)
-        async function reloadAllData(index) {
-            const files = index.files ?? [];
-            if (files.length === 0) {
-                runs = [];
-                aggregateData();
-                updateUI();
-                updateLastUpdated();
-                return;
-            }
-
-            try {
-                const payloads = await Promise.all(
-                    files.map(path =>
-                        fetch(`${DIAGNOSTICS_BASE_URL}/${path}?ts=${Date.now()}`)
-                            .then(r => {
-                                if (!r.ok) throw new Error(`Failed to fetch ${path}`);
-                                return r.json();
-                            })
-                    )
-                );
-
-                // Reset runs and recompute from scratch (no incremental mutation)
-                runs = [];
-                rawPayloads = [];
-                let loadedCount = 0;
-
-                for (const payload of payloads) {
-                    try {
-                        validatePayload(payload);
-
-                        if (Array.isArray(payload.Actions)) {
-                            // Store raw payload for operation-level aggregation
-                            rawPayloads.push(payload);
-                            const samples = extractNetworkSamples(payload);
-                            if (samples.length > 0) {
-                                runs.push(...samples);
-                                loadedCount += samples.length;
-                            }
-                        } else if (payload.connectivity || payload.network) {
-                            const sample = extractLegacySample(payload);
-                            runs.push(sample);
-                            loadedCount++;
-                        }
-                    } catch (e) {
-                        console.warn('Skipping invalid payload:', e.message);
-                    }
-                }
-
-                aggregateData();
-                updateUI();
-                updateLastUpdated();
-
-                if (loadedCount > 0) {
-                    console.log(`Auto-update: loaded ${loadedCount} samples from ${files.length} files`);
-                }
-            } catch (err) {
-                console.error('Auto-update reload failed:', err);
-                showWarning('Failed to reload diagnostics data');
-            }
-        }
-
-        // Poll for updates
-        async function pollForUpdates() {
-            try {
-                const index = await fetchIndex();
-                const hash = hashIndex(index);
-
-                if (hash !== lastIndexHash) {
-                    console.log('Index changed, reloading data...');
-                    lastIndexHash = hash;
-                    await reloadAllData(index);
-                }
-            } catch (err) {
-                console.warn('Poll failed:', err.message);
-                showWarning('Diagnostics fetch failed - will retry');
-            }
-        }
-
-        // Update "Last updated" timestamp
-        function updateLastUpdated() {
-            const el = document.getElementById('lastUpdated');
-            if (el && runs.length > 0) {
-                const now = new Date();
-                const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                el.textContent = `Updated ${time}`;
-                el.style.display = 'inline';
-            }
-        }
-
-        // Show warning (non-fatal)
-        function showWarning(message) {
-            console.warn(message);
-            // Could show a subtle banner here if needed
-        }
-
-        // Start auto-update polling
-        function startPolling() {
-            if (pollInterval) return; // Already polling
-
-            // Initial poll
-            pollForUpdates();
-
-            // Schedule recurring polls
-            pollInterval = setInterval(pollForUpdates, POLL_INTERVAL_MS);
-            console.log(`Auto-update polling started (interval: ${POLL_INTERVAL_MS / 1000}s)`);
-        }
-
-        // Stop polling (for manual mode)
-        function stopPolling() {
-            if (pollInterval) {
-                clearInterval(pollInterval);
-                pollInterval = null;
-                console.log('Auto-update polling stopped');
-            }
-        }
-
-        // ==================== END AUTO-UPDATE POLLING ====================
-
-        // Schema validation (per ANALYTICS_CONTRACT.md)
-        function validatePayload(data) {
-            const version = data.SchemaVersion || data.schemaVersion;
-            if (!version) {
-                throw new Error('Missing SchemaVersion');
-            }
-            // Reject if major version != 1
-            const major = version.split('.')[0];
-            if (major !== '1') {
-                throw new Error(`Unsupported SchemaVersion: ${version} (major must be 1)`);
-            }
-            return true;
-        }
-
-        // Extract NetworkSamples from payload per ANALYTICS_CONTRACT
-        // Accepts Actions with diagnostic Categories (operation identifiers)
-        function extractNetworkSamples(payload) {
-            const samples = [];
-            const actions = payload.Actions || [];
-
-            // Valid diagnostic categories (operation identifiers)
-            const diagnosticCategories = new Set([
-                'Diagnostics',           // Legacy
-                'DNS Resolution',        // dns.resolution
-                'Reachability',          // network.reachability
-                'Geo Inference',         // geo.inference
-                'Latency Probe',         // latency.measurement
-                'Throughput Probe',      // speed.throughput (future)
-                'VPN Detection',         // vpn.detection (future)
-                'HTTPS Handshake'        // https.handshake (future)
-            ]);
-
-            for (const action of actions) {
-                // Filter: Category must be a recognized diagnostic operation
-                if (!diagnosticCategories.has(action.Category)) continue;
-
-                // Skip PENDING (should not appear post-coercion)
-                if (action.Result === 'PENDING') continue;
-
-                const ev = action.Evidence || {};
-
-                // Normalize country (per contract: CountryCode > Country > "Unknown")
-                let countryCode = 'Unknown';
-                let countryName = undefined;
-
-                if (ev.Country && typeof ev.Country === 'object') {
-                    countryCode = ev.Country.CountryCode || ev.Country.code || 'Unknown';
-                    countryName = ev.Country.CountryName || ev.Country.name;
-                } else if (typeof ev.CountryCode === 'string') {
-                    countryCode = ev.CountryCode;
-                    countryName = ev.CountryName;
-                } else if (typeof ev.Country === 'string') {
-                    countryCode = ev.Country;
-                }
-
-                samples.push({
-                    schemaVersion: '1.0',
-                    exportedAt: payload.ExportedAt,
-                    sessionId: payload.SessionId,
-                    appVersion: payload.AppVersion,
-                    appChannel: payload.AppChannel,
-                    sessionStartTime: payload.SessionStartTime,
-                    action: action.Action,
-                    category: action.Category,  // Operation ID (canonical)
-                    result: action.Result,
-                    tier: typeof action.Tier === 'number' ? action.Tier : 0,
-                    countryCode: countryCode.toUpperCase(),
-                    countryName: countryName,
-                    // Latency metrics
-                    latencyMs: typeof ev.LatencyMs === 'number' ? ev.LatencyMs : undefined,
-                    latencyMin: typeof ev.LatencyMin === 'number' ? ev.LatencyMin : undefined,
-                    latencyMax: typeof ev.LatencyMax === 'number' ? ev.LatencyMax : undefined,
-                    jitterMs: typeof ev.JitterMs === 'number' ? ev.JitterMs : undefined,
-                    packetLossDetected: ev.PacketLossDetected === true,
-                    latencyQuality: typeof ev.LatencyQuality === 'string' ? ev.LatencyQuality : undefined,
-                    // Network context
-                    linkSpeedMbps: typeof ev.LinkSpeedMbps === 'number' ? ev.LinkSpeedMbps : undefined,
-                    linkStandard: typeof ev.LinkStandard === 'string' ? ev.LinkStandard : undefined,
-                    signalStrength: typeof ev.SignalStrength === 'number' ? ev.SignalStrength : undefined,
-                    connectionType: typeof ev.ConnectionType === 'string' ? ev.ConnectionType : undefined,
-                    // Routing / Geo
-                    publicIP: typeof ev.PublicIP === 'string' ? ev.PublicIP : undefined,
-                    ipType: typeof ev.IpType === 'string' ? ev.IpType : undefined,
-                    natDetected: ev.NatDetected === true,
-                    geoMismatchDetected: ev.GeoMismatchDetected === true,
-                    activeAdapterCount: typeof ev.ActiveAdapterCount === 'number' ? ev.ActiveAdapterCount : undefined,
-                    // Risk flags (array of {Id, Severity} objects)
-                    riskFlags: Array.isArray(ev.RiskFlags) ? ev.RiskFlags : undefined,
-                    // Connectivity test fields
-                    dnsFailures: typeof ev.DnsFailures === 'number' ? ev.DnsFailures : undefined,
-                    tlsInterceptions: typeof ev.TlsInterceptions === 'number' ? ev.TlsInterceptions :
-                                      (ev.TLSIntercepted === true ? 1 : undefined),
-                    blockedPorts: Array.isArray(ev.BlockedPorts) ? ev.BlockedPorts : undefined
-                });
-            }
-
-            return samples;
-        }
-
-        // Legacy format support (flat structure from sample-data.json)
-        function extractLegacySample(data) {
-            return {
-                schemaVersion: '1.0',
-                sessionId: data.sessionId,
-                result: data.connectivity?.result || 'PASS',
-                countryCode: (data.country?.code || 'Unknown').toUpperCase(),
-                countryName: data.country?.name,
-                latencyMs: data.network?.latencyMs,
-                linkSpeedMbps: data.network?.linkSpeedMbps,
-                connectionType: data.network?.connectionType,
-                dnsFailures: data.connectivity?.dnsFailures,
-                tlsInterceptions: data.connectivity?.tlsInterceptions,
-                blockedPorts: data.connectivity?.blockedPorts
-            };
-        }
-
-        // Percentile calculation
-        function percentile(arr, p) {
-            if (arr.length === 0) return null;
-            const sorted = [...arr].sort((a, b) => a - b);
-            const idx = Math.ceil(p * sorted.length) - 1;
-            return sorted[Math.max(0, idx)];
-        }
-
-        // Process uploaded files
-        async function processFiles(files) {
-            let added = 0;
-            let errors = 0;
-            let errorMessages = [];
-
-            for (const file of files) {
-                try {
-                    const text = await file.text();
-                    const data = JSON.parse(text);
-
-                    // Handle array of items or single item
-                    const items = Array.isArray(data) ? data : [data];
-
-                    for (const item of items) {
-                        try {
-                            validatePayload(item);
-
-                            // Detect format: new (Actions array) vs legacy (flat structure)
-                            if (Array.isArray(item.Actions)) {
-                                // New WinConfig export format
-                                const samples = extractNetworkSamples(item);
-                                if (samples.length > 0) {
-                                    runs.push(...samples);
-                                    added += samples.length;
-                                } else {
-                                    // Valid payload but no diagnostic actions
-                                    console.warn('Payload has no diagnostic actions:', item.SessionId);
-                                }
-                            } else if (item.connectivity || item.network) {
-                                // Legacy flat format (sample-data.json style)
-                                const sample = extractLegacySample(item);
-                                runs.push(sample);
-                                added++;
-                            } else {
-                                throw new Error('Unrecognized payload structure');
-                            }
-                        } catch (e) {
-                            console.error('Validation error:', e.message);
-                            errorMessages.push(e.message);
-                            errors++;
-                        }
-                    }
-                } catch (e) {
-                    console.error('Parse error:', e.message);
-                    errorMessages.push(e.message);
-                    errors++;
-                }
-            }
-
-            if (added > 0) {
-                showToast(`Loaded ${added} sample(s)`, 'success');
-                aggregateData();
-                updateUI();
-                updateLastUpdated();
-            }
-            if (errors > 0) {
-                const msg = errorMessages.length === 1
-                    ? errorMessages[0]
-                    : `${errors} file(s) failed validation`;
-                showToast(msg, 'error');
-            }
-        }
-
-        // Aggregate data by country (works with NetworkSample format)
-        function aggregateData() {
-            countryData = {};
-
-            for (const sample of runs) {
-                // NetworkSample uses flat properties
-                const code = sample.countryCode || 'Unknown';
-                const name = sample.countryName || code;
-
-                if (!countryData[code]) {
-                    countryData[code] = {
-                        code,
-                        name,
-                        runs: [],
-                        latencies: [],
-                        speeds: [],
-                        jitters: [],
-                        signalStrengths: [],
-                        outcomes: { PASS: 0, WARN: 0, FAIL: 0 },
-                        dnsFailures: 0,
-                        tlsInterceptions: 0,
-                        blockedPorts: {},
-                        connectionTypes: {},
-                        ipTypes: {},
-                        linkStandards: {},
-                        // Counters for new boolean flags
-                        packetLossCount: 0,
-                        geoMismatchCount: 0,
-                        natDetectedCount: 0,
-                        // Risk flag aggregation
-                        riskFlagCounts: {}
-                    };
-                }
-
-                const c = countryData[code];
-                c.runs.push(sample);
-
-                // Latency (undefined = missing, not 0)
-                if (typeof sample.latencyMs === 'number' && sample.latencyMs > 0) {
-                    c.latencies.push(sample.latencyMs);
-                }
-
-                // Speed (undefined = missing, not 0)
-                if (typeof sample.linkSpeedMbps === 'number' && sample.linkSpeedMbps > 0) {
-                    c.speeds.push(sample.linkSpeedMbps);
-                }
-
-                // Jitter
-                if (typeof sample.jitterMs === 'number' && sample.jitterMs >= 0) {
-                    c.jitters.push(sample.jitterMs);
-                }
-
-                // Signal Strength (Wi-Fi only)
-                if (typeof sample.signalStrength === 'number') {
-                    c.signalStrengths.push(sample.signalStrength);
-                }
-
-                // Outcome
-                const result = sample.result || 'PASS';
-                if (c.outcomes[result] !== undefined) {
-                    c.outcomes[result]++;
-                }
-
-                // DNS Failures (undefined = missing, not counted)
-                if (typeof sample.dnsFailures === 'number' && sample.dnsFailures > 0) {
-                    c.dnsFailures += sample.dnsFailures;
-                }
-
-                // TLS Interceptions (undefined = missing, not counted)
-                if (typeof sample.tlsInterceptions === 'number' && sample.tlsInterceptions > 0) {
-                    c.tlsInterceptions += sample.tlsInterceptions;
-                }
-
-                // Blocked Ports (undefined = missing, not empty array)
-                if (Array.isArray(sample.blockedPorts)) {
-                    for (const port of sample.blockedPorts) {
-                        c.blockedPorts[port] = (c.blockedPorts[port] || 0) + 1;
-                    }
-                }
-
-                // Connection Types
-                if (typeof sample.connectionType === 'string') {
-                    c.connectionTypes[sample.connectionType] = (c.connectionTypes[sample.connectionType] || 0) + 1;
-                }
-
-                // IP Types
-                if (typeof sample.ipType === 'string') {
-                    c.ipTypes[sample.ipType] = (c.ipTypes[sample.ipType] || 0) + 1;
-                }
-
-                // Link Standards
-                if (typeof sample.linkStandard === 'string') {
-                    c.linkStandards[sample.linkStandard] = (c.linkStandards[sample.linkStandard] || 0) + 1;
-                }
-
-                // Boolean flag counters
-                if (sample.packetLossDetected) c.packetLossCount++;
-                if (sample.geoMismatchDetected) c.geoMismatchCount++;
-                if (sample.natDetected) c.natDetectedCount++;
-
-                // Risk flags aggregation
-                if (Array.isArray(sample.riskFlags)) {
-                    for (const flag of sample.riskFlags) {
-                        const id = flag.Id || flag.id || (typeof flag === 'string' ? flag : null);
-                        if (id) {
-                            c.riskFlagCounts[id] = (c.riskFlagCounts[id] || 0) + 1;
-                        }
-                    }
-                }
-            }
-
-            // Calculate aggregates
-            for (const c of Object.values(countryData)) {
-                c.runCount = c.runs.length;
-                c.avgLatency = c.latencies.length > 0
-                    ? Math.round(c.latencies.reduce((a, b) => a + b, 0) / c.latencies.length)
-                    : null;
-                c.avgSpeed = c.speeds.length > 0
-                    ? Math.round(c.speeds.reduce((a, b) => a + b, 0) / c.speeds.length)
-                    : null;
-                c.avgJitter = c.jitters.length > 0
-                    ? Math.round(c.jitters.reduce((a, b) => a + b, 0) / c.jitters.length * 10) / 10
-                    : null;
-                c.avgSignal = c.signalStrengths.length > 0
-                    ? Math.round(c.signalStrengths.reduce((a, b) => a + b, 0) / c.signalStrengths.length)
-                    : null;
-
-                const total = c.outcomes.PASS + c.outcomes.WARN + c.outcomes.FAIL;
-                c.signalRate = total > 0 ? ((c.outcomes.WARN + c.outcomes.FAIL) / total * 100) : 0;
-                c.passRate = total > 0 ? (c.outcomes.PASS / total * 100) : 0;
-
-                // Percentage calculations for new flags
-                c.packetLossRate = c.runCount > 0 ? (c.packetLossCount / c.runCount * 100) : 0;
-                c.geoMismatchRate = c.runCount > 0 ? (c.geoMismatchCount / c.runCount * 100) : 0;
-
-                // Determine Wi-Fi vs Ethernet split
-                const wifiCount = c.connectionTypes['Wi-Fi'] || 0;
-                const ethernetCount = c.connectionTypes['Ethernet'] || 0;
-                const totalConn = wifiCount + ethernetCount;
-                c.wifiRate = totalConn > 0 ? (wifiCount / totalConn * 100) : null;
-
-                // Worst result (FAIL > WARN > PASS)
-                c.dominantOutcome = c.outcomes.FAIL > 0 ? 'fail'
-                    : c.outcomes.WARN > 0 ? 'warn' : 'pass';
-            }
-
-            // Aggregate operation-level statistics
-            aggregateOperationStats();
-        }
-
-        // Aggregate operation statistics from raw payloads
-        // Operation ID = Category (canonical, stable)
-        function aggregateOperationStats() {
-            operationStats = {};
-
-            for (const payload of rawPayloads) {
-                if (!Array.isArray(payload.Actions)) continue;
-
-                for (const action of payload.Actions) {
-                    // Category is the canonical operation identifier
-                    const category = action.Category;
-                    if (!category) continue;
-
-                    if (!operationStats[category]) {
-                        operationStats[category] = {
-                            id: category,
-                            display: category,  // Category IS the display name
-                            pass: 0,
-                            warn: 0,
-                            fail: 0,
-                            total: 0
-                        };
-                    }
-
-                    const op = operationStats[category];
-                    op.total++;
-
-                    switch (action.Result) {
-                        case 'PASS': op.pass++; break;
-                        case 'WARN': op.warn++; break;
-                        case 'FAIL': op.fail++; break;
-                    }
-                }
-            }
-
-            // Calculate signal rate for each operation
-            for (const op of Object.values(operationStats)) {
-                op.signalRate = op.total > 0
-                    ? Math.round((op.warn + op.fail) / op.total * 100)
-                    : 0;
-            }
-        }
-
-        // Render Operation Signals table
-        // Sorted by: FAIL desc, WARN desc, total desc
-        // Low-N (< 3 executions): grayed out, not hidden
-        function renderOperationTable() {
-            const tbody = document.getElementById('operationTableBody');
-            if (!tbody) return;
-
-            const ops = Object.values(operationStats)
-                .sort((a, b) => b.fail - a.fail || b.warn - a.warn || b.total - a.total);
-
-            if (ops.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No operation data</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = ops.map(op => {
-                const isLowN = op.total < 3;
-                const rowClass = isLowN ? 'low-n' : '';
-                const title = isLowN ? 'title="Insufficient data to assess signal reliability"' : '';
-
-                return `
-                    <tr class="${rowClass}" ${title}>
-                        <td>${op.display}</td>
-                        <td class="op-col-num">${op.pass}</td>
-                        <td class="op-col-num ${op.warn > 0 && !isLowN ? 'warn-accent' : ''}">${op.warn}</td>
-                        <td class="op-col-num ${op.fail > 0 && !isLowN ? 'fail-accent' : ''}">${op.fail}</td>
-                        <td class="op-col-rate signal-rate">${op.signalRate}%</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // Update UI
-        function updateUI() {
-            const hasData = runs.length > 0;
-
-            emptyState.style.display = hasData ? 'none' : 'flex';
-            uploadBtn.classList.toggle('has-data', hasData);
-            uploadBtn.innerHTML = hasData
-                ? `<input type="file" id="fileInput" accept=".json" multiple hidden>${runs.length} runs`
-                : `<input type="file" id="fileInput" accept=".json" multiple hidden>Upload JSON`;
-
-            if (hasData) {
-                updateOverview();
-                updateCountriesGrid();
-                showPage('overview');
-                parseEmojis();
-            }
-        }
-
-        // Update Overview page
-        function updateOverview() {
-            // === CORE STATS ===
-
-            // Total diagnostics runs
-            document.getElementById('totalRuns').textContent = runs.length;
-
-            // Countries observed
-            const countryCount = Object.keys(countryData).length;
-            document.getElementById('totalCountries').textContent = countryCount;
-
-            // Runs with signals (WARN or FAIL)
-            let totalPass = 0, totalWarn = 0, totalFail = 0;
-            for (const c of Object.values(countryData)) {
-                totalPass += c.outcomes.PASS;
-                totalWarn += c.outcomes.WARN;
-                totalFail += c.outcomes.FAIL;
-            }
-            const runsWithSignals = totalWarn + totalFail;
-            const signalPercent = runs.length > 0 ? Math.round(runsWithSignals / runs.length * 100) : 0;
-            document.getElementById('runsWithSignals').textContent = runsWithSignals;
-            document.getElementById('runsWithSignalsPercent').textContent = runs.length > 0 ? ` (${signalPercent}%)` : '';
-
-            // Signal density (flags per run with signals)
-            const runsEmittingSignals = runs.filter(s => s.result === 'WARN' || s.result === 'FAIL');
-            let totalSignalFlags = 0;
-            for (const s of runsEmittingSignals) {
-                // Count risk flags as signal indicators
-                if (Array.isArray(s.riskFlags)) {
-                    totalSignalFlags += s.riskFlags.filter(f => {
-                        const id = f.Id || f.id || f;
-                        return !['LATENCY_OK', 'BANDWIDTH_OK', 'ETHERNET_CONNECTED', 'NO_PACKET_LOSS'].includes(id);
-                    }).length;
-                }
-                // Also count connectivity flags
-                if (s.dnsFailures > 0) totalSignalFlags++;
-                if (s.tlsInterceptions > 0) totalSignalFlags++;
-                if (Array.isArray(s.blockedPorts) && s.blockedPorts.length > 0) totalSignalFlags++;
-            }
-            const signalDensity = runsEmittingSignals.length > 0 ? (totalSignalFlags / runsEmittingSignals.length).toFixed(1) : '—';
-            document.getElementById('signalDensity').textContent = signalDensity;
-            document.getElementById('signalDensityUnit').textContent = runsEmittingSignals.length > 0 ? ' flags/run' : '';
-
-            // === SIGNALS & EXTREMES ===
-
-            // Highest observed latency (find run with max latency)
-            let maxLatency = { value: 0, country: null, code: null };
-            for (const c of Object.values(countryData)) {
-                if (c.latencies.length > 0) {
-                    const maxInCountry = Math.max(...c.latencies);
-                    if (maxInCountry > maxLatency.value) {
-                        maxLatency = { value: maxInCountry, country: c.name, code: c.code };
-                    }
-                }
-            }
-            document.getElementById('highestLatency').innerHTML = maxLatency.code
-                ? `<span class="country-flag" title="${maxLatency.country}">${getFlag(maxLatency.code)}</span> ${maxLatency.value} ms`
-                : '—';
-
-            // Highest observed throughput
-            let maxSpeed = { value: 0, country: null, code: null };
-            for (const c of Object.values(countryData)) {
-                if (c.speeds.length > 0) {
-                    const maxInCountry = Math.max(...c.speeds);
-                    if (maxInCountry > maxSpeed.value) {
-                        maxSpeed = { value: maxInCountry, country: c.name, code: c.code };
-                    }
-                }
-            }
-            document.getElementById('highestThroughput').innerHTML = maxSpeed.code
-                ? `<span class="country-flag" title="${maxSpeed.country}">${getFlag(maxSpeed.code)}</span> ${maxSpeed.value} Mbps`
-                : '—';
-
-            // === OPERATION SIGNALS ===
-            renderOperationTable();
-
-            // === CONNECTION CONTEXT SIGNALS ===
-            // Aggregate runs and signals by connection type
-            const connStats = {};
-            for (const run of runs) {
-                const connType = run.connectionType || 'Unknown';
-                if (!connStats[connType]) {
-                    connStats[connType] = { runs: 0, withSignals: 0 };
-                }
-                connStats[connType].runs++;
-                if (run.result === 'WARN' || run.result === 'FAIL') {
-                    connStats[connType].withSignals++;
-                }
-            }
-
-            const connTypes = Object.entries(connStats)
-                .filter(([type]) => type !== 'Unknown')
-                .sort((a, b) => b[1].runs - a[1].runs);
-
-            const connContextHtml = connTypes.length > 0
-                ? connTypes.map(([type, stats]) => {
-                    const signalRate = stats.runs > 0 ? Math.round(stats.withSignals / stats.runs * 100) : 0;
-                    return `
-                        <tr>
-                            <td>${type}</td>
-                            <td class="op-col-num">${stats.runs}</td>
-                            <td class="op-col-num ${stats.withSignals > 0 ? 'warn-accent' : ''}">${stats.withSignals}</td>
-                            <td class="op-col-rate signal-rate">${signalRate}%</td>
-                        </tr>
-                    `;
-                }).join('')
-                : '<tr><td colspan="4" style="color: var(--text-muted); text-align: center;">No connection data</td></tr>';
-            document.getElementById('connectionContextBody').innerHTML = connContextHtml;
-
-            // Top countries
-            const sorted = Object.values(countryData).sort((a, b) => b.runCount - a.runCount);
-            const top5 = sorted.slice(0, 5);
-            document.getElementById('topCountriesGrid').innerHTML = top5.map(renderCountryCard).join('');
-        }
-
-        // Render country card (context only, no averages, no outcome badge)
-        function renderCountryCard(c) {
-            // Count signals (WARN + FAIL)
-            const signalCount = c.outcomes.WARN + c.outcomes.FAIL;
-            const signalDensity = c.runCount > 0
-                ? (signalCount / c.runCount).toFixed(1)
-                : '0';
-
-            // Determine highest-signal operation for this country
-            const countryOps = getCountryOperationStats(c.code);
-            const highestSignalOp = countryOps.length > 0 ? countryOps[0] : null;
-
-            return `
-                <div class="country-card" onclick="showCountryDetail('${c.code}')">
-                    <div class="country-header">
-                        <span class="country-flag" title="${c.name}">${getFlag(c.code)}</span>
-                    </div>
-                    <div class="country-stats">
-                        <div class="country-stat">
-                            <span class="stat-label">Runs</span>
-                            <span class="stat-value">${c.runCount}</span>
-                        </div>
-                        <div class="country-stat">
-                            <span class="stat-label">With Signals</span>
-                            <span class="stat-value ${signalCount > 0 ? 'has-signals' : ''}">${signalCount}</span>
-                        </div>
-                        <div class="country-stat">
-                            <span class="stat-label">Density</span>
-                            <span class="stat-value">${signalDensity}/run</span>
-                        </div>
-                    </div>
-                    ${highestSignalOp && highestSignalOp.signals > 0 ? `
-                        <div class="country-signal-hint">
-                            Top: ${highestSignalOp.category}
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-        }
-
-        // Get operation-level stats for a specific country
-        function getCountryOperationStats(countryCode) {
-            const ops = {};
-
-            for (const payload of rawPayloads) {
-                if (!Array.isArray(payload.Actions)) continue;
-
-                for (const action of payload.Actions) {
-                    const ev = action.Evidence || {};
-                    const code = ev.CountryCode || ev.Country?.CountryCode || 'Unknown';
-
-                    if (code.toUpperCase() !== countryCode.toUpperCase()) continue;
-
-                    const cat = action.Category;
-                    if (!cat) continue;
-
-                    if (!ops[cat]) {
-                        ops[cat] = { category: cat, pass: 0, warn: 0, fail: 0, signals: 0 };
-                    }
-
-                    if (action.Result === 'PASS') ops[cat].pass++;
-                    else if (action.Result === 'WARN') { ops[cat].warn++; ops[cat].signals++; }
-                    else if (action.Result === 'FAIL') { ops[cat].fail++; ops[cat].signals++; }
-                }
-            }
-
-            // Sort by signals desc
-            return Object.values(ops).sort((a, b) => b.signals - a.signals);
-        }
-
-        // Update countries grid
-        function updateCountriesGrid() {
-            let sorted = Object.values(countryData);
-
-            switch (currentSort) {
-                case 'signals':
-                    // Sort by signal count (WARN + FAIL)
-                    sorted.sort((a, b) => (b.outcomes.WARN + b.outcomes.FAIL) - (a.outcomes.WARN + a.outcomes.FAIL));
-                    break;
-                case 'runs':
-                default:
-                    sorted.sort((a, b) => b.runCount - a.runCount);
-            }
-
-            document.getElementById('allCountriesGrid').innerHTML = sorted.map(renderCountryCard).join('');
-        }
-
-        // Show country detail modal
-        function showCountryDetail(code) {
-            const c = countryData[code];
-            if (!c) return;
-
-            document.getElementById('modalFlag').textContent = getFlag(code);
-            document.getElementById('modalCountryName').textContent = c.name;
-
-            // Operation Signals for this country
-            const countryOps = getCountryOperationStats(code);
-            const opsHtml = countryOps.length > 0 ? `
-                <table class="operation-table" style="margin-top: 0.5rem;">
+            <div class="inline-note">
+                Leaderboards show peak observed values per country. These are individual observations, not averages.
+            </div>
+        </section>
+
+        <!-- Network Operation Signals -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-question">Question Answered</div>
+                <h2 class="section-title">Which network operations most frequently emit signals across runs?</h2>
+            </div>
+            <div class="operations-table-container">
+                <table class="operations-table">
                     <thead>
                         <tr>
-                            <th>OPERATION</th>
-                            <th class="op-col-num">PASS</th>
-                            <th class="op-col-num">WARN</th>
-                            <th class="op-col-num">FAIL</th>
+                            <th>Operation</th>
+                            <th>Pass</th>
+                            <th>Warn</th>
+                            <th>Fail</th>
+                            <th>Signal Rate</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${countryOps.map(op => `
-                            <tr>
-                                <td>${op.category}</td>
-                                <td class="op-col-num">${op.pass}</td>
-                                <td class="op-col-num ${op.warn > 0 ? 'warn-accent' : ''}">${op.warn}</td>
-                                <td class="op-col-num ${op.fail > 0 ? 'fail-accent' : ''}">${op.fail}</td>
-                            </tr>
-                        `).join('')}
+                        <tr>
+                            <td class="operation-name">DNS Resolution</td>
+                            <td><span class="signal-count pass">2,412</span></td>
+                            <td><span class="signal-count warn">298</span></td>
+                            <td><span class="signal-count fail">137</span></td>
+                            <td class="signal-rate">
+                                <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: 15%"></span></span>
+                                15.3%
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="operation-name">TCP Connection</td>
+                            <td><span class="signal-count pass">2,651</span></td>
+                            <td><span class="signal-count warn">142</span></td>
+                            <td><span class="signal-count fail">54</span></td>
+                            <td class="signal-rate">
+                                <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: 7%"></span></span>
+                                6.9%
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="operation-name">TLS Handshake</td>
+                            <td><span class="signal-count pass">2,589</span></td>
+                            <td><span class="signal-count warn">187</span></td>
+                            <td><span class="signal-count fail">71</span></td>
+                            <td class="signal-rate">
+                                <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: 9%"></span></span>
+                                9.1%
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="operation-name">HTTP Request</td>
+                            <td><span class="signal-count pass">2,203</span></td>
+                            <td><span class="signal-count warn">421</span></td>
+                            <td><span class="signal-count fail">223</span></td>
+                            <td class="signal-rate">
+                                <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: 23%"></span></span>
+                                22.6%
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="operation-name">WebSocket</td>
+                            <td><span class="signal-count pass">1,847</span></td>
+                            <td><span class="signal-count warn">612</span></td>
+                            <td><span class="signal-count fail">388</span></td>
+                            <td class="signal-rate">
+                                <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: 35%"></span></span>
+                                35.1%
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="operation-name">Proxy Detection</td>
+                            <td><span class="signal-count pass">2,734</span></td>
+                            <td><span class="signal-count warn">89</span></td>
+                            <td><span class="signal-count fail">24</span></td>
+                            <td class="signal-rate">
+                                <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: 4%"></span></span>
+                                4.0%
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
-            ` : '<div style="color: var(--text-muted); font-size: 0.875rem;">No operation data</div>';
-            document.getElementById('modalOperationSignals').innerHTML = opsHtml;
+            </div>
+            <div class="inline-note">
+                Operations are aggregated by category. Action labels and evidence are informational and may vary.
+            </div>
+        </section>
 
-            // Risk flags breakdown
-            const riskFlagLabels = {
-                'UNREACHABLE': 'Cannot Reach Server',
-                'HIGH_LATENCY': 'High Latency',
-                'HIGH_JITTER': 'High Jitter',
-                'PACKET_LOSS': 'Packet Loss',
-                'DATACENTER_IP': 'Datacenter/VPN IP',
-                'GEO_MISMATCH': 'Geo Mismatch',
-                'MULTIPLE_ADAPTERS': 'Multiple Adapters',
-                'BLUETOOTH_PAN': 'Bluetooth PAN',
-                'WIFI_IN_USE': 'Wi-Fi (not Ethernet)',
-                'WEAK_SIGNAL': 'Weak Signal'
-            };
-            const warningFlags = Object.entries(c.riskFlagCounts)
-                .filter(([id]) => !['LATENCY_OK', 'BANDWIDTH_OK', 'ETHERNET_CONNECTED', 'NO_PACKET_LOSS'].includes(id))
-                .sort((a, b) => b[1] - a[1]);
-            const maxFlag = Math.max(...warningFlags.map(([, v]) => v), 1);
-
-            document.getElementById('riskFlags').innerHTML = warningFlags.length > 0
-                ? warningFlags.map(([id, count]) => `
-                    <div class="dist-row">
-                        <span class="dist-label" style="width: 120px;">${riskFlagLabels[id] || id}</span>
-                        <div class="dist-bar-container">
-                            <div class="dist-bar" style="width: ${count / maxFlag * 100}%; background: var(--accent-warn);"></div>
-                        </div>
-                        <span class="dist-value">${count}</span>
+        <!-- Countries by Network Diagnostic Runs -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-question">Question Answered</div>
+                <h2 class="section-title">In which country contexts are network diagnostics occurring, and how noisy?</h2>
+            </div>
+            <div class="countries-grid">
+                <div class="country-card">
+                    <div class="country-header">
+                        <span class="country-flag" title="United States">🇺🇸</span>
+                        <span class="country-name">United States</span>
                     </div>
-                `).join('')
-                : '<div style="color: var(--text-muted); font-size: 0.875rem;">No risk flags recorded</div>';
+                    <div class="country-metrics">
+                        <div class="country-metric">
+                            <div class="country-metric-label">Diagnostics Runs</div>
+                            <div class="country-metric-value">847</div>
+                        </div>
+                        <div class="country-metric">
+                            <div class="country-metric-label">Runs with Signals</div>
+                            <div class="country-metric-value">312</div>
+                        </div>
+                        <div class="country-metric">
+                            <div class="country-metric-label">Signal Density</div>
+                            <div class="country-metric-value">1.8</div>
+                        </div>
+                        <div class="country-metric full-width">
+                            <div class="country-metric-label">Top Signal Operation</div>
+                            <span class="top-operation">
+                                <span class="top-operation-dot"></span>
+                                WebSocket
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
-            // Connection Context Signals for this country
-            // Aggregate runs and signals by connection type for this country
-            const countryConnStats = {};
-            for (const run of c.runs) {
-                const connType = run.connectionType || 'Unknown';
-                if (!countryConnStats[connType]) {
-                    countryConnStats[connType] = { runs: 0, withSignals: 0 };
-                }
-                countryConnStats[connType].runs++;
-                if (run.result === 'WARN' || run.result === 'FAIL') {
-                    countryConnStats[connType].withSignals++;
-                }
-            }
+                <div class="country-card">
+                    <div class="country-header">
+                        <span class="country-flag" title="Germany">🇩🇪</span>
+                        <span class="country-name">Germany</span>
+                    </div>
+                    <div class="country-metrics">
+                        <div class="country-metric">
+                            <div class="country-metric-label">Diagnostics Runs</div>
+                            <div class="country-metric-value">523</div>
+                        </div>
+                        <div class="country-metric">
+                            <div class="country-metric-label">Runs with Signals</div>
+                            <div class="country-metric-value">187</div>
+                        </div>
+                        <div class="country-metric">
+                            <div class="country-metric-label">Signal Density</div>
+                            <div class="country-metric-value">2.1</div>
+                        </div>
+                        <div class="country-metric full-width">
+                            <div class="country-metric-label">Top Signal Operation</div>
+                            <span class="top-operation">
+                                <span class="top-operation-dot"></span>
+                                HTTP Request
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
-            const countryConnTypes = Object.entries(countryConnStats)
-                .filter(([type]) => type !== 'Unknown')
-                .sort((a, b) => b[1].runs - a[1].runs);
+                <div class="country-card">
+                    <div class="country-header">
+                        <span class="country-flag" title="Brazil">🇧🇷</span>
+                        <span class="country-name">Brazil</span>
+                    </div>
+                    <div class="country-metrics">
+                        <div class="country-metric">
+                            <div class="country-metric-label">Diagnostics Runs</div>
+                            <div class="country-metric-value">412</div>
+                        </div>
+                        <div class="country-metric">
+                            <div class="country-metric-label">Runs with Signals</div>
+                            <div class="country-metric-value">203</div>
+                        </div>
+                        <div class="country-metric">
+                            <div class="country-metric-label">Signal Density</div>
+                            <div class="country-metric-value">3.4</div>
+                        </div>
+                        <div class="country-metric full-width">
+                            <div class="country-metric-label">Top Signal Operation</div>
+                            <span class="top-operation">
+                                <span class="top-operation-dot"></span>
+                                DNS Resolution
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
-            const modalConnHtml = countryConnTypes.length > 0
-                ? `<table class="operation-table" style="margin-top: 0.5rem;">
-                    <thead>
-                        <tr>
-                            <th>TYPE</th>
-                            <th class="op-col-num">RUNS</th>
-                            <th class="op-col-num">SIGNALS</th>
-                            <th class="op-col-rate">RATE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${countryConnTypes.map(([type, stats]) => {
-                            const rate = stats.runs > 0 ? Math.round(stats.withSignals / stats.runs * 100) : 0;
-                            return `
-                                <tr>
-                                    <td>${type}</td>
-                                    <td class="op-col-num">${stats.runs}</td>
-                                    <td class="op-col-num ${stats.withSignals > 0 ? 'warn-accent' : ''}">${stats.withSignals}</td>
-                                    <td class="op-col-rate signal-rate">${rate}%</td>
-                                </tr>
-                            `;
-                        }).join('')}
-                    </tbody>
-                </table>`
-                : '<div style="color: var(--text-muted); font-size: 0.875rem;">No connection data</div>';
-            document.getElementById('modalConnectionContext').innerHTML = modalConnHtml;
+                <div class="country-card">
+                    <div class="country-header">
+                        <span class="country-flag" title="India">🇮🇳</span>
+                        <span class="country-name">India</span>
+                    </div>
+                    <div class="country-metrics">
+                        <div class="country-metric">
+                            <div class="country-metric-label">Diagnostics Runs</div>
+                            <div class="country-metric-value">389</div>
+                        </div>
+                        <div class="country-metric">
+                            <div class="country-metric-label">Runs with Signals</div>
+                            <div class="country-metric-value">218</div>
+                        </div>
+                        <div class="country-metric">
+                            <div class="country-metric-label">Signal Density</div>
+                            <div class="country-metric-value">4.1</div>
+                        </div>
+                        <div class="country-metric full-width">
+                            <div class="country-metric-label">Top Signal Operation</div>
+                            <span class="top-operation">
+                                <span class="top-operation-dot"></span>
+                                WebSocket
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
-            countryModal.classList.add('active');
-            parseEmojis();
-        }
+                <div class="country-card">
+                    <div class="country-header">
+                        <span class="country-flag" title="United Kingdom">🇬🇧</span>
+                        <span class="country-name">United Kingdom</span>
+                    </div>
+                    <div class="country-metrics">
+                        <div class="country-metric">
+                            <div class="country-metric-label">Diagnostics Runs</div>
+                            <div class="country-metric-value">298</div>
+                        </div>
+                        <div class="country-metric">
+                            <div class="country-metric-label">Runs with Signals</div>
+                            <div class="country-metric-value">94</div>
+                        </div>
+                        <div class="country-metric">
+                            <div class="country-metric-label">Signal Density</div>
+                            <div class="country-metric-value">1.6</div>
+                        </div>
+                        <div class="country-metric full-width">
+                            <div class="country-metric-label">Top Signal Operation</div>
+                            <span class="top-operation">
+                                <span class="top-operation-dot"></span>
+                                TLS Handshake
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
-        // Show page
-        function showPage(page) {
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`[data-page="${page}"]`).classList.add('active');
+                <div class="country-card">
+                    <div class="country-header">
+                        <span class="country-flag" title="Japan">🇯🇵</span>
+                        <span class="country-name">Japan</span>
+                    </div>
+                    <div class="country-metrics">
+                        <div class="country-metric">
+                            <div class="country-metric-label">Diagnostics Runs</div>
+                            <div class="country-metric-value">245</div>
+                        </div>
+                        <div class="country-metric">
+                            <div class="country-metric-label">Runs with Signals</div>
+                            <div class="country-metric-value">67</div>
+                        </div>
+                        <div class="country-metric">
+                            <div class="country-metric-label">Signal Density</div>
+                            <div class="country-metric-value">1.4</div>
+                        </div>
+                        <div class="country-metric full-width">
+                            <div class="country-metric-label">Top Signal Operation</div>
+                            <span class="top-operation">
+                                <span class="top-operation-dot"></span>
+                                HTTP Request
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="inline-note">
+                Countries represent environmental context, not outcomes. Signal patterns vary by local network conditions.
+            </div>
+        </section>
 
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(page + 'Page').classList.add('active');
-        }
-
-        // Show toast
-        function showToast(message, type = 'success') {
-            toast.textContent = message;
-            toast.className = 'toast active ' + type;
-            setTimeout(() => toast.classList.remove('active'), 3000);
-        }
-
-        // Event listeners
-        fileInput.addEventListener('change', (e) => processFiles(e.target.files));
-        emptyFileInput.addEventListener('change', (e) => processFiles(e.target.files));
-
-        // Re-attach after innerHTML update
-        document.addEventListener('change', (e) => {
-            if (e.target.matches('#fileInput')) {
-                processFiles(e.target.files);
-            }
-        });
-
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', () => showPage(tab.dataset.page));
-        });
-
-        document.querySelectorAll('.sort-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentSort = btn.dataset.sort;
-                updateCountriesGrid();
-            });
-        });
-
-        document.getElementById('modalClose').addEventListener('click', () => {
-            countryModal.classList.remove('active');
-        });
-
-        countryModal.addEventListener('click', (e) => {
-            if (e.target === countryModal) {
-                countryModal.classList.remove('active');
-            }
-        });
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                countryModal.classList.remove('active');
-            }
-        });
-
-        // Start auto-update polling on page load
-        // This will fetch index.json and load data automatically if available
-        // Falls back gracefully to manual upload if server unavailable
-        document.addEventListener('DOMContentLoaded', () => {
-            startPolling();
-        });
-    </script>
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <p class="footer-note">
+                This dashboard currently presents network-related diagnostics only. Additional diagnostic domains may be added in future sections.
+            </p>
+        </footer>
+    </div>
 </body>
 </html>
