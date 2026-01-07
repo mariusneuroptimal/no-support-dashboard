@@ -269,6 +269,11 @@
             line-height: 1.6;
         }
 
+        .inline-note.error {
+            border-left-color: var(--signal-fail);
+            color: var(--signal-fail);
+        }
+
         /* Leaderboard section */
         .leaderboards {
             display: grid;
@@ -356,6 +361,13 @@
         .leaderboard-item:first-child .leaderboard-value {
             color: var(--text-primary);
             font-weight: 500;
+        }
+
+        .leaderboard-empty {
+            color: var(--text-tertiary);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: var(--space-md);
         }
 
         /* Operations table */
@@ -566,6 +578,13 @@
             margin: 0 auto;
         }
 
+        /* Loading state */
+        .loading {
+            color: var(--text-tertiary);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+
         /* Responsive */
         @media (max-width: 1200px) {
             .metrics-grid {
@@ -633,6 +652,9 @@
             </nav>
         </header>
 
+        <!-- Error Banner (hidden by default) -->
+        <div id="error-banner" class="inline-note error" style="display: none; margin-bottom: var(--space-lg);"></div>
+
         <!-- Network Overview -->
         <section class="section">
             <div class="section-header">
@@ -642,19 +664,19 @@
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-label">Diagnostics Runs</div>
-                    <div class="metric-value">2,847</div>
+                    <div class="metric-value" id="metric-runs"><span class="loading">—</span></div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-label">Countries Observed</div>
-                    <div class="metric-value">34</div>
+                    <div class="metric-value" id="metric-countries"><span class="loading">—</span></div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-label">Runs with Signals</div>
-                    <div class="metric-value">1,203</div>
+                    <div class="metric-value" id="metric-signals"><span class="loading">—</span></div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-label">Signal Density</div>
-                    <div class="metric-value">2.4<span class="metric-unit">flags/run</span></div>
+                    <div class="metric-value" id="metric-density"><span class="loading">—</span></div>
                 </div>
             </div>
             <div class="inline-note">
@@ -674,42 +696,8 @@
                         <span class="leaderboard-title">Highest Latency</span>
                         <span class="leaderboard-icon">🐢</span>
                     </div>
-                    <div class="leaderboard-list">
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-flag" title="Brazil">🇧🇷</span>
-                            <div class="leaderboard-bar-container">
-                                <div class="leaderboard-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="leaderboard-value">452 ms</span>
-                        </div>
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-flag" title="India">🇮🇳</span>
-                            <div class="leaderboard-bar-container">
-                                <div class="leaderboard-bar" style="width: 78%"></div>
-                            </div>
-                            <span class="leaderboard-value">354 ms</span>
-                        </div>
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-flag" title="Australia">🇦🇺</span>
-                            <div class="leaderboard-bar-container">
-                                <div class="leaderboard-bar" style="width: 62%"></div>
-                            </div>
-                            <span class="leaderboard-value">281 ms</span>
-                        </div>
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-flag" title="South Africa">🇿🇦</span>
-                            <div class="leaderboard-bar-container">
-                                <div class="leaderboard-bar" style="width: 55%"></div>
-                            </div>
-                            <span class="leaderboard-value">248 ms</span>
-                        </div>
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-flag" title="Canada">🇨🇦</span>
-                            <div class="leaderboard-bar-container">
-                                <div class="leaderboard-bar" style="width: 41%"></div>
-                            </div>
-                            <span class="leaderboard-value">187 ms</span>
-                        </div>
+                    <div class="leaderboard-list" id="leaderboard-latency">
+                        <div class="leaderboard-empty">Loading...</div>
                     </div>
                 </div>
                 <div class="leaderboard fast">
@@ -717,42 +705,8 @@
                         <span class="leaderboard-title">Highest Throughput</span>
                         <span class="leaderboard-icon">🚀</span>
                     </div>
-                    <div class="leaderboard-list">
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-flag" title="South Korea">🇰🇷</span>
-                            <div class="leaderboard-bar-container">
-                                <div class="leaderboard-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="leaderboard-value">94.2 Mbps</span>
-                        </div>
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-flag" title="Japan">🇯🇵</span>
-                            <div class="leaderboard-bar-container">
-                                <div class="leaderboard-bar" style="width: 91%"></div>
-                            </div>
-                            <span class="leaderboard-value">85.7 Mbps</span>
-                        </div>
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-flag" title="Sweden">🇸🇪</span>
-                            <div class="leaderboard-bar-container">
-                                <div class="leaderboard-bar" style="width: 82%"></div>
-                            </div>
-                            <span class="leaderboard-value">77.1 Mbps</span>
-                        </div>
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-flag" title="Germany">🇩🇪</span>
-                            <div class="leaderboard-bar-container">
-                                <div class="leaderboard-bar" style="width: 74%"></div>
-                            </div>
-                            <span class="leaderboard-value">69.8 Mbps</span>
-                        </div>
-                        <div class="leaderboard-item">
-                            <span class="leaderboard-flag" title="United States">🇺🇸</span>
-                            <div class="leaderboard-bar-container">
-                                <div class="leaderboard-bar" style="width: 68%"></div>
-                            </div>
-                            <span class="leaderboard-value">64.3 Mbps</span>
-                        </div>
+                    <div class="leaderboard-list" id="leaderboard-throughput">
+                        <div class="leaderboard-empty">Loading...</div>
                     </div>
                 </div>
             </div>
@@ -778,67 +732,8 @@
                             <th>Signal Rate</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td class="operation-name">DNS Resolution</td>
-                            <td><span class="signal-count pass">2,412</span></td>
-                            <td><span class="signal-count warn">298</span></td>
-                            <td><span class="signal-count fail">137</span></td>
-                            <td class="signal-rate">
-                                <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: 15%"></span></span>
-                                15.3%
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="operation-name">TCP Connection</td>
-                            <td><span class="signal-count pass">2,651</span></td>
-                            <td><span class="signal-count warn">142</span></td>
-                            <td><span class="signal-count fail">54</span></td>
-                            <td class="signal-rate">
-                                <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: 7%"></span></span>
-                                6.9%
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="operation-name">TLS Handshake</td>
-                            <td><span class="signal-count pass">2,589</span></td>
-                            <td><span class="signal-count warn">187</span></td>
-                            <td><span class="signal-count fail">71</span></td>
-                            <td class="signal-rate">
-                                <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: 9%"></span></span>
-                                9.1%
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="operation-name">HTTP Request</td>
-                            <td><span class="signal-count pass">2,203</span></td>
-                            <td><span class="signal-count warn">421</span></td>
-                            <td><span class="signal-count fail">223</span></td>
-                            <td class="signal-rate">
-                                <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: 23%"></span></span>
-                                22.6%
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="operation-name">WebSocket</td>
-                            <td><span class="signal-count pass">1,847</span></td>
-                            <td><span class="signal-count warn">612</span></td>
-                            <td><span class="signal-count fail">388</span></td>
-                            <td class="signal-rate">
-                                <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: 35%"></span></span>
-                                35.1%
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="operation-name">Proxy Detection</td>
-                            <td><span class="signal-count pass">2,734</span></td>
-                            <td><span class="signal-count warn">89</span></td>
-                            <td><span class="signal-count fail">24</span></td>
-                            <td class="signal-rate">
-                                <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: 4%"></span></span>
-                                4.0%
-                            </td>
-                        </tr>
+                    <tbody id="operations-tbody">
+                        <tr><td colspan="5" class="loading" style="text-align: center;">Loading...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -853,174 +748,8 @@
                 <div class="section-question">Question Answered</div>
                 <h2 class="section-title">In which country contexts are network diagnostics occurring, and how noisy?</h2>
             </div>
-            <div class="countries-grid">
-                <div class="country-card">
-                    <div class="country-header">
-                        <span class="country-flag" title="United States">🇺🇸</span>
-                        <span class="country-name">United States</span>
-                    </div>
-                    <div class="country-metrics">
-                        <div class="country-metric">
-                            <div class="country-metric-label">Diagnostics Runs</div>
-                            <div class="country-metric-value">847</div>
-                        </div>
-                        <div class="country-metric">
-                            <div class="country-metric-label">Runs with Signals</div>
-                            <div class="country-metric-value">312</div>
-                        </div>
-                        <div class="country-metric">
-                            <div class="country-metric-label">Signal Density</div>
-                            <div class="country-metric-value">1.8</div>
-                        </div>
-                        <div class="country-metric full-width">
-                            <div class="country-metric-label">Top Signal Operation</div>
-                            <span class="top-operation">
-                                <span class="top-operation-dot"></span>
-                                WebSocket
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="country-card">
-                    <div class="country-header">
-                        <span class="country-flag" title="Germany">🇩🇪</span>
-                        <span class="country-name">Germany</span>
-                    </div>
-                    <div class="country-metrics">
-                        <div class="country-metric">
-                            <div class="country-metric-label">Diagnostics Runs</div>
-                            <div class="country-metric-value">523</div>
-                        </div>
-                        <div class="country-metric">
-                            <div class="country-metric-label">Runs with Signals</div>
-                            <div class="country-metric-value">187</div>
-                        </div>
-                        <div class="country-metric">
-                            <div class="country-metric-label">Signal Density</div>
-                            <div class="country-metric-value">2.1</div>
-                        </div>
-                        <div class="country-metric full-width">
-                            <div class="country-metric-label">Top Signal Operation</div>
-                            <span class="top-operation">
-                                <span class="top-operation-dot"></span>
-                                HTTP Request
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="country-card">
-                    <div class="country-header">
-                        <span class="country-flag" title="Brazil">🇧🇷</span>
-                        <span class="country-name">Brazil</span>
-                    </div>
-                    <div class="country-metrics">
-                        <div class="country-metric">
-                            <div class="country-metric-label">Diagnostics Runs</div>
-                            <div class="country-metric-value">412</div>
-                        </div>
-                        <div class="country-metric">
-                            <div class="country-metric-label">Runs with Signals</div>
-                            <div class="country-metric-value">203</div>
-                        </div>
-                        <div class="country-metric">
-                            <div class="country-metric-label">Signal Density</div>
-                            <div class="country-metric-value">3.4</div>
-                        </div>
-                        <div class="country-metric full-width">
-                            <div class="country-metric-label">Top Signal Operation</div>
-                            <span class="top-operation">
-                                <span class="top-operation-dot"></span>
-                                DNS Resolution
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="country-card">
-                    <div class="country-header">
-                        <span class="country-flag" title="India">🇮🇳</span>
-                        <span class="country-name">India</span>
-                    </div>
-                    <div class="country-metrics">
-                        <div class="country-metric">
-                            <div class="country-metric-label">Diagnostics Runs</div>
-                            <div class="country-metric-value">389</div>
-                        </div>
-                        <div class="country-metric">
-                            <div class="country-metric-label">Runs with Signals</div>
-                            <div class="country-metric-value">218</div>
-                        </div>
-                        <div class="country-metric">
-                            <div class="country-metric-label">Signal Density</div>
-                            <div class="country-metric-value">4.1</div>
-                        </div>
-                        <div class="country-metric full-width">
-                            <div class="country-metric-label">Top Signal Operation</div>
-                            <span class="top-operation">
-                                <span class="top-operation-dot"></span>
-                                WebSocket
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="country-card">
-                    <div class="country-header">
-                        <span class="country-flag" title="United Kingdom">🇬🇧</span>
-                        <span class="country-name">United Kingdom</span>
-                    </div>
-                    <div class="country-metrics">
-                        <div class="country-metric">
-                            <div class="country-metric-label">Diagnostics Runs</div>
-                            <div class="country-metric-value">298</div>
-                        </div>
-                        <div class="country-metric">
-                            <div class="country-metric-label">Runs with Signals</div>
-                            <div class="country-metric-value">94</div>
-                        </div>
-                        <div class="country-metric">
-                            <div class="country-metric-label">Signal Density</div>
-                            <div class="country-metric-value">1.6</div>
-                        </div>
-                        <div class="country-metric full-width">
-                            <div class="country-metric-label">Top Signal Operation</div>
-                            <span class="top-operation">
-                                <span class="top-operation-dot"></span>
-                                TLS Handshake
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="country-card">
-                    <div class="country-header">
-                        <span class="country-flag" title="Japan">🇯🇵</span>
-                        <span class="country-name">Japan</span>
-                    </div>
-                    <div class="country-metrics">
-                        <div class="country-metric">
-                            <div class="country-metric-label">Diagnostics Runs</div>
-                            <div class="country-metric-value">245</div>
-                        </div>
-                        <div class="country-metric">
-                            <div class="country-metric-label">Runs with Signals</div>
-                            <div class="country-metric-value">67</div>
-                        </div>
-                        <div class="country-metric">
-                            <div class="country-metric-label">Signal Density</div>
-                            <div class="country-metric-value">1.4</div>
-                        </div>
-                        <div class="country-metric full-width">
-                            <div class="country-metric-label">Top Signal Operation</div>
-                            <span class="top-operation">
-                                <span class="top-operation-dot"></span>
-                                HTTP Request
-                            </span>
-                        </div>
-                    </div>
-                </div>
+            <div class="countries-grid" id="countries-grid">
+                <div class="loading" style="padding: var(--space-lg);">Loading...</div>
             </div>
             <div class="inline-note">
                 Countries represent environmental context, not outcomes. Signal patterns vary by local network conditions.
@@ -1034,5 +763,356 @@
             </p>
         </footer>
     </div>
+
+    <script>
+        /**
+         * NO Support Tool Dashboard - Live Data Loading
+         *
+         * IMPORTANT: This dashboard MUST load live data from ./data/index.json
+         * Static sample data is NOT acceptable in production.
+         * See: ANALYTICS_CONTRACT.md, ARCHITECTURE_MAP.md
+         */
+
+        // Country code to flag emoji mapping
+        const countryFlags = {
+            'US': '🇺🇸', 'CA': '🇨🇦', 'GB': '🇬🇧', 'DE': '🇩🇪', 'FR': '🇫🇷',
+            'JP': '🇯🇵', 'KR': '🇰🇷', 'CN': '🇨🇳', 'IN': '🇮🇳', 'BR': '🇧🇷',
+            'AU': '🇦🇺', 'MX': '🇲🇽', 'ES': '🇪🇸', 'IT': '🇮🇹', 'NL': '🇳🇱',
+            'SE': '🇸🇪', 'NO': '🇳🇴', 'DK': '🇩🇰', 'FI': '🇫🇮', 'PL': '🇵🇱',
+            'RU': '🇷🇺', 'ZA': '🇿🇦', 'SG': '🇸🇬', 'HK': '🇭🇰', 'TW': '🇹🇼',
+            'NZ': '🇳🇿', 'AR': '🇦🇷', 'CL': '🇨🇱', 'CO': '🇨🇴', 'PE': '🇵🇪',
+            'CH': '🇨🇭', 'AT': '🇦🇹', 'BE': '🇧🇪', 'IE': '🇮🇪', 'PT': '🇵🇹'
+        };
+
+        const countryNames = {
+            'US': 'United States', 'CA': 'Canada', 'GB': 'United Kingdom', 'DE': 'Germany',
+            'FR': 'France', 'JP': 'Japan', 'KR': 'South Korea', 'CN': 'China',
+            'IN': 'India', 'BR': 'Brazil', 'AU': 'Australia', 'MX': 'Mexico',
+            'ES': 'Spain', 'IT': 'Italy', 'NL': 'Netherlands', 'SE': 'Sweden',
+            'NO': 'Norway', 'DK': 'Denmark', 'FI': 'Finland', 'PL': 'Poland',
+            'RU': 'Russia', 'ZA': 'South Africa', 'SG': 'Singapore', 'HK': 'Hong Kong',
+            'TW': 'Taiwan', 'NZ': 'New Zealand', 'AR': 'Argentina', 'CL': 'Chile',
+            'CO': 'Colombia', 'PE': 'Peru', 'CH': 'Switzerland', 'AT': 'Austria',
+            'BE': 'Belgium', 'IE': 'Ireland', 'PT': 'Portugal'
+        };
+
+        function getFlag(code) {
+            return countryFlags[code] || '🏳️';
+        }
+
+        function getCountryName(code, fallbackName) {
+            return countryNames[code] || fallbackName || code || 'Unknown';
+        }
+
+        /**
+         * Load live data from ./data/index.json
+         * This is the ONLY acceptable data source for production.
+         */
+        async function loadLiveData() {
+            const index = await fetch('./data/index.json', { cache: 'no-store' }).then(r => {
+                if (!r.ok) throw new Error(`Failed to load index.json: ${r.status}`);
+                return r.json();
+            });
+
+            const runs = await Promise.all(
+                index.files.map(file =>
+                    fetch(`./data/${file}`, { cache: 'no-store' })
+                        .then(r => r.ok ? r.json() : null)
+                        .catch(() => null)
+                )
+            );
+
+            return runs.filter(Boolean);
+        }
+
+        /**
+         * Aggregate data according to Operation Signals contract
+         * - Category = operation (stable, for aggregation)
+         * - Action = informational only
+         * - Evidence = explanatory only
+         */
+        function aggregateData(runs) {
+            const stats = {
+                totalRuns: runs.length,
+                countries: new Set(),
+                runsWithSignals: 0,
+                totalSignals: 0,
+                operations: {},      // Category -> { pass, warn, fail }
+                countryData: {},     // CountryCode -> { runs, signals, latencies, throughputs, topOp }
+                latencyByCountry: {},   // CountryCode -> max latency
+                throughputByCountry: {} // CountryCode -> max throughput
+            };
+
+            for (const run of runs) {
+                if (!run.Actions || !Array.isArray(run.Actions)) continue;
+
+                let runHasSignal = false;
+                let runSignalCount = 0;
+                const runCountries = new Set();
+                const runOperationSignals = {};
+
+                for (const action of run.Actions) {
+                    const category = action.Category || 'Unknown';
+                    const result = (action.Result || '').toUpperCase();
+                    const evidence = action.Evidence || {};
+                    const countryCode = evidence.CountryCode || evidence.Country || null;
+                    const countryName = evidence.CountryName || null;
+
+                    // Track country
+                    if (countryCode) {
+                        stats.countries.add(countryCode);
+                        runCountries.add(countryCode);
+
+                        // Initialize country data
+                        if (!stats.countryData[countryCode]) {
+                            stats.countryData[countryCode] = {
+                                name: countryName,
+                                runs: new Set(),
+                                signals: 0,
+                                operationSignals: {}
+                            };
+                        }
+                        stats.countryData[countryCode].runs.add(run.SessionId);
+                        if (countryName) stats.countryData[countryCode].name = countryName;
+                    }
+
+                    // Track operation stats (aggregated by Category)
+                    if (!stats.operations[category]) {
+                        stats.operations[category] = { pass: 0, warn: 0, fail: 0 };
+                    }
+
+                    if (result === 'PASS') {
+                        stats.operations[category].pass++;
+                    } else if (result === 'WARN') {
+                        stats.operations[category].warn++;
+                        runHasSignal = true;
+                        runSignalCount++;
+                        if (countryCode) {
+                            stats.countryData[countryCode].signals++;
+                            stats.countryData[countryCode].operationSignals[category] =
+                                (stats.countryData[countryCode].operationSignals[category] || 0) + 1;
+                        }
+                    } else if (result === 'FAIL') {
+                        stats.operations[category].fail++;
+                        runHasSignal = true;
+                        runSignalCount++;
+                        if (countryCode) {
+                            stats.countryData[countryCode].signals++;
+                            stats.countryData[countryCode].operationSignals[category] =
+                                (stats.countryData[countryCode].operationSignals[category] || 0) + 1;
+                        }
+                    }
+
+                    // Track latency/throughput extremes for leaderboards
+                    if (countryCode && evidence.LatencyMs) {
+                        const lat = parseFloat(evidence.LatencyMs);
+                        if (!stats.latencyByCountry[countryCode] || lat > stats.latencyByCountry[countryCode]) {
+                            stats.latencyByCountry[countryCode] = lat;
+                        }
+                    }
+                    if (countryCode && evidence.LinkSpeedMbps) {
+                        const speed = parseFloat(evidence.LinkSpeedMbps);
+                        if (!stats.throughputByCountry[countryCode] || speed > stats.throughputByCountry[countryCode]) {
+                            stats.throughputByCountry[countryCode] = speed;
+                        }
+                    }
+                }
+
+                if (runHasSignal) {
+                    stats.runsWithSignals++;
+                }
+                stats.totalSignals += runSignalCount;
+            }
+
+            // Convert country run sets to counts
+            for (const code of Object.keys(stats.countryData)) {
+                stats.countryData[code].runCount = stats.countryData[code].runs.size;
+            }
+
+            return stats;
+        }
+
+        /**
+         * Render all dashboard sections with aggregated data
+         */
+        function renderDashboard(stats) {
+            // Network Overview metrics
+            document.getElementById('metric-runs').textContent = stats.totalRuns.toLocaleString();
+            document.getElementById('metric-countries').textContent = stats.countries.size.toLocaleString();
+            document.getElementById('metric-signals').textContent = stats.runsWithSignals.toLocaleString();
+
+            const density = stats.totalRuns > 0 ? (stats.totalSignals / stats.totalRuns).toFixed(1) : '0';
+            document.getElementById('metric-density').innerHTML = `${density}<span class="metric-unit">flags/run</span>`;
+
+            // Leaderboards
+            renderLeaderboards(stats);
+
+            // Operations table
+            renderOperationsTable(stats);
+
+            // Countries grid
+            renderCountriesGrid(stats);
+        }
+
+        function renderLeaderboards(stats) {
+            // Latency leaderboard (highest = slowest)
+            const latencyList = document.getElementById('leaderboard-latency');
+            const latencyEntries = Object.entries(stats.latencyByCountry)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            if (latencyEntries.length === 0) {
+                latencyList.innerHTML = '<div class="leaderboard-empty">No latency data available</div>';
+            } else {
+                const maxLat = latencyEntries[0][1];
+                latencyList.innerHTML = latencyEntries.map(([code, lat]) => `
+                    <div class="leaderboard-item">
+                        <span class="leaderboard-flag" title="${getCountryName(code)}">${getFlag(code)}</span>
+                        <div class="leaderboard-bar-container">
+                            <div class="leaderboard-bar" style="width: ${(lat / maxLat * 100).toFixed(0)}%"></div>
+                        </div>
+                        <span class="leaderboard-value">${Math.round(lat)} ms</span>
+                    </div>
+                `).join('');
+            }
+
+            // Throughput leaderboard (highest = fastest)
+            const throughputList = document.getElementById('leaderboard-throughput');
+            const throughputEntries = Object.entries(stats.throughputByCountry)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            if (throughputEntries.length === 0) {
+                throughputList.innerHTML = '<div class="leaderboard-empty">No throughput data available</div>';
+            } else {
+                const maxSpeed = throughputEntries[0][1];
+                throughputList.innerHTML = throughputEntries.map(([code, speed]) => `
+                    <div class="leaderboard-item">
+                        <span class="leaderboard-flag" title="${getCountryName(code)}">${getFlag(code)}</span>
+                        <div class="leaderboard-bar-container">
+                            <div class="leaderboard-bar" style="width: ${(speed / maxSpeed * 100).toFixed(0)}%"></div>
+                        </div>
+                        <span class="leaderboard-value">${speed.toFixed(1)} Mbps</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderOperationsTable(stats) {
+            const tbody = document.getElementById('operations-tbody');
+            const operations = Object.entries(stats.operations)
+                .sort((a, b) => {
+                    const aSignals = a[1].warn + a[1].fail;
+                    const bSignals = b[1].warn + b[1].fail;
+                    return bSignals - aSignals;
+                });
+
+            if (operations.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-tertiary);">No operation data available</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = operations.map(([category, counts]) => {
+                const total = counts.pass + counts.warn + counts.fail;
+                const signalRate = total > 0 ? ((counts.warn + counts.fail) / total * 100) : 0;
+                return `
+                    <tr>
+                        <td class="operation-name">${category}</td>
+                        <td><span class="signal-count pass">${counts.pass.toLocaleString()}</span></td>
+                        <td><span class="signal-count warn">${counts.warn.toLocaleString()}</span></td>
+                        <td><span class="signal-count fail">${counts.fail.toLocaleString()}</span></td>
+                        <td class="signal-rate">
+                            <span class="signal-rate-bar"><span class="signal-rate-fill" style="width: ${Math.min(signalRate, 100).toFixed(0)}%"></span></span>
+                            ${signalRate.toFixed(1)}%
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderCountriesGrid(stats) {
+            const grid = document.getElementById('countries-grid');
+            const countries = Object.entries(stats.countryData)
+                .sort((a, b) => b[1].runCount - a[1].runCount);
+
+            if (countries.length === 0) {
+                grid.innerHTML = '<div style="padding: var(--space-lg); color: var(--text-tertiary);">No country data available</div>';
+                return;
+            }
+
+            grid.innerHTML = countries.map(([code, data]) => {
+                const density = data.runCount > 0 ? (data.signals / data.runCount).toFixed(1) : '0';
+                const topOp = Object.entries(data.operationSignals)
+                    .sort((a, b) => b[1] - a[1])[0];
+                const topOpName = topOp ? topOp[0] : 'None';
+
+                return `
+                    <div class="country-card">
+                        <div class="country-header">
+                            <span class="country-flag" title="${getCountryName(code, data.name)}">${getFlag(code)}</span>
+                            <span class="country-name">${getCountryName(code, data.name)}</span>
+                        </div>
+                        <div class="country-metrics">
+                            <div class="country-metric">
+                                <div class="country-metric-label">Diagnostics Runs</div>
+                                <div class="country-metric-value">${data.runCount.toLocaleString()}</div>
+                            </div>
+                            <div class="country-metric">
+                                <div class="country-metric-label">Runs with Signals</div>
+                                <div class="country-metric-value">${data.signals.toLocaleString()}</div>
+                            </div>
+                            <div class="country-metric">
+                                <div class="country-metric-label">Signal Density</div>
+                                <div class="country-metric-value">${density}</div>
+                            </div>
+                            <div class="country-metric full-width">
+                                <div class="country-metric-label">Top Signal Operation</div>
+                                <span class="top-operation">
+                                    <span class="top-operation-dot"></span>
+                                    ${topOpName}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /**
+         * Show error state - NEVER silently fall back to static data
+         */
+        function showError(message) {
+            const banner = document.getElementById('error-banner');
+            banner.textContent = `Live data unavailable: ${message}. Check data/index.json or GitHub Pages deployment.`;
+            banner.style.display = 'block';
+
+            // Set empty states
+            document.getElementById('metric-runs').textContent = '—';
+            document.getElementById('metric-countries').textContent = '—';
+            document.getElementById('metric-signals').textContent = '—';
+            document.getElementById('metric-density').textContent = '—';
+            document.getElementById('leaderboard-latency').innerHTML = '<div class="leaderboard-empty">Data unavailable</div>';
+            document.getElementById('leaderboard-throughput').innerHTML = '<div class="leaderboard-empty">Data unavailable</div>';
+            document.getElementById('operations-tbody').innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-tertiary);">Data unavailable</td></tr>';
+            document.getElementById('countries-grid').innerHTML = '<div style="padding: var(--space-lg); color: var(--text-tertiary);">Data unavailable</div>';
+        }
+
+        /**
+         * Initialize dashboard on page load
+         */
+        async function init() {
+            try {
+                const runs = await loadLiveData();
+                const stats = aggregateData(runs);
+                renderDashboard(stats);
+            } catch (err) {
+                console.error('Dashboard data load failed:', err);
+                showError(err.message);
+            }
+        }
+
+        // Load data when DOM is ready
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>
