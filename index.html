@@ -359,6 +359,15 @@
             text-align: center;
         }
 
+        .observation-provenance {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-tertiary);
+            text-align: right;
+            margin-top: var(--space-sm);
+            font-style: italic;
+        }
+
         /* Operations table */
         .operations-table-container {
             background: var(--bg-secondary);
@@ -933,11 +942,33 @@
             }
         }
 
+        /**
+         * Format signal density with small-N awareness
+         * Shows "~X" when sample size is small to avoid false precision
+         */
+        function formatDensity(density, runs) {
+            if (runs < 5) {
+                return `~${Math.round(density)}`;
+            }
+            return density.toFixed(1);
+        }
+
         function renderObservations(stats) {
             const container = document.getElementById('observations-container');
 
+            /*
+             * SEVERITY RULE (locked):
+             * Severity reflects signal concentration, not certainty.
+             * WARN = elevated relative to baseline (density > 1, fail rate > 10%)
+             * FAIL = dominant concentration or repeated clustering (density > 2, fail rate > 30%)
+             */
+
             // Find contexts with notable signal patterns
             const observations = [];
+
+            // Provenance tracking
+            const totalRuns = stats.totalRuns;
+            const totalCountries = stats.countries.size;
 
             // Find countries with highest signal density (where signals concentrate)
             const countryByDensity = Object.entries(stats.countryData)
@@ -972,7 +1003,7 @@
                     flag: getFlag(top.code),
                     country: getCountryName(top.code, top.name),
                     headline: `${getCountryName(top.code, top.name)} has the highest signal concentration`,
-                    detail: `${top.density.toFixed(1)} signals per run across ${top.runs} diagnostic runs. Primary signal source: ${top.topOp ? top.topOp[0] : 'various'}.`,
+                    detail: `${formatDensity(top.density, top.runs)} signals per run across ${top.runs} diagnostic runs. Most frequent signal: ${top.topOp ? top.topOp[0] : 'various'}.`,
                     severity: top.density > 2 ? 'fail' : 'warn',
                     meta: [`${top.signals} total signals`, `${top.runs} runs`]
                 });
@@ -996,7 +1027,7 @@
                     flag: getFlag(second.code),
                     country: getCountryName(second.code, second.name),
                     headline: `${getCountryName(second.code, second.name)} also shows signal clustering`,
-                    detail: `${second.density.toFixed(1)} signals per run. Top operation: ${second.topOp ? second.topOp[0] : 'various'}.`,
+                    detail: `${formatDensity(second.density, second.runs)} signals per run. Most frequent signal: ${second.topOp ? second.topOp[0] : 'various'}.`,
                     severity: 'warn',
                     meta: [`${second.signals} signals`, `${second.runs} runs`]
                 });
@@ -1006,6 +1037,9 @@
                 container.innerHTML = '<div class="observation-empty">No notable signal concentrations detected in current data.</div>';
                 return;
             }
+
+            // Provenance line
+            const provenance = `Derived from ${totalRuns} runs across ${totalCountries} ${totalCountries === 1 ? 'country' : 'countries'}`;
 
             container.innerHTML = observations.slice(0, 3).map(obs => `
                 <div class="observation-card severity-${obs.severity}">
@@ -1018,7 +1052,7 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `).join('') + `<div class="observation-provenance">${provenance}</div>`;
         }
 
         function renderOperationsTable(stats) {
@@ -1071,7 +1105,8 @@
             });
 
             grid.innerHTML = sortedCountries.map(([code, data]) => {
-                const density = data.runCount > 0 ? (data.signals / data.runCount).toFixed(1) : '0';
+                const rawDensity = data.runCount > 0 ? data.signals / data.runCount : 0;
+                const density = formatDensity(rawDensity, data.runCount);
                 const topOp = Object.entries(data.operationSignals)
                     .sort((a, b) => b[1] - a[1])[0];
                 const topOpName = topOp ? topOp[0] : 'None';
@@ -1086,7 +1121,7 @@
                         <div class="country-metrics">
                             ${hasSignals ? `
                             <div class="country-metric full-width" style="margin-top: 0; padding-top: 0; border-top: none;">
-                                <div class="country-metric-label">Primary Signal Source</div>
+                                <div class="country-metric-label">Most Frequent Signal</div>
                                 <span class="top-operation">
                                     <span class="top-operation-dot"></span>
                                     ${topOpName}
