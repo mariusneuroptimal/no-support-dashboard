@@ -294,100 +294,69 @@
             color: var(--signal-fail);
         }
 
-        /* Leaderboard section */
-        .leaderboards {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--grid-gap);
-        }
-
-        .leaderboard {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: var(--space-lg);
-        }
-
-        .leaderboard-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: var(--space-md);
-            padding-bottom: var(--space-sm);
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .leaderboard-title {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-tertiary);
-        }
-
-        .leaderboard-icon {
-            font-size: 0.9rem;
-            opacity: 0.6;
-        }
-
-        .leaderboard-list {
+        /* Notable observations section */
+        .observations-container {
             display: flex;
             flex-direction: column;
-            gap: var(--space-sm);
+            gap: var(--space-md);
         }
 
-        .leaderboard-item {
-            display: grid;
-            grid-template-columns: 24px 1fr auto;
-            align-items: center;
-            gap: var(--space-sm);
-            padding: var(--space-xs) 0;
+        .observation-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-left: 3px solid var(--signal-warn);
+            border-radius: 0 8px 8px 0;
+            padding: var(--space-md) var(--space-lg);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-lg);
         }
 
-        .leaderboard-flag {
-            font-size: 1rem;
+        .observation-card.severity-fail {
+            border-left-color: var(--signal-fail);
+        }
+
+        .observation-card.severity-warn {
+            border-left-color: var(--signal-warn);
+        }
+
+        .observation-flag {
+            font-size: 1.5rem;
             line-height: 1;
+            flex-shrink: 0;
         }
 
-        .leaderboard-bar-container {
-            height: 6px;
-            background: var(--bg-tertiary);
-            border-radius: 3px;
-            overflow: hidden;
+        .observation-content {
+            flex: 1;
+            min-width: 0;
         }
 
-        .leaderboard-bar {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-
-        .leaderboard.slow .leaderboard-bar {
-            background: linear-gradient(90deg, var(--signal-warn) 0%, var(--signal-fail) 100%);
-        }
-
-        .leaderboard.fast .leaderboard-bar {
-            background: linear-gradient(90deg, var(--accent) 0%, var(--signal-pass) 100%);
-        }
-
-        .leaderboard-value {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            min-width: 65px;
-            text-align: right;
-        }
-
-        .leaderboard-item:first-child .leaderboard-value {
-            color: var(--text-primary);
+        .observation-headline {
             font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
         }
 
-        .leaderboard-empty {
+        .observation-detail {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .observation-meta {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-sm);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
             color: var(--text-tertiary);
-            font-size: 0.8rem;
+        }
+
+        .observation-empty {
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+            padding: var(--space-lg);
             text-align: center;
-            padding: var(--space-md);
         }
 
         /* Operations table */
@@ -622,8 +591,7 @@
                 gap: var(--space-lg);
             }
 
-            .metrics-grid,
-            .leaderboards {
+            .metrics-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -704,34 +672,17 @@
             </div>
         </section>
 
-        <!-- Network Context & Extremes -->
+        <!-- Notable Network Observations -->
         <section class="section">
             <div class="section-header">
-                <div class="section-question">Trivia</div>
-                <h2 class="section-title">Country leaderboards by observed network performance</h2>
+                <div class="section-question">Question Answered</div>
+                <h2 class="section-title">What are the most notable signal-generating contexts?</h2>
             </div>
-            <div class="leaderboards">
-                <div class="leaderboard fast">
-                    <div class="leaderboard-header">
-                        <span class="leaderboard-title">Fastest Connection Speed</span>
-                        <span class="leaderboard-icon">🚀</span>
-                    </div>
-                    <div class="leaderboard-list" id="leaderboard-throughput">
-                        <div class="leaderboard-empty">Loading...</div>
-                    </div>
-                </div>
-                <div class="leaderboard slow">
-                    <div class="leaderboard-header">
-                        <span class="leaderboard-title">Highest Latency</span>
-                        <span class="leaderboard-icon">🐢</span>
-                    </div>
-                    <div class="leaderboard-list" id="leaderboard-latency">
-                        <div class="leaderboard-empty">Loading...</div>
-                    </div>
-                </div>
+            <div class="observations-container" id="observations-container">
+                <div class="loading" style="padding: var(--space-lg);">Loading...</div>
             </div>
             <div class="inline-note">
-                Leaderboards show peak observed values per country. These are individual observations, not averages.
+                Observations highlight contexts where signals concentrate. These are starting points for investigation, not conclusions.
             </div>
         </section>
 
@@ -964,8 +915,8 @@
             const density = stats.totalRuns > 0 ? (stats.totalSignals / stats.totalRuns).toFixed(1) : '0';
             document.getElementById('metric-density').innerHTML = `${density}<span class="metric-unit">flags/run</span>`;
 
-            // Leaderboards
-            renderLeaderboards(stats);
+            // Notable observations
+            renderObservations(stats);
 
             // Operations table
             renderOperationsTable(stats);
@@ -982,48 +933,92 @@
             }
         }
 
-        function renderLeaderboards(stats) {
-            // Latency leaderboard (highest = slowest)
-            const latencyList = document.getElementById('leaderboard-latency');
-            const latencyEntries = Object.entries(stats.latencyByCountry)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 5);
+        function renderObservations(stats) {
+            const container = document.getElementById('observations-container');
 
-            if (latencyEntries.length === 0) {
-                latencyList.innerHTML = '<div class="leaderboard-empty">No latency data available</div>';
-            } else {
-                const maxLat = latencyEntries[0][1];
-                latencyList.innerHTML = latencyEntries.map(([code, lat]) => `
-                    <div class="leaderboard-item">
-                        <span class="leaderboard-flag" title="${getCountryName(code)}">${getFlag(code)}</span>
-                        <div class="leaderboard-bar-container">
-                            <div class="leaderboard-bar" style="width: ${(lat / maxLat * 100).toFixed(0)}%"></div>
-                        </div>
-                        <span class="leaderboard-value">${Math.round(lat)} ms</span>
-                    </div>
-                `).join('');
+            // Find contexts with notable signal patterns
+            const observations = [];
+
+            // Find countries with highest signal density (where signals concentrate)
+            const countryByDensity = Object.entries(stats.countryData)
+                .map(([code, data]) => ({
+                    code,
+                    name: data.name,
+                    density: data.runCount > 0 ? data.signals / data.runCount : 0,
+                    signals: data.signals,
+                    runs: data.runCount,
+                    topOp: Object.entries(data.operationSignals).sort((a, b) => b[1] - a[1])[0]
+                }))
+                .filter(c => c.signals > 0)
+                .sort((a, b) => b.density - a.density);
+
+            // Find operations with highest fail rates
+            const opsByFailRate = Object.entries(stats.operations)
+                .map(([op, counts]) => ({
+                    op,
+                    total: counts.pass + counts.warn + counts.fail,
+                    fails: counts.fail,
+                    warns: counts.warn,
+                    failRate: (counts.pass + counts.warn + counts.fail) > 0
+                        ? counts.fail / (counts.pass + counts.warn + counts.fail) : 0
+                }))
+                .filter(o => o.fails > 0)
+                .sort((a, b) => b.failRate - a.failRate);
+
+            // Build observations (max 3)
+            if (countryByDensity.length > 0) {
+                const top = countryByDensity[0];
+                observations.push({
+                    flag: getFlag(top.code),
+                    country: getCountryName(top.code, top.name),
+                    headline: `${getCountryName(top.code, top.name)} has the highest signal concentration`,
+                    detail: `${top.density.toFixed(1)} signals per run across ${top.runs} diagnostic runs. Primary signal source: ${top.topOp ? top.topOp[0] : 'various'}.`,
+                    severity: top.density > 2 ? 'fail' : 'warn',
+                    meta: [`${top.signals} total signals`, `${top.runs} runs`]
+                });
             }
 
-            // Throughput leaderboard (highest = fastest)
-            const throughputList = document.getElementById('leaderboard-throughput');
-            const throughputEntries = Object.entries(stats.throughputByCountry)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 5);
-
-            if (throughputEntries.length === 0) {
-                throughputList.innerHTML = '<div class="leaderboard-empty">No throughput data available</div>';
-            } else {
-                const maxSpeed = throughputEntries[0][1];
-                throughputList.innerHTML = throughputEntries.map(([code, speed]) => `
-                    <div class="leaderboard-item">
-                        <span class="leaderboard-flag" title="${getCountryName(code)}">${getFlag(code)}</span>
-                        <div class="leaderboard-bar-container">
-                            <div class="leaderboard-bar" style="width: ${(speed / maxSpeed * 100).toFixed(0)}%"></div>
-                        </div>
-                        <span class="leaderboard-value">${speed.toFixed(1)} Mbps</span>
-                    </div>
-                `).join('');
+            if (opsByFailRate.length > 0 && opsByFailRate[0].failRate > 0.1) {
+                const top = opsByFailRate[0];
+                observations.push({
+                    flag: '⚠️',
+                    headline: `${top.op} shows elevated failure rate`,
+                    detail: `${(top.failRate * 100).toFixed(0)}% of ${top.op} operations resulted in FAIL signals. Consider investigating common environmental factors.`,
+                    severity: top.failRate > 0.3 ? 'fail' : 'warn',
+                    meta: [`${top.fails} failures`, `${top.total} total`]
+                });
             }
+
+            // Add a second country if notably different
+            if (countryByDensity.length > 1 && countryByDensity[1].density > 1) {
+                const second = countryByDensity[1];
+                observations.push({
+                    flag: getFlag(second.code),
+                    country: getCountryName(second.code, second.name),
+                    headline: `${getCountryName(second.code, second.name)} also shows signal clustering`,
+                    detail: `${second.density.toFixed(1)} signals per run. Top operation: ${second.topOp ? second.topOp[0] : 'various'}.`,
+                    severity: 'warn',
+                    meta: [`${second.signals} signals`, `${second.runs} runs`]
+                });
+            }
+
+            if (observations.length === 0) {
+                container.innerHTML = '<div class="observation-empty">No notable signal concentrations detected in current data.</div>';
+                return;
+            }
+
+            container.innerHTML = observations.slice(0, 3).map(obs => `
+                <div class="observation-card severity-${obs.severity}">
+                    <span class="observation-flag">${obs.flag}</span>
+                    <div class="observation-content">
+                        <div class="observation-headline">${obs.headline}</div>
+                        <div class="observation-detail">${obs.detail}</div>
+                        <div class="observation-meta">
+                            ${obs.meta.map(m => `<span>${m}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function renderOperationsTable(stats) {
@@ -1068,11 +1063,19 @@
                 return;
             }
 
-            grid.innerHTML = countries.map(([code, data]) => {
+            // Sort by signal density (most signals per run first) to surface investigation priorities
+            const sortedCountries = countries.sort((a, b) => {
+                const densityA = a[1].runCount > 0 ? a[1].signals / a[1].runCount : 0;
+                const densityB = b[1].runCount > 0 ? b[1].signals / b[1].runCount : 0;
+                return densityB - densityA;
+            });
+
+            grid.innerHTML = sortedCountries.map(([code, data]) => {
                 const density = data.runCount > 0 ? (data.signals / data.runCount).toFixed(1) : '0';
                 const topOp = Object.entries(data.operationSignals)
                     .sort((a, b) => b[1] - a[1])[0];
                 const topOpName = topOp ? topOp[0] : 'None';
+                const hasSignals = data.signals > 0;
 
                 return `
                     <div class="country-card">
@@ -1081,24 +1084,26 @@
                             <span class="country-name">${getCountryName(code, data.name)}</span>
                         </div>
                         <div class="country-metrics">
-                            <div class="country-metric">
-                                <div class="country-metric-label">Diagnostics Runs</div>
-                                <div class="country-metric-value">${data.runCount.toLocaleString()}</div>
-                            </div>
-                            <div class="country-metric">
-                                <div class="country-metric-label">Runs with Signals</div>
-                                <div class="country-metric-value">${data.signals.toLocaleString()}</div>
-                            </div>
-                            <div class="country-metric">
-                                <div class="country-metric-label">Signal Density</div>
-                                <div class="country-metric-value">${density}</div>
-                            </div>
-                            <div class="country-metric full-width">
-                                <div class="country-metric-label">Top Signal Operation</div>
+                            ${hasSignals ? `
+                            <div class="country-metric full-width" style="margin-top: 0; padding-top: 0; border-top: none;">
+                                <div class="country-metric-label">Primary Signal Source</div>
                                 <span class="top-operation">
                                     <span class="top-operation-dot"></span>
                                     ${topOpName}
                                 </span>
+                            </div>
+                            ` : ''}
+                            <div class="country-metric">
+                                <div class="country-metric-label">Signal Density</div>
+                                <div class="country-metric-value">${density}<span class="metric-unit" style="font-size: 0.65rem;">/run</span></div>
+                            </div>
+                            <div class="country-metric">
+                                <div class="country-metric-label">Total Signals</div>
+                                <div class="country-metric-value">${data.signals.toLocaleString()}</div>
+                            </div>
+                            <div class="country-metric">
+                                <div class="country-metric-label">Diagnostic Runs</div>
+                                <div class="country-metric-value">${data.runCount.toLocaleString()}</div>
                             </div>
                         </div>
                     </div>
@@ -1119,8 +1124,7 @@
             document.getElementById('metric-countries').textContent = '—';
             document.getElementById('metric-signals').textContent = '—';
             document.getElementById('metric-density').textContent = '—';
-            document.getElementById('leaderboard-latency').innerHTML = '<div class="leaderboard-empty">Data unavailable</div>';
-            document.getElementById('leaderboard-throughput').innerHTML = '<div class="leaderboard-empty">Data unavailable</div>';
+            document.getElementById('observations-container').innerHTML = '<div class="observation-empty">Data unavailable</div>';
             document.getElementById('operations-tbody').innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-tertiary);">Data unavailable</td></tr>';
             document.getElementById('countries-grid').innerHTML = '<div style="padding: var(--space-lg); color: var(--text-tertiary);">Data unavailable</div>';
         }
