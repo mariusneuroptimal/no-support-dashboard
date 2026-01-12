@@ -235,9 +235,19 @@
         /* Empty State */
         .empty-state {
             text-align: center;
-            padding: var(--space-xl);
+            padding: var(--space-xl) var(--space-lg);
             color: var(--text-tertiary);
             font-size: 0.9rem;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state p {
+            margin-bottom: var(--space-sm);
+        }
+
+        .empty-state .subtext {
+            font-size: 0.8rem;
+            color: var(--text-muted);
         }
 
         /* Responsive */
@@ -315,14 +325,40 @@
             return COUNTRY_NAMES[code] || code || 'Unknown';
         }
 
+        // Render empty state when no data
+        function renderEmptyState() {
+            const container = document.getElementById('countriesGrid');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <p>No observed network environments yet</p>
+                    <p class="subtext">Diagnostic data will appear here once sessions are recorded.</p>
+                </div>
+            `;
+        }
+
         // Fetch all session data
         async function loadAllSessions() {
             const res = await fetch(`${BASE_URL}/index.json`, { cache: "no-store" });
             if (!res.ok) throw new Error("Failed to load data index");
 
             const index = await res.json();
+
+            // Guard: handle empty or missing runs array
+            if (!index || !Array.isArray(index.runs) || index.runs.length === 0) {
+                return [];
+            }
+
+            // Extract file paths from runs array (schema: runs[].file)
+            const filePaths = index.runs
+                .map(r => r.file)
+                .filter(Boolean);
+
+            if (filePaths.length === 0) {
+                return [];
+            }
+
             const sessions = await Promise.all(
-                index.files.map(f =>
+                filePaths.map(f =>
                     fetch(`${BASE_URL}/${f}`, { cache: "no-store" })
                         .then(r => r.ok ? r.json() : null)
                         .catch(() => null)
@@ -336,8 +372,13 @@
         function aggregateByCountry(sessions) {
             const countries = {};
 
+            // Guard: handle empty sessions array
+            if (!Array.isArray(sessions) || sessions.length === 0) {
+                return countries;
+            }
+
             for (const session of sessions) {
-                if (!session.Actions || !Array.isArray(session.Actions)) continue;
+                if (!session || !session.Actions || !Array.isArray(session.Actions)) continue;
 
                 // Get country from first action's evidence
                 const firstAction = session.Actions[0];
@@ -369,14 +410,14 @@
 
         // Sort countries per contract: runs desc, then total failures desc
         function sortCountries(countries) {
-            return Object.entries(countries).sort((a, b) => {
+            return Object.entries(countries || {}).sort((a, b) => {
                 // First: by runs descending
                 if (b[1].runs !== a[1].runs) {
                     return b[1].runs - a[1].runs;
                 }
                 // Second: by total failure count descending
-                const totalA = Object.values(a[1].failures).reduce((s, n) => s + n, 0);
-                const totalB = Object.values(b[1].failures).reduce((s, n) => s + n, 0);
+                const totalA = Object.values(a[1].failures || {}).reduce((s, n) => s + n, 0);
+                const totalB = Object.values(b[1].failures || {}).reduce((s, n) => s + n, 0);
                 return totalB - totalA;
             });
         }
@@ -387,7 +428,7 @@
             const name = getCountryName(code);
 
             // Get top failures (max 3, sorted by count desc)
-            const topFailures = Object.entries(data.failures)
+            const topFailures = Object.entries(data.failures || {})
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, MAX_FAILURES_SHOWN);
 
@@ -444,11 +485,7 @@
             const sorted = sortCountries(countries);
 
             if (sorted.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        No diagnostic data available
-                    </div>
-                `;
+                renderEmptyState();
                 return;
             }
 
@@ -476,6 +513,13 @@
         async function main() {
             try {
                 const sessions = await loadAllSessions();
+
+                // Guard: render empty state if no sessions
+                if (!sessions || sessions.length === 0) {
+                    renderEmptyState();
+                    return;
+                }
+
                 const countries = aggregateByCountry(sessions);
                 renderCountries(countries);
             } catch (err) {
